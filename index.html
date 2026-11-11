@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Règle anti-bug pour Chrome/Mobile/Mode Sombre : force texte noir sur fond blanc */
     select, option, optgroup {
       color-scheme: light !important;
       color: #0f172a !important;
@@ -36,7 +35,7 @@
         <h1 class="text-2xl font-bold flex items-center gap-2">
           <i class="fa-solid fa-calculator text-amber-400"></i> Estimateur & Relevé Multi-Niches
         </h1>
-        <p class="text-xs text-blue-200 mt-1">Norme ISSA 540 + Modèle financier de rentabilité (158,00 $/h production | 98,75 $/h route)</p>
+        <p class="text-xs text-blue-200 mt-1">Norme ISSA 540 + Modèle financier (158,00 $/h production | 98,75 $/h route)</p>
       </div>
 
       <div class="flex items-center gap-2">
@@ -45,6 +44,9 @@
         </button>
         <button id="btn-reset" class="bg-rose-800 hover:bg-rose-700 text-xs px-3 py-2 rounded font-medium transition">
           <i class="fa-solid fa-trash mr-1"></i> Vider
+        </button>
+        <button id="btn-toggle-client-view" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-2 rounded font-bold transition">
+          <i class="fa-solid fa-eye mr-1"></i> Fiche Client
         </button>
         <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs px-4 py-2 rounded font-bold transition">
           <i class="fa-solid fa-print mr-1"></i> Imprimer / Devis PDF
@@ -109,7 +111,6 @@
           <div class="grid grid-cols-2 gap-2">
             <div>
               <label class="block font-bold text-slate-700 mb-1">Téléphone</label>
-              <!-- Champ avec masque automatique 514-820-0368 -->
               <input type="tel" id="client-phone" placeholder="514-820-0368" maxlength="12" inputmode="numeric" class="w-full px-3 py-1.5 font-bold text-slate-900 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
             <div>
@@ -124,28 +125,7 @@
         </div>
       </div>
 
-      <!-- Module 2 : Dictée Vocale -->
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
-            <i class="fa-solid fa-microphone text-rose-600"></i> Dictée Vocale Rapide
-          </h2>
-          <span id="voice-indicator" class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Inactif</span>
-        </div>
-        <p class="text-[11px] text-slate-500 mb-2">
-          Ex: <em>"Cuisine four"</em>, <em>"Salon 300 pieds tapis"</em>, <em>"Entrée pression 1500"</em>
-        </p>
-
-        <button id="btn-voice" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-2 transition text-xs">
-          <i class="fa-solid fa-microphone-lines"></i>
-          <span id="btn-voice-text">Activer le micro sur le terrain</span>
-        </button>
-        <div id="voice-transcript" class="mt-2 text-[11px] bg-slate-50 p-2 rounded border border-slate-200 min-h-[36px] text-slate-600 italic">
-          En attente...
-        </div>
-      </div>
-
-      <!-- Module 3 : Sélection Pièces & Travaux -->
+      <!-- Module 2 : Sélection Pièces & Travaux -->
       <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
         <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
           <i class="fa-solid fa-list-check text-blue-600"></i> Sélectionner Pièce & Travaux
@@ -164,7 +144,6 @@
               </button>
             </div>
 
-            <!-- Liste 1 : Catégories -->
             <select id="select-building-type" class="w-full text-xs font-semibold px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
               <option value="1. Résidentiel" selected>1. Résidentiel</option>
               <option value="2. Bureaux et administration">2. Bureaux et administration</option>
@@ -192,43 +171,19 @@
               <label class="block text-xs font-bold text-slate-700 mb-1">
                 <i class="fa-solid fa-door-open text-blue-600 mr-1"></i> 2. Pièce ou local
               </label>
-              <!-- Liste 2 : Pièces -->
               <select id="select-room-type" class="w-full text-xs font-semibold px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
                 <option value="Chambre principale" selected>Chambre principale</option>
                 <option value="Chambre secondaire">Chambre secondaire</option>
-                <option value="Chambre d'enfant">Chambre d'enfant</option>
-                <option value="Chambre d'amis">Chambre d'amis</option>
-                <option value="Salon">Salon</option>
-                <option value="Salle familiale">Salle familiale</option>
-                <option value="Salle à manger">Salle à manger</option>
-                <option value="Cuisine">Cuisine</option>
-                <option value="Cuisinette">Cuisinette</option>
-                <option value="Coin-repas">Coin-repas</option>
-                <option value="Bureau à domicile">Bureau à domicile</option>
                 <option value="Salle de bain complète">Salle de bain complète</option>
                 <option value="Salle d'eau">Salle d'eau</option>
-                <option value="Salle de douche">Salle de douche</option>
-                <option value="Salle de lavage">Salle de lavage</option>
-                <option value="Buanderie">Buanderie</option>
-                <option value="Walk-in">Walk-in</option>
-                <option value="Garde-robe">Garde-robe</option>
-                <option value="Vestibule">Vestibule</option>
-                <option value="Hall d'entrée">Hall d'entrée</option>
+                <option value="Cuisine">Cuisine</option>
+                <option value="Salon">Salon</option>
+                <option value="Salle à manger">Salle à manger</option>
                 <option value="Corridor">Corridor</option>
                 <option value="Escalier">Escalier</option>
                 <option value="Sous-sol aménagé">Sous-sol aménagé</option>
-                <option value="Sous-sol non aménagé">Sous-sol non aménagé</option>
-                <option value="Salle de jeux">Salle de jeux</option>
-                <option value="Salle de cinéma maison">Salle de cinéma maison</option>
-                <option value="Véranda">Véranda</option>
-                <option value="Solarium">Solarium</option>
-                <option value="Salle de rangement">Salle de rangement</option>
-                <option value="Débarras">Débarras</option>
-                <option value="Garage">Garage</option>
-                <option value="Atelier résidentiel">Atelier résidentiel</option>
-                <option value="Cave à vin">Cave à vin</option>
-                <option value="Grenier">Grenier</option>
-                <option value="Salle mécanique">Salle mécanique</option>
+                <option value="Toilettes publiques">Toilettes publiques</option>
+                <option value="Bureau individuel">Bureau individuel</option>
                 <option value="Autre">Autre (préciser ci-dessous)</option>
               </select>
             </div>
@@ -236,7 +191,7 @@
             <div>
               <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nom / Précision du local :</label>
               <div class="flex gap-2">
-                <input type="text" id="input-final-room" value="Chambre principale" placeholder="Précisez la pièce..." required class="flex-1 text-xs px-3 py-1.5 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                <input type="text" id="input-final-room" value="Salle de bain" placeholder="Précisez la pièce..." required class="flex-1 text-xs px-3 py-1.5 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
                 <button type="button" id="btn-save-custom-room" title="Enregistrer dans ma banque" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-md transition font-semibold">
                   <i class="fa-solid fa-floppy-disk"></i>
                 </button>
@@ -244,95 +199,97 @@
             </div>
           </div>
 
-          <!-- BANQUE EXHAUSTIVE DE TOUTES LES TÂCHES / NICHES -->
+          <!-- SÉLECTION DES TÂCHES PAR UNITÉ & 100 PI² -->
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">
               <i class="fa-solid fa-spray-can-sparkles text-blue-600 mr-1"></i> 3. Tâche / Niche & Équipement
             </label>
             <select id="select-task" class="w-full text-xs px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
               
-              <optgroup label="🏠 Résidentiel, Ménage & Électroménagers">
-                <option value="res_oven">Poêle / Cuisinière - Nettoyage complet intérieur du four [45 min / unité]</option>
-                <option value="res_fridge">Réfrigérateur - Nettoyage complet intérieur/tiroirs [45 min / unité]</option>
-                <option value="res_cabinets">Armoires de cuisine - Lavage complet intérieur/extérieur [60 min / unité]</option>
-                <option value="res_deep_clean">Grand ménage complet en profondeur [15 min / 100 pi²]</option>
-                <option value="res_regular_clean">Entretien ménager résidentiel régulier [7 min / 100 pi²]</option>
-                <option value="res_bedding">Changement de literie & draps [10 min / lit]</option>
-                <option value="res_laundry">Lessive, séchage & pliage [30 min / brassée]</option>
+              <optgroup label="🚽 Sanitaires & Toilettes (À l'unité en minutes exactes)">
+                <option value="comm_toilet" selected>Toilette individuelle - Nettoyage complet & désinfection [1.5 min / unité][cite: 6]</option>
+                <option value="comm_urinal">Urinoir - Nettoyage, détartrage & pastille [1.5 min / unité][cite: 6]</option>
+                <option value="comm_sink">Lavabo sanitaire - Robinetterie, vasque & miroir [1.0 min / unité][cite: 4]</option>
+                <option value="comm_shower_stall">Cabine de douche commerciale/gym - Lavage complet [4.5 min / cabine]</option>
+                <option value="res_bath_full">Salle de bain complète standard (Toilette, lavabo, bain/douche, plancher) [20 min / pièce]</option>
+                <option value="res_powder_room">Salle d'eau demi-bain (Toilette + lavabo) [10 min / pièce]</option>
                 <option value="res_shower_descaling">Douche / Bain - Détartrage approfondi calcaire [25 min / unité]</option>
-              </optgroup>
-
-              <optgroup label="🪡 Tapis & Moquettes (Norme ISSA 540)">
-                <option value="carpet_wand_15" selected>Tapis - Extraction Wand 15" grandes surfaces [115 min / 1000 pi²][cite: 7, 8]</option>
-                <option value="carpet_wand_12">Tapis - Extraction Wand 12" standard [120 min / 1000 pi²][cite: 7]</option>
-                <option value="carpet_wand_8">Tapis - Extraction Wand 8" passages étroits / escaliers [180 min / 1000 pi²]</option>
-                <option value="carpet_crb_15">Tapis - Brossage mécanique CRB 15" [21.4 min / 1000 pi²][cite: 8]</option>
-                <option value="carpet_crb_11">Tapis - Brossage mécanique CRB 11" [29.2 min / 1000 pi²][cite: 8]</option>
-                <option value="carpet_rx20">Tapis - Tête rotative Turbo 17" RX20 [15 min / 1000 pi²][cite: 7]</option>
-                <option value="carpet_encapsulation">Tapis - Encapsulation / Bonnet 17" faible humidité [54 min / 1000 pi²][cite: 7]</option>
-                <option value="carpet_protecteur">Tapis - Protecteur Téflon / Scotchgard [10.2 min / 1000 pi²][cite: 7]</option>
-                <option value="carpet_antibact">Tapis - Traitement Antibactérien & Neutralisant odeurs [10.2 min / 1000 pi²]</option>
-              </optgroup>
-
-              <optgroup label="🧼 Planchers Durs (Vinyle, Béton, Époxy, Coulis)">
-                <option value="floor_strip_wax">Tuile vinyle - Décapage complet & 4 couches cire [113 min / 1000 pi²][cite: 9]</option>
-                <option value="floor_wax_only">Tuile vinyle - Pose de cire / fini par couche [9.5 min / 1000 pi²][cite: 9]</option>
-                <option value="floor_top_scrub">Plancher dur - Récurage de surface (Top Scrub) [27 min / 1000 pi²]</option>
-                <option value="floor_burnish">Plancher dur - Polissage thermique haute vitesse (Burnishing) [3.5 min / 1000 pi²][cite: 9]</option>
-                <option value="floor_tile_grout">Céramique & Coulis - Nettoyage rotatif acide [45 min / 1000 pi²]</option>
-                <option value="floor_concrete_scrub">Béton - Récurage mécanique industriel [15 min / 1000 pi²]</option>
-                <option value="floor_epoxy">Plancher époxy - Dégraissage & récurage [20 min / 1000 pi²]</option>
-                <option value="floor_mop">Plancher dur - Lavage humide / Mopping désinfectant [14.4 min / 1000 pi²][cite: 9]</option>
-                <option value="floor_autoscrub">Plancher dur - Autolaveuse autotractée [6.5 min / 1000 pi²]</option>
-              </optgroup>
-
-              <optgroup label="💦 Lavage à Pression & Extérieur">
-                <option value="pressure_concrete">Pression - Trottoir, allée béton & dalles [12 min / 1000 pi²]</option>
-                <option value="pressure_siding">Pression - Façade de bâtiment / Revêtement extérieur [20 min / 1000 pi²]</option>
-                <option value="pressure_patio">Pression - Terrasse bois, patio ou pavé uni [25 min / 1000 pi²]</option>
-                <option value="pressure_bins">Pression - Conteneur à déchets / Bac roulant [8 min / unité]</option>
-                <option value="pressure_grease">Pression - Dégraissage quai de chargement & huile [35 min / 1000 pi²]</option>
-              </optgroup>
-
-              <optgroup label="🪟 Vitres & Fenestration">
-                <option value="window_res_standard">Fenêtre résidentielle int/ext avec cadrage & moustiquaire [8 min / vitre]</option>
-                <option value="window_comm_ground">Vitrine commerciale plain-pied (int/ext) [2.5 min / vitre]</option>
-                <option value="window_comm_high">Vitre commerciale en hauteur / perche télescopique [7 min / vitre]</option>
-              </optgroup>
-
-              <optgroup label="🛋️ Ameublement Rembourré & Matelas">
-                <option value="upholstery_chair">Fauteuil 1 place en tissu - Extraction [10 min / unité]</option>
-                <option value="upholstery_loveseat">Causeuse 2 places en tissu - Extraction [25 min / unité]</option>
-                <option value="upholstery_couch">Divan 3 places en tissu - Extraction complète [45 min / canapé]</option>
-                <option value="upholstery_sectional">Sectionnel complet en L/U - Extraction [80 min / unité]</option>
-                <option value="upholstery_mattress">Matelas (Double / Queen / King) - Assainissement & extraction [40 min / unité][cite: 4]</option>
-                <option value="upholstery_office_chair">Chaise de bureau sur roulettes - Shampoing [5 min / unité]</option>
-              </optgroup>
-
-              <optgroup label="🏢 Conciergerie Commerciale & Blocs Sanitaires">
-                <option value="comm_office_sqft">Bureaux - Entretien régulier des locaux [10 min / 1000 pi²][cite: 2]</option>
-                <option value="comm_desk">Poste de travail / Bureau - Désinfection & époussetage [1.0 min / unité]</option>
-                <option value="comm_trash">Corbeille / Poubelle - Vider et religner [0.75 min / unité][cite: 5]</option>
-                <option value="comm_toilet">Toilette - Nettoyage complet & détartrage [1.5 min / unité][cite: 6]</option>
-                <option value="comm_urinal">Urinoir - Nettoyage & pastille [1.5 min / unité][cite: 6]</option>
-                <option value="comm_sink">Lavabo sanitaire - Nettoyage, robinetterie & miroir [1.0 min / unité][cite: 4]</option>
                 <option value="comm_dispensers">Remplissage distributeurs (savon, papier, essuie-mains) [1.0 min / unité][cite: 6]</option>
               </optgroup>
 
-              <optgroup label="🔨 Après-Construction & Après-Sinistre">
-                <option value="post_const_rough">Après construction - Décapage & gros débris (Rough) [18 min / 1000 pi²]</option>
-                <option value="post_const_final">Après construction - Dépoussiérage fin & livraison (Final) [35 min / 1000 pi²]</option>
-                <option value="sinister_ozone">Assainissement - Nébulisation / Ozone anti-odeur [15 min / 1000 pi²]</option>
+              <optgroup label="🏠 Résidentiel, Ménage & Électroménagers (À l'unité)">
+                <option value="res_oven">Poêle / Cuisinière - Nettoyage complet intérieur du four [45 min / unité]</option>
+                <option value="res_fridge">Réfrigérateur - Nettoyage complet intérieur & tiroirs [45 min / unité]</option>
+                <option value="res_cabinets">Armoires de cuisine - Intérieur & Extérieur complet [60 min / unité]</option>
+                <option value="res_bedding">Changement de literie & draps [10 min / lit]</option>
+                <option value="res_laundry">Lessive, séchage & pliage [30 min / brassée]</option>
               </optgroup>
 
+              <optgroup label="📐 Planchers Durs par 100 pi² (Petites surfaces & pièces)">
+                <option value="floor_mop_100">Plancher dur - Lavage humide / Vadrouille [1.44 min / 100 pi²][cite: 9]</option>
+                <option value="floor_strip_wax_100">Tuile vinyle - Décapage & 4 couches cire [11.3 min / 100 pi²][cite: 9]</option>
+                <option value="floor_wax_only_100">Tuile vinyle - Pose de cire par couche [0.95 min / 100 pi²][cite: 9]</option>
+                <option value="floor_tile_grout_100">Céramique & Coulis - Nettoyage rotatif acide [4.5 min / 100 pi²]</option>
+              </optgroup>
+
+              <optgroup label="📐 Moquettes & Tapis par 100 pi²">
+                <option value="carpet_wand_100">Tapis - Extraction Wand standard [11.5 min / 100 pi²][cite: 7, 8]</option>
+                <option value="carpet_narrow_100">Tapis - Wand passages étroits / escaliers [18.0 min / 100 pi²]</option>
+                <option value="carpet_encap_100">Tapis - Encapsulation / Faible humidité [5.4 min / 100 pi²][cite: 7]</option>
+              </optgroup>
+
+              <optgroup label="🏢 Grandes Surfaces au 1 000 pi² (ISSA 540)">
+                <option value="carpet_wand_15">Tapis - Wand 15" grandes surfaces [115 min / 1000 pi²][cite: 7, 8]</option>
+                <option value="carpet_wand_12">Tapis - Wand 12" standard [120 min / 1000 pi²][cite: 7]</option>
+                <option value="carpet_rx20">Tapis - Tête Rotative Turbo 17" RX20 [15 min / 1000 pi²][cite: 7]</option>
+                <option value="carpet_encapsulation">Tapis - Encapsulation / Bonnet 17" [54 min / 1000 pi²][cite: 7]</option>
+                <option value="floor_strip_wax">Tuile vinyle - Décapage complet & 4 couches cire [113 min / 1000 pi²][cite: 9]</option>
+                <option value="floor_top_scrub">Plancher dur - Récurage de surface (Top Scrub) [27 min / 1000 pi²]</option>
+                <option value="floor_mop">Plancher dur - Lavage humide / Mopping [14.4 min / 1000 pi²][cite: 9]</option>
+                <option value="comm_office_sqft">Bureaux - Entretien régulier des locaux [10 min / 1000 pi²][cite: 2]</option>
+              </optgroup>
+
+              <optgroup label="💦 Lavage à Pression & Vitres">
+                <option value="pressure_concrete">Pression - Trottoir & allée béton/dalles [12 min / 1000 pi²]</option>
+                <option value="pressure_patio">Pression - Terrasse bois ou pavé uni [25 min / 1000 pi²]</option>
+                <option value="pressure_bins">Pression - Conteneur à déchets / Bac roulant [8 min / unité]</option>
+                <option value="window_res_standard">Fenêtre résidentielle int/ext + moustiquaire [8 min / vitre]</option>
+                <option value="window_comm_ground">Vitrine commerciale plain-pied [2.5 min / vitre]</option>
+              </optgroup>
+
+              <optgroup label="🛋️ Ameublement Rembourré">
+                <option value="upholstery_chair">Fauteuil 1 place en tissu - Extraction [10 min / unité]</option>
+                <option value="upholstery_loveseat">Causeuse 2 places en tissu - Extraction [25 min / unité]</option>
+                <option value="upholstery_couch">Divan 3 places en tissu - Extraction complète [45 min / canapé]</option>
+                <option value="upholstery_office_chair">Chaise de bureau sur roulettes [5 min / unité]</option>
+              </optgroup>
             </select>
+          </div>
+
+          <!-- ENCOMBREMENT ET NIVEAU D'OBSTACLES (Prix variable) -->
+          <div class="bg-amber-50 p-3 rounded-lg border border-amber-200">
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold text-amber-950">
+                <i class="fa-solid fa-couch text-amber-600 mr-1"></i> Niveau d'encombrement / Difficulté
+              </label>
+              <span id="label-encombrement-mult" class="text-[11px] font-bold text-amber-800">x 1,00 (Standard)</span>
+            </div>
+            <select id="select-encombrement" class="w-full text-xs font-semibold px-2.5 py-1.5 bg-white text-slate-900 border border-amber-300 rounded-md focus:ring-2 focus:ring-amber-500 outline-none">
+              <option value="0.85">Espace vide / Dégagé (-15% de temps/prix)</option>
+              <option value="1.00" selected>Normal / Mobilier standard (Taux plein 100%)</option>
+              <option value="1.25">Encombré / Nombreux obstacles (+25% de temps/prix)</option>
+              <option value="1.50">Très encombré / Chantier difficile (+50% de temps/prix)</option>
+            </select>
+            <p class="text-[10px] text-amber-800 mt-1 italic">
+              Ajuste automatiquement le temps de travail et le prix de la pièce selon les obstacles.
+            </p>
           </div>
 
           <!-- Quantité & Fréquence -->
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1" id="label-qty">Quantité (pi²)</label>
-              <input type="number" id="input-qty" value="1000" min="1" step="any" required class="w-full text-sm font-bold px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+              <label class="block text-xs font-bold text-slate-700 mb-1" id="label-qty">Quantité (unité)</label>
+              <input type="number" id="input-qty" value="1" min="0.1" step="any" required class="w-full text-sm font-bold px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">Fréquence annuelle</label>
@@ -347,7 +304,7 @@
           </div>
 
           <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg shadow transition">
-            <i class="fa-solid fa-plus-circle mr-1"></i> Ajouter à la lecture
+            <i class="fa-solid fa-plus-circle mr-1"></i> Ajouter à la soumission
           </button>
         </form>
       </div>
@@ -357,12 +314,12 @@
     <!-- Colonne DROITE : Résultats, Synthèse Client & Gestion des Escomptes -->
     <section class="lg:col-span-7 space-y-6">
 
-      <!-- Carte 1 : Sommaire & Escomptes / Taxes (Visible Client) -->
+      <!-- Carte 1 : Sommaire & Escomptes / Taxes -->
       <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5 client-sheet">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-3 mb-4 gap-2">
           <div>
             <h2 class="text-lg font-bold text-slate-900">Synthèse de la Soumission</h2>
-            <p class="text-xs text-slate-500">Estimé officiel basé sur les cadences techniques ISSA 540</p>
+            <p class="text-xs text-slate-500">Estimé officiel selon cadences ISSA et barème de 158 $/h</p>
           </div>
           <div class="text-right">
             <div class="text-2xl font-black text-blue-700" id="total-final-tax">0,00 $</div>
@@ -370,7 +327,6 @@
           </div>
         </div>
 
-        <!-- Badges d'heures et temps -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center mb-4">
           <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
             <div class="text-xs text-blue-700 font-medium">Temps / visite</div>
@@ -394,7 +350,7 @@
           </div>
         </div>
 
-        <!-- Gestion de l'Escompte & Taxes (Formulaire) -->
+        <!-- Gestion Escompte & Taxes -->
         <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 mb-4 no-print">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
             <div>
@@ -417,7 +373,7 @@
           </div>
         </div>
 
-        <!-- Tableau Récapitulatif Financier Client -->
+        <!-- Tableau Récapitulatif Client -->
         <div class="border rounded-lg overflow-hidden text-xs">
           <table class="w-full">
             <tbody class="divide-y divide-slate-200">
@@ -450,7 +406,7 @@
         </div>
       </div>
 
-      <!-- Carte 2 : Ventilation Interne de Rentabilité (Masquée à l'impression client) -->
+      <!-- Carte 2 : Ventilation Interne de Rentabilité (Masquée client) -->
       <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5 internal-budget no-print">
         <div class="flex items-center justify-between border-b pb-3 mb-3">
           <div>
@@ -473,7 +429,6 @@
               </tr>
             </thead>
             <tbody id="breakdown-tbody" class="divide-y divide-slate-200">
-              <!-- Rempli en JS -->
             </tbody>
           </table>
         </div>
@@ -509,7 +464,7 @@
                 <tr>
                   <th class="text-left p-2">Item & Tâche</th>
                   <th class="text-center p-2">Quantité totale</th>
-                  <th class="text-center p-2">Temps ISSA</th>
+                  <th class="text-center p-2">Temps unitaire</th>
                   <th class="text-right p-2">Temps total</th>
                   <th class="text-right p-2">Total estimé</th>
                 </tr>
@@ -547,7 +502,7 @@
 
   <script>
     // ----------------------------------------------------
-    // BANQUE DE DONNÉES COMPLÈTE DES 16 BÂTIMENTS ET PIÈCES
+    // BANQUE DE DONNÉES COMPLÈTE DES 16 BÂTIMENTS
     // ----------------------------------------------------
     const DEFAULT_BUILDINGS_DB = {
       "1. Résidentiel": [
@@ -700,75 +655,62 @@
       ]
     };
 
-    let BUILDINGS_DB = JSON.parse(localStorage.getItem('cleaning_buildings_db_v6') || 'null') || DEFAULT_BUILDINGS_DB;
+    let BUILDINGS_DB = JSON.parse(localStorage.getItem('cleaning_buildings_db_v7') || 'null') || DEFAULT_BUILDINGS_DB;
 
-    // CATALOGUE DES TÂCHES
+    // ----------------------------------------------------
+    // CATALOGUE DES TÂCHES PAR UNITÉ, 100 PI² ET 1 000 PI²
+    // ----------------------------------------------------
     const TASK_CATALOG = {
-      // Résidentiel
-      res_oven: { name: 'Four / Poêle - Nettoyage complet intérieur', unit: 'unité', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
-      res_fridge: { name: 'Réfrigérateur - Nettoyage complet intérieur', unit: 'unité', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
-      res_cabinets: { name: 'Armoires de cuisine - Intérieur & Extérieur', unit: 'unité', type: 'count', minutesEach: 60.0, rateHr: 158.0 },
-      res_deep_clean: { name: 'Grand ménage résidentiel en profondeur', unit: 'pi²', type: 'area', timePer1000: 150.0, rateHr: 158.0 },
-      res_regular_clean: { name: 'Entretien ménager résidentiel régulier', unit: 'pi²', type: 'area', timePer1000: 70.0, rateHr: 158.0 },
+      // Sanitaires à l'unité
+      comm_toilet: { name: 'Toilette individuelle - Désinfection complète', unit: 'toilette', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
+      comm_urinal: { name: 'Urinoir - Nettoyage & pastille', unit: 'urinoir', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
+      comm_sink: { name: 'Lavabo sanitaire - Vasque, robinet & miroir', unit: 'lavabo', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
+      comm_shower_stall: { name: 'Cabine de douche - Nettoyage complet', unit: 'cabine', type: 'count', minutesEach: 4.5, rateHr: 158.0 },
+      res_bath_full: { name: 'Salle de bain complète standard (Bloc complet)', unit: 'salle de bain', type: 'count', minutesEach: 20.0, rateHr: 158.0 },
+      res_powder_room: { name: 'Salle d\'eau (Demi-bain toilette + lavabo)', unit: 'salle d\'eau', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
+      res_shower_descaling: { name: 'Douche/Bain - Détartrage calcaire approfondi', unit: 'unité', type: 'count', minutesEach: 25.0, rateHr: 158.0 },
+      comm_dispensers: { name: 'Remplissage distributeurs sanitaires', unit: 'distributeur', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
+
+      // Résidentiel à l'unité
+      res_oven: { name: 'Four / Poêle - Intérieur complet', unit: 'four', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
+      res_fridge: { name: 'Réfrigérateur - Intérieur & bacs', unit: 'frigo', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
+      res_cabinets: { name: 'Armoires cuisine - Intérieur/Extérieur', unit: 'armoire', type: 'count', minutesEach: 60.0, rateHr: 158.0 },
       res_bedding: { name: 'Changement de literie & draps', unit: 'lit', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
       res_laundry: { name: 'Lessive, séchage & pliage', unit: 'brassée', type: 'count', minutesEach: 30.0, rateHr: 158.0 },
-      res_shower_descaling: { name: 'Douche / Bain - Détartrage complet calcaire', unit: 'unité', type: 'count', minutesEach: 25.0, rateHr: 158.0 },
 
-      // Tapis ISSA 540
+      // Planchers par tranche de 100 pi²
+      floor_mop_100: { name: 'Plancher dur - Lavage vadrouille (par 100 pi²)', unit: '100 pi²', type: 'count', minutesEach: 1.44, rateHr: 158.0 },
+      floor_strip_wax_100: { name: 'Tuile vinyle - Décapage & 4 couches cire (par 100 pi²)', unit: '100 pi²', type: 'count', minutesEach: 11.3, rateHr: 158.0 },
+      floor_wax_only_100: { name: 'Tuile vinyle - Cire par couche (par 100 pi²)', unit: '100 pi²', type: 'count', minutesEach: 0.95, rateHr: 158.0 },
+      floor_tile_grout_100: { name: 'Céramique & coulis rotatif (par 100 pi²)', unit: '100 pi²', type: 'count', minutesEach: 4.5, rateHr: 158.0 },
+
+      // Tapis par tranche de 100 pi²
+      carpet_wand_100: { name: 'Tapis - Extraction Wand standard (par 100 pi²)', unit: '100 pi²', type: 'count', minutesEach: 11.5, rateHr: 158.0 },
+      carpet_narrow_100: { name: 'Tapis - Wand passages étroits (par 100 pi²)', unit: '100 pi²', type: 'count', minutesEach: 18.0, rateHr: 158.0 },
+      carpet_encap_100: { name: 'Tapis - Encapsulation bonnet (par 100 pi²)', unit: '100 pi²', type: 'count', minutesEach: 5.4, rateHr: 158.0 },
+
+      // Grandes surfaces au 1 000 pi²
       carpet_wand_15: { name: 'Tapis - Wand 15" grandes surfaces', unit: 'pi²', type: 'area', timePer1000: 115.0, rateHr: 158.0 },
       carpet_wand_12: { name: 'Tapis - Wand 12" standard', unit: 'pi²', type: 'area', timePer1000: 120.0, rateHr: 158.0 },
-      carpet_wand_8: { name: 'Tapis - Wand 8" passages étroits', unit: 'pi²', type: 'area', timePer1000: 180.0, rateHr: 158.0 },
-      carpet_crb_15: { name: 'Tapis - Brossage mécanique CRB 15"', unit: 'pi²', type: 'area', timePer1000: 21.44, rateHr: 158.0 },
-      carpet_crb_11: { name: 'Tapis - Brossage mécanique CRB 11"', unit: 'pi²', type: 'area', timePer1000: 29.23, rateHr: 158.0 },
       carpet_rx20: { name: 'Tapis - Tête Rotative Turbo 17" RX20', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 },
       carpet_encapsulation: { name: 'Tapis - Encapsulation / Bonnet 17"', unit: 'pi²', type: 'area', timePer1000: 54.0, rateHr: 158.0 },
-      carpet_protecteur: { name: 'Tapis - Protecteur Téflon/Scotchgard', unit: 'pi²', type: 'area', timePer1000: 10.2, rateHr: 158.0 },
-      carpet_antibact: { name: 'Tapis - Désodorisant / Antibactérien', unit: 'pi²', type: 'area', timePer1000: 10.2, rateHr: 158.0 },
-
-      // Planchers durs
       floor_strip_wax: { name: 'Tuile vinyle - Décapage complet & 4 couches cire', unit: 'pi²', type: 'area', timePer1000: 113.0, rateHr: 158.0 },
-      floor_wax_only: { name: 'Tuile vinyle - Pose de cire (par couche)', unit: 'pi²', type: 'area', timePer1000: 9.5, rateHr: 158.0 },
       floor_top_scrub: { name: 'Plancher dur - Récurage de surface (Top Scrub)', unit: 'pi²', type: 'area', timePer1000: 27.0, rateHr: 158.0 },
-      floor_burnish: { name: 'Plancher dur - Polissage thermique (Burnishing)', unit: 'pi²', type: 'area', timePer1000: 3.5, rateHr: 158.0 },
-      floor_tile_grout: { name: 'Céramique & Coulis - Nettoyage acide rotatif', unit: 'pi²', type: 'area', timePer1000: 45.0, rateHr: 158.0 },
-      floor_concrete_scrub: { name: 'Béton - Récurage mécanique d\'entrepôt', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 },
-      floor_epoxy: { name: 'Plancher époxy - Dégraissage & récurage', unit: 'pi²', type: 'area', timePer1000: 20.0, rateHr: 158.0 },
-      floor_mop: { name: 'Plancher dur - Mopping humide désinfectant', unit: 'pi²', type: 'area', timePer1000: 14.4, rateHr: 158.0 },
-      floor_autoscrub: { name: 'Plancher dur - Autolaveuse autotractée', unit: 'pi²', type: 'area', timePer1000: 6.5, rateHr: 158.0 },
+      floor_mop: { name: 'Plancher dur - Lavage humide / Mopping', unit: 'pi²', type: 'area', timePer1000: 14.4, rateHr: 158.0 },
+      comm_office_sqft: { name: 'Bureaux - Entretien régulier des locaux', unit: 'pi²', type: 'area', timePer1000: 10.0, rateHr: 158.0 },
 
-      // Pression
-      pressure_concrete: { name: 'Pression - Trottoir & allée béton/dalles', unit: 'pi²', type: 'area', timePer1000: 12.0, rateHr: 158.0 },
-      pressure_siding: { name: 'Pression - Façade / Revêtement extérieur', unit: 'pi²', type: 'area', timePer1000: 20.0, rateHr: 158.0 },
-      pressure_patio: { name: 'Pression - Terrasse bois ou pavé uni', unit: 'pi²', type: 'area', timePer1000: 25.0, rateHr: 158.0 },
-      pressure_bins: { name: 'Pression - Conteneur à déchets / Bac roulant', unit: 'bac', type: 'count', minutesEach: 8.0, rateHr: 158.0 },
-      pressure_grease: { name: 'Pression - Dégraissage quai / Taches d\'huile', unit: 'pi²', type: 'area', timePer1000: 35.0, rateHr: 158.0 },
-
-      // Vitres
+      // Extérieur & Vitres
+      pressure_concrete: { name: 'Pression - Trottoir & dalles béton', unit: 'pi²', type: 'area', timePer1000: 12.0, rateHr: 158.0 },
+      pressure_patio: { name: 'Pression - Terrasse bois ou pavé', unit: 'pi²', type: 'area', timePer1000: 25.0, rateHr: 158.0 },
+      pressure_bins: { name: 'Pression - Bac roulant / Conteneur', unit: 'bac', type: 'count', minutesEach: 8.0, rateHr: 158.0 },
       window_res_standard: { name: 'Fenêtre résidentielle int/ext + moustiquaire', unit: 'vitre', type: 'count', minutesEach: 8.0, rateHr: 158.0 },
       window_comm_ground: { name: 'Vitrine commerciale plain-pied', unit: 'vitre', type: 'count', minutesEach: 2.5, rateHr: 158.0 },
-      window_comm_high: { name: 'Vitre commerciale hauteur / perche', unit: 'vitre', type: 'count', minutesEach: 7.0, rateHr: 158.0 },
 
       // Ameublement
-      upholstery_chair: { name: 'Fauteuil 1 place en tissu - Extraction', unit: 'unité', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
-      upholstery_loveseat: { name: 'Causeuse 2 places en tissu - Extraction', unit: 'unité', type: 'count', minutesEach: 25.0, rateHr: 158.0 },
-      upholstery_couch: { name: 'Divan 3 places en tissu - Extraction', unit: 'canapé', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
-      upholstery_sectional: { name: 'Sectionnel complet - Extraction', unit: 'unité', type: 'count', minutesEach: 80.0, rateHr: 158.0 },
-      upholstery_mattress: { name: 'Matelas - Assainissement & extraction', unit: 'matelas', type: 'count', minutesEach: 40.0, rateHr: 158.0 },
-      upholstery_office_chair: { name: 'Chaise de bureau sur roulettes', unit: 'chaise', type: 'count', minutesEach: 5.0, rateHr: 158.0 },
-
-      // Conciergerie & Sanitaires
-      comm_office_sqft: { name: 'Bureaux - Entretien régulier des locaux', unit: 'pi²', type: 'area', timePer1000: 10.0, rateHr: 158.0 },
-      comm_desk: { name: 'Poste de travail - Époussetage & désinfection', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
-      comm_trash: { name: 'Corbeille / Poubelle - Vider et religner', unit: 'unité', type: 'count', minutesEach: 0.75, rateHr: 158.0 },
-      comm_toilet: { name: 'Toilette - Nettoyage complet & désinfection', unit: 'unité', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
-      comm_urinal: { name: 'Urinoir - Nettoyage & détartrage', unit: 'unité', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
-      comm_sink: { name: 'Lavabo sanitaire - Lavage & miroir', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
-      comm_dispensers: { name: 'Remplissage distributeurs sanitaires', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
-
-      // Après construction
-      post_const_rough: { name: 'Après construction - Gros ménage (Rough)', unit: 'pi²', type: 'area', timePer1000: 18.0, rateHr: 158.0 },
-      post_const_final: { name: 'Après construction - Finition fine (Final)', unit: 'pi²', type: 'area', timePer1000: 35.0, rateHr: 158.0 },
-      sinister_ozone: { name: 'Assainissement / Nébulisation anti-odeur', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 }
+      upholstery_chair: { name: 'Fauteuil 1 place en tissu - Extraction', unit: 'fauteuil', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
+      upholstery_loveseat: { name: 'Causeuse 2 places en tissu - Extraction', unit: 'causeuse', type: 'count', minutesEach: 25.0, rateHr: 158.0 },
+      upholstery_couch: { name: 'Divan 3 places en tissu - Extraction', unit: 'divan', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
+      upholstery_office_chair: { name: 'Chaise de bureau sur roulettes', unit: 'chaise', type: 'count', minutesEach: 5.0, rateHr: 158.0 }
     };
 
     // VENTILATION FINANCIÈRE INTERNE
@@ -818,7 +760,7 @@
 
     function onRoomChange() {
       const val = selectRoomType.value;
-      if (val === 'Autre' || val === 'Autre (préciser ci-dessous)') {
+      if (val === 'Autre') {
         inputFinalRoom.value = '';
         inputFinalRoom.placeholder = 'Précisez le nom du local...';
         inputFinalRoom.focus();
@@ -850,12 +792,20 @@
       if (!newRoom) return alert('Veuillez entrer un nom.');
       if (!BUILDINGS_DB[currentBldg].includes(newRoom)) {
         BUILDINGS_DB[currentBldg].unshift(newRoom);
-        localStorage.setItem('cleaning_buildings_db_v6', JSON.stringify(BUILDINGS_DB));
+        localStorage.setItem('cleaning_buildings_db_v7', JSON.stringify(BUILDINGS_DB));
         populateRooms(currentBldg);
         selectRoomType.value = newRoom;
         inputFinalRoom.value = newRoom;
         alert(`« ${newRoom} » mémorisé dans ${currentBldg}`);
       }
+    });
+
+    // Gestion du sélecteur d'encombrement
+    const selectEncombrement = document.getElementById('select-encombrement');
+    const labelEncombrementMult = document.getElementById('label-encombrement-mult');
+    selectEncombrement.addEventListener('change', () => {
+      const mult = parseFloat(selectEncombrement.value);
+      labelEncombrementMult.textContent = `x ${mult.toFixed(2)}`;
     });
 
     // Formulaire d'ajout
@@ -874,22 +824,26 @@
       const taskKey = selectTask.value;
       const qty = parseFloat(document.getElementById('input-qty').value) || 0;
       const freq = parseInt(document.getElementById('select-freq').value, 10) || 1;
+      const encMult = parseFloat(selectEncombrement.value) || 1.0;
 
-      addEntry(room, taskKey, qty, freq);
-      document.getElementById('input-qty').value = '';
+      addEntry(room, taskKey, qty, freq, encMult);
+      document.getElementById('input-qty').value = '1';
     });
 
-    function addEntry(room, taskKey, qty, freq) {
+    function addEntry(room, taskKey, qty, freq, encMult = 1.0) {
       const task = TASK_CATALOG[taskKey];
       if (!task || qty <= 0) return;
 
-      let minutes = 0;
+      // Calcul du temps brut
+      let baseMinutes = 0;
       if (task.type === 'area') {
-        minutes = (qty / 1000) * task.timePer1000;
+        baseMinutes = (qty / 1000) * task.timePer1000;
       } else {
-        minutes = qty * task.minutesEach;
+        baseMinutes = qty * task.minutesEach;
       }
 
+      // Application du multiplicateur d'encombrement
+      const minutes = baseMinutes * encMult;
       const hours = minutes / 60;
       const priceVisit = hours * task.rateHr;
       const priceYear = priceVisit * freq;
@@ -902,6 +856,7 @@
         unit: task.unit,
         qty,
         freq,
+        encMult,
         minutes,
         hours,
         priceVisit,
@@ -1069,11 +1024,13 @@
             </div>
           </div>
           <div class="space-y-1.5">
-            ${items.map(item => `
+            ${items.map(item => {
+              const encLabel = item.encMult !== 1.0 ? ` (Encombrement x${item.encMult.toFixed(2)})` : '';
+              return `
               <div class="flex items-center justify-between text-xs bg-white p-2 rounded border border-slate-200">
                 <div>
                   <span class="font-semibold text-slate-800">${item.taskName}</span>
-                  <span class="text-slate-500 ml-1">(${item.qty} ${item.unit})</span>
+                  <span class="text-slate-500 ml-1">(${item.qty} ${item.unit}${encLabel})</span>
                 </div>
                 <div class="flex items-center gap-3">
                   <span class="text-slate-600 font-mono">${Math.round(item.minutes)} min</span>
@@ -1083,7 +1040,8 @@
                   </button>
                 </div>
               </div>
-            `).join('')}
+              `;
+            }).join('')}
           </div>
         `;
         container.appendChild(card);
@@ -1127,7 +1085,12 @@
       }
     }
 
-    // Navigation onglets
+    // Bascule Fiche Client
+    document.getElementById('btn-toggle-client-view').addEventListener('click', () => {
+      window.print();
+    });
+
+    // Onglets
     const tabRoom = document.getElementById('tab-room');
     const tabItem = document.getElementById('tab-item');
     const viewRoom = document.getElementById('view-room');
@@ -1164,13 +1127,11 @@
       document.getElementById('client-address').value = '450 boul. Saint-Martin O., Laval, QC';
       document.getElementById('discount-value').value = 5;
 
-      addEntry('Cuisine', 'res_oven', 1, 1);
-      addEntry('Cuisine', 'res_fridge', 1, 1);
-      addEntry('Salon & Séjour', 'carpet_wand_15', 850, 1);
-      addEntry('Salon & Séjour', 'upholstery_couch', 1, 1);
-      addEntry('Entrée & Allée', 'pressure_concrete', 1200, 1);
-      addEntry('Façade vitrée', 'window_res_standard', 10, 1);
-      addEntry('Salle de bain', 'res_shower_descaling', 1, 1);
+      addEntry('Bloc sanitaire employés', 'comm_toilet', 2, 1, 1.0);
+      addEntry('Bloc sanitaire employés', 'comm_sink', 2, 1, 1.0);
+      addEntry('Bloc sanitaire employés', 'floor_mop_100', 1.5, 1, 1.25); // 150 pi² encombré
+      addEntry('Cuisine employés', 'res_fridge', 1, 1, 1.0);
+      addEntry('Bureaux consultation', 'carpet_wand_100', 4.0, 1, 1.25); // 400 pi² encombré
       render();
     });
 
