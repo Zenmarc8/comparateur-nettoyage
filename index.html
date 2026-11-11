@@ -7,6 +7,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* FORCER LE MODE CLAIR SUR TOUS LES MENUS DÉROULANTS (Règle anti-bug Chrome/Mobile) */
+    select, option, optgroup {
+      color-scheme: light !important;
+      color: #0f172a !important; /* Texte noir foncé */
+      background-color: #ffffff !important; /* Fond blanc pur */
+    }
+    optgroup {
+      font-weight: 800 !important;
+      background-color: #f1f5f9 !important;
+      color: #1e3a8a !important;
+    }
     @media print {
       .no-print { display: none !important; }
       body { background: white !important; color: black !important; font-size: 10.5pt; }
@@ -45,7 +56,7 @@
     </div>
   </header>
 
-  <!-- Fiche En-tête Client Imprimable (Prêt à donner au client) -->
+  <!-- Fiche En-tête Client Imprimable -->
   <div class="hidden print:block max-w-7xl mx-auto p-6 bg-white border-b border-slate-300">
     <div class="flex justify-between items-start">
       <div>
@@ -78,7 +89,7 @@
 
   <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- Colonne GAUCHE : Formulaires (Client, Pièces, Tâches) -->
+    <!-- Colonne GAUCHE : Formulaires -->
     <section class="lg:col-span-5 space-y-6 no-print">
       
       <!-- Module 1 : Coordonnées du Client -->
@@ -95,7 +106,7 @@
             </div>
             <div>
               <label class="block font-bold text-slate-700 mb-1">Entreprise / Organisation</label>
-              <input type="text" id="client-company" placeholder="Ex: Gestion Immobilière ABC" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+              <input type="text" id="client-company" placeholder="Ex: Gestion ABC" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
           </div>
           <div class="grid grid-cols-2 gap-2">
@@ -110,7 +121,7 @@
           </div>
           <div>
             <label class="block font-bold text-slate-700 mb-1">Adresse complète des travaux</label>
-            <input type="text" id="client-address" placeholder="1234 boul. René-Lévesque O., Montréal, QC" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            <input type="text" id="client-address" placeholder="1234 rue Principale, Montréal, QC" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
           </div>
         </div>
       </div>
@@ -124,7 +135,7 @@
           <span id="voice-indicator" class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Inactif</span>
         </div>
         <p class="text-[11px] text-slate-500 mb-2">
-          Ex: <em>"Cuisine intérieur four"</em>, <em>"Salon 300 pieds tapis"</em>, <em>"Entrée lavage pression 1500 pieds"</em>
+          Ex: <em>"Cuisine four"</em>, <em>"Salon 300 pieds tapis"</em>, <em>"Entrée pression 1500"</em>
         </p>
 
         <button id="btn-voice" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-2 transition text-xs">
@@ -136,7 +147,7 @@
         </div>
       </div>
 
-      <!-- Module 3 : Ajout Manuel d'un Élément (Toutes les pièces + Toutes les niches) -->
+      <!-- Module 3 : Sélection Pièces & Travaux -->
       <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
         <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
           <i class="fa-solid fa-list-check text-blue-600"></i> Sélectionner Pièce & Travaux
@@ -155,7 +166,24 @@
               </button>
             </div>
 
+            <!-- Liste 1 : Pré-remplie dans le HTML direct -->
             <select id="select-building-type" class="w-full text-xs font-semibold px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+              <option value="1. Résidentiel" selected>1. Résidentiel</option>
+              <option value="2. Bureaux et administration">2. Bureaux et administration</option>
+              <option value="3. Industriel et usine">3. Industriel et usine</option>
+              <option value="4. Commercial et magasins">4. Commercial et magasins</option>
+              <option value="5. Restaurants et hôtels">5. Restaurants et hôtels</option>
+              <option value="6. Santé et médical">6. Santé et médical</option>
+              <option value="7. Laboratoires et sciences">7. Laboratoires et sciences</option>
+              <option value="8. Écoles et garderies">8. Écoles et garderies</option>
+              <option value="9. Copropriétés et immeubles à logements">9. Copropriétés et immeubles à logements</option>
+              <option value="10. Sport et loisirs">10. Sport et loisirs</option>
+              <option value="11. Institutions et bâtiments publics">11. Institutions et bâtiments publics</option>
+              <option value="12. Transport et logistique">12. Transport et logistique</option>
+              <option value="13. Locaux techniques et spécialisés">13. Locaux techniques et spécialisés</option>
+              <option value="14. Espaces de circulation">14. Espaces de circulation</option>
+              <option value="15. Espaces extérieurs">15. Espaces extérieurs</option>
+              <option value="16. Espaces sanitaires">16. Espaces sanitaires</option>
             </select>
 
             <div id="box-search-room" class="hidden">
@@ -166,14 +194,51 @@
               <label class="block text-xs font-bold text-slate-700 mb-1">
                 <i class="fa-solid fa-door-open text-blue-600 mr-1"></i> 2. Pièce ou local
               </label>
+              <!-- Liste 2 : Pré-remplie par défaut avec le résidentiel -->
               <select id="select-room-type" class="w-full text-xs font-semibold px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                <option value="Chambre principale" selected>Chambre principale</option>
+                <option value="Chambre secondaire">Chambre secondaire</option>
+                <option value="Chambre d'enfant">Chambre d'enfant</option>
+                <option value="Chambre d'amis">Chambre d'amis</option>
+                <option value="Salon">Salon</option>
+                <option value="Salle familiale">Salle familiale</option>
+                <option value="Salle à manger">Salle à manger</option>
+                <option value="Cuisine">Cuisine</option>
+                <option value="Cuisinette">Cuisinette</option>
+                <option value="Coin-repas">Coin-repas</option>
+                <option value="Bureau à domicile">Bureau à domicile</option>
+                <option value="Salle de bain complète">Salle de bain complète</option>
+                <option value="Salle d'eau">Salle d'eau</option>
+                <option value="Salle de douche">Salle de douche</option>
+                <option value="Salle de lavage">Salle de lavage</option>
+                <option value="Buanderie">Buanderie</option>
+                <option value="Walk-in">Walk-in</option>
+                <option value="Garde-robe">Garde-robe</option>
+                <option value="Vestibule">Vestibule</option>
+                <option value="Hall d'entrée">Hall d'entrée</option>
+                <option value="Corridor">Corridor</option>
+                <option value="Escalier">Escalier</option>
+                <option value="Sous-sol aménagé">Sous-sol aménagé</option>
+                <option value="Sous-sol non aménagé">Sous-sol non aménagé</option>
+                <option value="Salle de jeux">Salle de jeux</option>
+                <option value="Salle de cinéma maison">Salle de cinéma maison</option>
+                <option value="Véranda">Véranda</option>
+                <option value="Solarium">Solarium</option>
+                <option value="Salle de rangement">Salle de rangement</option>
+                <option value="Débarras">Débarras</option>
+                <option value="Garage">Garage</option>
+                <option value="Atelier résidentiel">Atelier résidentiel</option>
+                <option value="Cave à vin">Cave à vin</option>
+                <option value="Grenier">Grenier</option>
+                <option value="Salle mécanique">Salle mécanique</option>
+                <option value="Autre">Autre (préciser ci-dessous)</option>
               </select>
             </div>
 
             <div>
               <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nom / Précision du local :</label>
               <div class="flex gap-2">
-                <input type="text" id="input-final-room" placeholder="Précisez la pièce..." required class="flex-1 text-xs px-3 py-1.5 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                <input type="text" id="input-final-room" value="Chambre principale" placeholder="Précisez la pièce..." required class="flex-1 text-xs px-3 py-1.5 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
                 <button type="button" id="btn-save-custom-room" title="Enregistrer dans ma banque" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-md transition font-semibold">
                   <i class="fa-solid fa-floppy-disk"></i>
                 </button>
@@ -193,34 +258,34 @@
                 <option value="res_fridge">Réfrigérateur - Nettoyage complet intérieur/tiroirs [45 min / unité]</option>
                 <option value="res_cabinets">Armoires de cuisine - Lavage complet intérieur/extérieur [60 min / unité]</option>
                 <option value="res_deep_clean">Grand ménage complet en profondeur [15 min / 100 pi²]</option>
-                <option value="res_regular_clean">Entretien ménager régulier / Dépoussiérage [7 min / 100 pi²]</option>
+                <option value="res_regular_clean">Entretien ménager résidentiel régulier [7 min / 100 pi²]</option>
                 <option value="res_bedding">Changement de literie & draps [10 min / lit]</option>
                 <option value="res_laundry">Lessive, séchage & pliage [30 min / brassée]</option>
                 <option value="res_shower_descaling">Douche / Bain - Détartrage approfondi calcaire [25 min / unité]</option>
               </optgroup>
 
               <optgroup label="🪡 Tapis & Moquettes (Norme ISSA 540)">
-                <option value="carpet_wand_15" selected>Tapis - Extraction Wand 15" grandes surfaces [115 min / 1000 pi²]</option>
-                <option value="carpet_wand_12">Tapis - Extraction Wand 12" standard [120 min / 1000 pi²]</option>
+                <option value="carpet_wand_15" selected>Tapis - Extraction Wand 15" grandes surfaces [115 min / 1000 pi²][cite: 7, 8]</option>
+                <option value="carpet_wand_12">Tapis - Extraction Wand 12" standard [120 min / 1000 pi²][cite: 7]</option>
                 <option value="carpet_wand_8">Tapis - Extraction Wand 8" passages étroits / escaliers [180 min / 1000 pi²]</option>
-                <option value="carpet_crb_15">Tapis - Brossage mécanique CRB 15" [21.4 min / 1000 pi²]</option>
-                <option value="carpet_crb_11">Tapis - Brossage mécanique CRB 11" [29.2 min / 1000 pi²]</option>
-                <option value="carpet_rx20">Tapis - Tête rotative Turbo 17" RX20 [15 min / 1000 pi²]</option>
-                <option value="carpet_encapsulation">Tapis - Encapsulation / Bonnet 17" faible humidité [54 min / 1000 pi²]</option>
-                <option value="carpet_protecteur">Tapis - Protecteur Téflon / Scotchgard [10.2 min / 1000 pi²]</option>
+                <option value="carpet_crb_15">Tapis - Brossage mécanique CRB 15" [21.4 min / 1000 pi²][cite: 8]</option>
+                <option value="carpet_crb_11">Tapis - Brossage mécanique CRB 11" [29.2 min / 1000 pi²][cite: 8]</option>
+                <option value="carpet_rx20">Tapis - Tête rotative Turbo 17" RX20 [15 min / 1000 pi²][cite: 7]</option>
+                <option value="carpet_encapsulation">Tapis - Encapsulation / Bonnet 17" faible humidité [54 min / 1000 pi²][cite: 7]</option>
+                <option value="carpet_protecteur">Tapis - Protecteur Téflon / Scotchgard [10.2 min / 1000 pi²][cite: 7]</option>
                 <option value="carpet_antibact">Tapis - Traitement Antibactérien & Neutralisant odeurs [10.2 min / 1000 pi²]</option>
               </optgroup>
 
               <optgroup label="🧼 Planchers Durs (Vinyle, Béton, Époxy, Coulis)">
-                <option value="floor_strip_wax">Tuile vinyle - Décapage complet & 4 couches cire [113 min / 1000 pi²]</option>
-                <option value="floor_wax_only">Tuile vinyle - Pose de cire / fini par couche [9.5 min / 1000 pi²]</option>
-                <option value="floor_top_scrub">Plancher dur - Récurage de surface (Top Scrub) [27 min / 1000 pi²]</option>
-                <option value="floor_burnish">Plancher dur - Polissage thermique haute vitesse (Burnishing) [3.5 min / 1000 pi²]</option>
+                <option value="floor_strip_wax">Tuile vinyle - Décapage complet & 4 couches cire [113 min / 1000 pi²][cite: 9, 11]</option>
+                <option value="floor_wax_only">Tuile vinyle - Pose de cire / fini par couche [9.5 min / 1000 pi²][cite: 9]</option>
+                <option value="floor_top_scrub">Plancher dur - Récurage de surface (Top Scrub) [27 min / 1000 pi²][cite: 10]</option>
+                <option value="floor_burnish">Plancher dur - Polissage thermique haute vitesse (Burnishing) [3.5 min / 1000 pi²][cite: 9]</option>
                 <option value="floor_tile_grout">Céramique & Coulis - Nettoyage rotatif acide [45 min / 1000 pi²]</option>
                 <option value="floor_concrete_scrub">Béton - Récurage mécanique industriel [15 min / 1000 pi²]</option>
                 <option value="floor_epoxy">Plancher époxy - Dégraissage & récurage [20 min / 1000 pi²]</option>
-                <option value="floor_mop">Plancher dur - Lavage humide / Mopping désinfectant [14.4 min / 1000 pi²]</option>
-                <option value="floor_autoscrub">Plancher dur - Autolaveuse autotractée [6.5 min / 1000 pi²]</option>
+                <option value="floor_mop">Plancher dur - Lavage humide / Mopping désinfectant [14.4 min / 1000 pi²][cite: 9]</option>
+                <option value="floor_autoscrub">Plancher dur - Autolaveuse autotractée [6.5 min / 1000 pi²][cite: 10]</option>
               </optgroup>
 
               <optgroup label="💦 Lavage à Pression & Extérieur">
@@ -233,27 +298,27 @@
 
               <optgroup label="🪟 Vitres & Fenestration">
                 <option value="window_res_standard">Fenêtre résidentielle int/ext avec cadrage & moustiquaire [8 min / vitre]</option>
-                <option value="window_comm_ground">Vitrine commerciale plain-pied (int/ext) [2.5 min / vitre]</option>
-                <option value="window_comm_high">Vitre commerciale en hauteur / perche télescopique [7 min / vitre]</option>
+                <option value="window_comm_ground">Vitrine commerciale plain-pied (int/ext) [2.5 min / vitre][cite: 13]</option>
+                <option value="window_comm_high">Vitre commerciale en hauteur / perche télescopique [7 min / vitre][cite: 13]</option>
               </optgroup>
 
               <optgroup label="🛋️ Ameublement Rembourré & Matelas">
-                <option value="upholstery_chair">Fauteuil 1 place en tissu - Extraction [10 min / unité]</option>
+                <option value="upholstery_chair">Fauteuil 1 place en tissu - Extraction [10 min / unité][cite: 13]</option>
                 <option value="upholstery_loveseat">Causeuse 2 places en tissu - Extraction [25 min / unité]</option>
                 <option value="upholstery_couch">Divan 3 places en tissu - Extraction complète [45 min / canapé]</option>
                 <option value="upholstery_sectional">Sectionnel complet en L/U - Extraction [80 min / unité]</option>
-                <option value="upholstery_mattress">Matelas (Double / Queen / King) - Assainissement & extraction [40 min / unité]</option>
+                <option value="upholstery_mattress">Matelas (Double / Queen / King) - Assainissement & extraction [40 min / unité][cite: 4]</option>
                 <option value="upholstery_office_chair">Chaise de bureau sur roulettes - Shampoing [5 min / unité]</option>
               </optgroup>
 
               <optgroup label="🏢 Conciergerie Commerciale & Blocs Sanitaires">
-                <option value="comm_office_sqft">Bureaux - Entretien régulier des locaux [10 min / 1000 pi²]</option>
+                <option value="comm_office_sqft">Bureaux - Entretien régulier des locaux [10 min / 1000 pi²][cite: 2]</option>
                 <option value="comm_desk">Poste de travail / Bureau - Désinfection & époussetage [1.0 min / unité]</option>
-                <option value="comm_trash">Corbeille / Poubelle - Vider et religner [0.75 min / unité]</option>
-                <option value="comm_toilet">Toilette - Nettoyage complet & détartrage [1.5 min / unité]</option>
-                <option value="comm_urinal">Urinoir - Nettoyage & pastille [1.5 min / unité]</option>
-                <option value="comm_sink">Lavabo sanitaire - Nettoyage, robinetterie & miroir [1.0 min / unité]</option>
-                <option value="comm_dispensers">Remplissage distributeurs (savon, papier, essuie-mains) [1.0 min / unité]</option>
+                <option value="comm_trash">Corbeille / Poubelle - Vider et religner [0.75 min / unité][cite: 5]</option>
+                <option value="comm_toilet">Toilette - Nettoyage complet & détartrage [1.5 min / unité][cite: 6]</option>
+                <option value="comm_urinal">Urinoir - Nettoyage & pastille [1.5 min / unité][cite: 6]</option>
+                <option value="comm_sink">Lavabo sanitaire - Nettoyage, robinetterie & miroir [1.0 min / unité][cite: 4]</option>
+                <option value="comm_dispensers">Remplissage distributeurs (savon, papier, essuie-mains) [1.0 min / unité][cite: 6]</option>
               </optgroup>
 
               <optgroup label="🔨 Après-Construction & Après-Sinistre">
@@ -265,7 +330,7 @@
             </select>
           </div>
 
-          <!-- Quantité & Tarif horaire de production -->
+          <!-- Quantité & Fréquence -->
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1" id="label-qty">Quantité (pi²)</label>
@@ -336,14 +401,14 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">Type d'escompte</label>
-              <select id="discount-type" class="w-full text-xs px-2.5 py-1.5 bg-white border border-slate-300 rounded-md outline-none">
+              <select id="discount-type" class="w-full text-xs px-2.5 py-1.5 bg-white text-slate-900 border border-slate-300 rounded-md outline-none">
                 <option value="pct">Pourcentage (%)</option>
                 <option value="fixed">Montant fixe ($)</option>
               </select>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">Valeur de l'escompte</label>
-              <input type="number" id="discount-value" value="0" min="0" step="any" class="w-full text-xs px-2.5 py-1.5 bg-white border border-slate-300 rounded-md outline-none font-bold">
+              <input type="number" id="discount-value" value="0" min="0" step="any" class="w-full text-xs px-2.5 py-1.5 bg-white text-slate-900 border border-slate-300 rounded-md outline-none font-bold">
             </div>
             <div class="flex items-center gap-2">
               <label class="inline-flex items-center text-xs font-bold text-slate-700 cursor-pointer">
@@ -457,7 +522,7 @@
           </div>
         </div>
 
-        <!-- Signature et conditions d'acceptation (Pour impression client) -->
+        <!-- Signature et conditions d'acceptation -->
         <div class="hidden print:block mt-8 pt-6 border-t border-slate-300 text-xs">
           <div class="grid grid-cols-2 gap-8">
             <div>
@@ -501,606 +566,4 @@
         "Poste de travail", "Salle de conférence", "Salle de réunion", "Salle de formation",
         "Salle de présentation", "Salle de visioconférence", "Réception", "Hall d'accueil",
         "Salle d'attente", "Aire de détente", "Salle de repos", "Cuisine des employés",
-        "Cuisinette", "Cafétéria", "Salle à manger des employés", "Salle d'impression",
-        "Salle de photocopieurs", "Salle informatique", "Salle de serveurs", "Centre d'appels",
-        "Archives", "Salle de classement", "Salle de courrier", "Salle de reprographie",
-        "Local administratif", "Corridor", "Escalier", "Ascenseur", "Vestibule", "Vestiaire",
-        "Toilettes", "Salle de bain", "Local d'entretien ménager", "Salle de rangement", "Autre"
-      ],
-      "3. Industriel et usine": [
-        "Aire de production", "Plancher de production", "Ligne de production", "Zone d'assemblage",
-        "Zone de fabrication", "Atelier mécanique", "Atelier de réparation", "Atelier de soudure",
-        "Atelier de peinture", "Atelier d'usinage", "Atelier de menuiserie", "Atelier d'ébénisterie",
-        "Atelier de maintenance", "Atelier électrique", "Atelier d'entretien", "Zone d'emballage",
-        "Zone d'expédition", "Réception des marchandises", "Quai de chargement", "Entrepôt",
-        "Aire d'entreposage", "Zone de stockage", "Chambre froide", "Congélateur industriel",
-        "Salle de contrôle", "Salle des opérateurs", "Salle électrique", "Local mécanique",
-        "Local technique", "Local de compresseurs", "Local de pompes", "Local de chaudières",
-        "Salle des machines", "Salle des équipements", "Salle de ventilation", "Local de filtration",
-        "Salle de lavage industriel", "Zone de décontamination", "Vestiaire des employés",
-        "Douches industrielles", "Toilettes industrielles", "Cafétéria", "Salle de repas",
-        "Salle de repos", "Bureau d'usine", "Salle de supervision", "Laboratoire de contrôle qualité",
-        "Corridor industriel", "Escalier industriel", "Autre"
-      ],
-      "4. Commercial et magasins": [
-        "Surface de vente", "Aire commerciale", "Salle d'exposition", "Salle de montre",
-        "Vitrine intérieure", "Zone de caisse", "Comptoir de service", "Comptoir d'accueil",
-        "Cabine d'essayage", "Réserve", "Arrière-boutique", "Entrepôt commercial",
-        "Réception des marchandises", "Préparation des commandes", "Aire d'attente",
-        "Salle de repos des employés", "Bureau administratif", "Cuisine des employés",
-        "Cafétéria", "Toilettes publiques", "Salle de bain des employés", "Corridor",
-        "Hall d'entrée", "Escalier", "Ascenseur", "Aire commune de centre commercial",
-        "Aire de restauration", "Kiosque commercial", "Autre"
-      ],
-      "5. Restaurants et hôtels": [
-        "Salle à manger", "Salle privée", "Salle de réception", "Bar", "Comptoir de service",
-        "Cuisine commerciale", "Cuisine de préparation", "Zone de cuisson", "Zone de plonge",
-        "Laverie de vaisselle", "Chambre froide", "Chambre de congélation", "Garde-manger",
-        "Réserve alimentaire", "Zone de livraison", "Salle des employés", "Vestiaire",
-        "Toilettes publiques", "Toilettes du personnel", "Hall d'entrée", "Réception d'hôtel",
-        "Lobby", "Chambre d'hôtel", "Suite", "Salle de bain d'hôtel", "Corridor d'hôtel",
-        "Salle de réunion", "Salle de banquet", "Salle de déjeuner", "Cuisine d'hôtel",
-        "Buanderie d'hôtel", "Local d'entretien ménager", "Ascenseur", "Escalier", "Autre"
-      ],
-      "6. Santé et médical": [
-        "Salle d'attente", "Réception médicale", "Salle de consultation", "Salle d'examen",
-        "Salle de traitement", "Salle de soins", "Salle d'opération", "Salle de réveil",
-        "Chambre de patient", "Chambre privée", "Chambre semi-privée", "Salle commune",
-        "Salle de prélèvement", "Laboratoire médical", "Laboratoire d'analyse",
-        "Salle de radiologie", "Salle d'imagerie médicale", "Salle d'échographie",
-        "Salle de physiothérapie", "Salle de réadaptation", "Salle de stérilisation",
-        "Salle de désinfection", "Salle d'isolement", "Salle de médicaments", "Pharmacie",
-        "Salle du personnel médical", "Poste infirmier", "Vestiaire médical",
-        "Salle de repos du personnel", "Cuisine du personnel", "Cafétéria", "Toilettes",
-        "Salle de bain adaptée", "Corridor médical", "Ascenseur", "Escalier",
-        "Local biomédical", "Local technique", "Autre"
-      ],
-      "7. Laboratoires et sciences": [
-        "Laboratoire de recherche", "Laboratoire d'analyse", "Laboratoire chimique",
-        "Laboratoire biologique", "Laboratoire pharmaceutique", "Laboratoire alimentaire",
-        "Laboratoire microbiologique", "Laboratoire de contrôle qualité", "Salle blanche",
-        "Salle propre", "Salle de préparation", "Salle de pesée", "Salle d'échantillonnage",
-        "Salle de manipulation", "Salle de culture", "Salle d'incubation", "Salle de stérilisation",
-        "Salle de lavage de matériel", "Salle d'entreposage", "Chambre froide",
-        "Local de produits chimiques", "Local de déchets biologiques", "Vestiaire de laboratoire",
-        "Zone de décontamination", "Sas d'entrée", "Corridor contrôlé", "Autre"
-      ],
-      "8. Écoles et garderies": [
-        "Salle de classe", "Salle de cours", "Salle informatique", "Laboratoire scolaire",
-        "Bibliothèque", "Salle de lecture", "Salle d'étude", "Salle de conférence",
-        "Auditorium", "Amphithéâtre", "Gymnase", "Salle d'entraînement", "Vestiaire sportif",
-        "Douches", "Toilettes", "Garderie", "Salle de jeux", "Salle de sieste", "Salle de repos",
-        "Salle des enseignants", "Bureau de direction", "Secrétariat", "Réception",
-        "Cafétéria", "Cuisine", "Salle polyvalente", "Salle d'activités", "Corridor",
-        "Hall d'entrée", "Escalier", "Ascenseur", "Local d'entretien", "Local de rangement", "Autre"
-      ],
-      "9. Copropriétés et immeubles à logements": [
-        "Hall d'entrée", "Lobby", "Vestibule", "Corridor d'étage", "Corridor de sous-sol",
-        "Cage d'escalier", "Ascenseur", "Salle de courrier", "Salle des colis",
-        "Salle communautaire", "Salle multifonctionnelle", "Salle de réception",
-        "Salle de jeux", "Salle de cinéma", "Gym", "Salle d'entraînement", "Salle de yoga",
-        "Piscine intérieure", "Vestiaire de piscine", "Sauna", "Bain vapeur", "Salle de billard",
-        "Salle de lavage commune", "Buanderie", "Salle de rangement", "Casiers",
-        "Garage intérieur", "Stationnement intérieur", "Local à vélos", "Local à déchets",
-        "Local de recyclage", "Local mécanique", "Local électrique", "Salle des compteurs",
-        "Terrasse commune", "Cuisine commune", "Toilettes communes", "Autre"
-      ],
-      "10. Sport et loisirs": [
-        "Gymnase", "Salle d'entraînement", "Salle de musculation", "Salle de cardio",
-        "Studio de yoga", "Studio de danse", "Salle de spinning", "Salle d'aérobie",
-        "Salle de boxe", "Dojo", "Salle de combat", "Vestiaire hommes", "Vestiaire femmes",
-        "Vestiaire familial", "Douches", "Toilettes", "Piscine intérieure", "Piscine extérieure",
-        "Plage de piscine", "Sauna", "Bain vapeur", "Spa", "Salle de massage",
-        "Salle de physiothérapie", "Salle de réception", "Gradins", "Tribune",
-        "Salle des arbitres", "Salle des entraîneurs", "Salle d'équipement", "Corridor",
-        "Hall d'entrée", "Autre"
-      ],
-      "11. Institutions et bâtiments publics": [
-        "Hôtel de ville", "Bureau municipal", "Salle du conseil", "Salle communautaire",
-        "Centre communautaire", "Bibliothèque publique", "Salle de spectacle",
-        "Auditorium", "Théâtre", "Salle de réception", "Salle polyvalente", "Salle d'exposition",
-        "Musée", "Galerie d'art", "Centre culturel", "Centre de loisirs", "Centre de services",
-        "Salle d'attente", "Réception", "Bureau administratif", "Salle de réunion",
-        "Cafétéria", "Cuisine", "Toilettes publiques", "Vestiaire", "Corridor",
-        "Hall d'entrée", "Escalier", "Ascenseur", "Local technique", "Autre"
-      ],
-      "12. Transport et logistique": [
-        "Terminal de transport", "Salle d'attente", "Hall de départ", "Hall d'arrivée",
-        "Billetterie", "Comptoir de service", "Salle des employés", "Salle de contrôle",
-        "Bureau administratif", "Quai", "Entrepôt logistique", "Zone de tri",
-        "Zone de manutention", "Quai de chargement", "Aire de stationnement",
-        "Garage mécanique", "Atelier de réparation", "Salle de repos des chauffeurs",
-        "Vestiaire", "Toilettes", "Cuisine", "Cafétéria", "Corridor", "Autre"
-      ],
-      "13. Locaux techniques et spécialisés": [
-        "Salle de serveurs", "Centre de données", "Salle électrique", "Salle mécanique",
-        "Local de ventilation", "Local de climatisation", "Local de chauffage",
-        "Local de plomberie", "Local de pompage", "Local de filtration",
-        "Local de génératrice", "Local de transformateurs", "Salle de batteries",
-        "Local d'entreposage", "Salle de produits d'entretien", "Salle de déchets",
-        "Local de recyclage", "Salle de décontamination", "Salle de lavage",
-        "Salle de séchage", "Salle de préparation", "Salle de stockage", "Chambre forte",
-        "Local de sécurité", "Salle de surveillance", "Poste de garde", "Autre"
-      ],
-      "14. Espaces de circulation": [
-        "Corridor", "Passage", "Escalier", "Palier", "Rampe", "Ascenseur",
-        "Vestibule", "Entrée", "Sortie", "Sas", "Passerelle", "Mezzanine", "Autre"
-      ],
-      "15. Espaces extérieurs": [
-        "Balcon", "Terrasse", "Patio", "Véranda", "Entrée extérieure", "Escalier extérieur",
-        "Passage couvert", "Aire de chargement extérieure", "Quai extérieur", "Trottoir",
-        "Stationnement extérieur", "Garage extérieur", "Aire de repos extérieure", "Autre"
-      ],
-      "16. Espaces sanitaires": [
-        "Toilette individuelle", "Toilettes multiples", "Urinoirs", "Lavabos",
-        "Douches", "Baignoires", "Vestiaire", "Salle de change", "Salle de bain accessible", "Autre"
-      ]
-    };
-
-    let BUILDINGS_DB = JSON.parse(localStorage.getItem('cleaning_buildings_db_v4') || 'null') || DEFAULT_BUILDINGS_DB;
-
-    // ----------------------------------------------------
-    // CATALOGUE COMPLET TOUTES NICHES & TEMPS ISSA
-    // ----------------------------------------------------
-    const TASK_CATALOG = {
-      // Résidentiel & Ménage
-      res_oven: { name: 'Four / Poêle - Nettoyage complet intérieur', unit: 'unité', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
-      res_fridge: { name: 'Réfrigérateur - Nettoyage complet intérieur', unit: 'unité', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
-      res_cabinets: { name: 'Armoires de cuisine - Intérieur & Extérieur', unit: 'unité', type: 'count', minutesEach: 60.0, rateHr: 158.0 },
-      res_deep_clean: { name: 'Grand ménage résidentiel en profondeur', unit: 'pi²', type: 'area', timePer1000: 150.0, rateHr: 158.0 },
-      res_regular_clean: { name: 'Entretien ménager résidentiel régulier', unit: 'pi²', type: 'area', timePer1000: 70.0, rateHr: 158.0 },
-      res_bedding: { name: 'Changement de literie & draps', unit: 'lit', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
-      res_laundry: { name: 'Lessive, séchage & pliage', unit: 'brassée', type: 'count', minutesEach: 30.0, rateHr: 158.0 },
-      res_shower_descaling: { name: 'Douche / Bain - Détartrage complet calcaire', unit: 'unité', type: 'count', minutesEach: 25.0, rateHr: 158.0 },
-
-      // Tapis ISSA 540
-      carpet_wand_15: { name: 'Tapis - Wand 15" grandes surfaces', unit: 'pi²', type: 'area', timePer1000: 115.0, rateHr: 158.0 },
-      carpet_wand_12: { name: 'Tapis - Wand 12" standard', unit: 'pi²', type: 'area', timePer1000: 120.0, rateHr: 158.0 },
-      carpet_wand_8: { name: 'Tapis - Wand 8" passages étroits', unit: 'pi²', type: 'area', timePer1000: 180.0, rateHr: 158.0 },
-      carpet_crb_15: { name: 'Tapis - Brossage mécanique CRB 15"', unit: 'pi²', type: 'area', timePer1000: 21.44, rateHr: 158.0 },
-      carpet_crb_11: { name: 'Tapis - Brossage mécanique CRB 11"', unit: 'pi²', type: 'area', timePer1000: 29.23, rateHr: 158.0 },
-      carpet_rx20: { name: 'Tapis - Tête Rotative Turbo 17" RX20', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 },
-      carpet_encapsulation: { name: 'Tapis - Encapsulation / Bonnet 17"', unit: 'pi²', type: 'area', timePer1000: 54.0, rateHr: 158.0 },
-      carpet_protecteur: { name: 'Tapis - Protecteur Téflon/Scotchgard', unit: 'pi²', type: 'area', timePer1000: 10.2, rateHr: 158.0 },
-      carpet_antibact: { name: 'Tapis - Désodorisant / Antibactérien', unit: 'pi²', type: 'area', timePer1000: 10.2, rateHr: 158.0 },
-
-      // Planchers durs
-      floor_strip_wax: { name: 'Tuile vinyle - Décapage complet & 4 couches cire', unit: 'pi²', type: 'area', timePer1000: 113.0, rateHr: 158.0 },
-      floor_wax_only: { name: 'Tuile vinyle - Pose de cire (par couche)', unit: 'pi²', type: 'area', timePer1000: 9.5, rateHr: 158.0 },
-      floor_top_scrub: { name: 'Plancher dur - Récurage de surface (Top Scrub)', unit: 'pi²', type: 'area', timePer1000: 27.0, rateHr: 158.0 },
-      floor_burnish: { name: 'Plancher dur - Polissage thermique (Burnishing)', unit: 'pi²', type: 'area', timePer1000: 3.5, rateHr: 158.0 },
-      floor_tile_grout: { name: 'Céramique & Coulis - Nettoyage acide rotatif', unit: 'pi²', type: 'area', timePer1000: 45.0, rateHr: 158.0 },
-      floor_concrete_scrub: { name: 'Béton - Récurage mécanique d\'entrepôt', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 },
-      floor_epoxy: { name: 'Plancher époxy - Dégraissage & récurage', unit: 'pi²', type: 'area', timePer1000: 20.0, rateHr: 158.0 },
-      floor_mop: { name: 'Plancher dur - Mopping humide désinfectant', unit: 'pi²', type: 'area', timePer1000: 14.4, rateHr: 158.0 },
-      floor_autoscrub: { name: 'Plancher dur - Autolaveuse autotractée', unit: 'pi²', type: 'area', timePer1000: 6.5, rateHr: 158.0 },
-
-      // Lavage à pression
-      pressure_concrete: { name: 'Pression - Trottoir & allée béton/dalles', unit: 'pi²', type: 'area', timePer1000: 12.0, rateHr: 158.0 },
-      pressure_siding: { name: 'Pression - Façade / Revêtement extérieur', unit: 'pi²', type: 'area', timePer1000: 20.0, rateHr: 158.0 },
-      pressure_patio: { name: 'Pression - Terrasse bois ou pavé uni', unit: 'pi²', type: 'area', timePer1000: 25.0, rateHr: 158.0 },
-      pressure_bins: { name: 'Pression - Conteneur à déchets / Bac roulant', unit: 'bac', type: 'count', minutesEach: 8.0, rateHr: 158.0 },
-      pressure_grease: { name: 'Pression - Dégraissage quai / Taches d\'huile', unit: 'pi²', type: 'area', timePer1000: 35.0, rateHr: 158.0 },
-
-      // Vitres
-      window_res_standard: { name: 'Fenêtre résidentielle int/ext + moustiquaire', unit: 'vitre', type: 'count', minutesEach: 8.0, rateHr: 158.0 },
-      window_comm_ground: { name: 'Vitrine commerciale plain-pied', unit: 'vitre', type: 'count', minutesEach: 2.5, rateHr: 158.0 },
-      window_comm_high: { name: 'Vitre commerciale hauteur / perche', unit: 'vitre', type: 'count', minutesEach: 7.0, rateHr: 158.0 },
-
-      // Ameublement
-      upholstery_chair: { name: 'Fauteuil 1 place en tissu - Extraction', unit: 'unité', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
-      upholstery_loveseat: { name: 'Causeuse 2 places en tissu - Extraction', unit: 'unité', type: 'count', minutesEach: 25.0, rateHr: 158.0 },
-      upholstery_couch: { name: 'Divan 3 places en tissu - Extraction', unit: 'canapé', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
-      upholstery_sectional: { name: 'Sectionnel complet - Extraction', unit: 'unité', type: 'count', minutesEach: 80.0, rateHr: 158.0 },
-      upholstery_mattress: { name: 'Matelas - Assainissement & extraction', unit: 'matelas', type: 'count', minutesEach: 40.0, rateHr: 158.0 },
-      upholstery_office_chair: { name: 'Chaise de bureau sur roulettes', unit: 'chaise', type: 'count', minutesEach: 5.0, rateHr: 158.0 },
-
-      // Conciergerie & Sanitaires
-      comm_office_sqft: { name: 'Bureaux - Entretien régulier des locaux', unit: 'pi²', type: 'area', timePer1000: 10.0, rateHr: 158.0 },
-      comm_desk: { name: 'Poste de travail - Époussetage & désinfection', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
-      comm_trash: { name: 'Corbeille / Poubelle - Vider et religner', unit: 'unité', type: 'count', minutesEach: 0.75, rateHr: 158.0 },
-      comm_toilet: { name: 'Toilette - Nettoyage complet & désinfection', unit: 'unité', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
-      comm_urinal: { name: 'Urinoir - Nettoyage & détartrage', unit: 'unité', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
-      comm_sink: { name: 'Lavabo sanitaire - Lavage & miroir', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
-      comm_dispensers: { name: 'Remplissage distributeurs sanitaires', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
-
-      // Après construction
-      post_const_rough: { name: 'Après construction - Gros ménage (Rough)', unit: 'pi²', type: 'area', timePer1000: 18.0, rateHr: 158.0 },
-      post_const_final: { name: 'Après construction - Finition fine (Final)', unit: 'pi²', type: 'area', timePer1000: 35.0, rateHr: 158.0 },
-      sinister_ozone: { name: 'Assainissement / Nébulisation anti-odeur', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 }
-    };
-
-    // ----------------------------------------------------
-    // VENTILATION FINANCIÈRE INTERNE (CONFIDENTIEL)[cite: 28]
-    // ----------------------------------------------------
-    const FINANCIAL_BREAKDOWN = [
-      { name: 'Main-d’œuvre terrain directe (Technicien + Aide)', pct: 43.5443, color: 'text-blue-900 font-semibold' },
-      { name: 'Vente, Marketing & Administration', pct: 28.3544, color: 'text-slate-700' },
-      { name: 'Frais généraux & Loyer d’atelier', pct: 8.9114, color: 'text-slate-700' },
-      { name: 'Véhicule, Camion & Essence (Transport)', pct: 6.0759, color: 'text-slate-700' },
-      { name: 'Équipements, Wands & Produits consommables', pct: 2.9873, color: 'text-slate-700' },
-      { name: 'Bénéfice net d’exploitation (Profit)', pct: 10.1266, color: 'text-emerald-700 font-bold' }
-    ];
-
-    let entries = [];
-
-    // Date du jour & devis
-    const today = new Date().toLocaleDateString('fr-CA');
-    document.getElementById('print-date').textContent = today;
-    document.getElementById('print-quote-id').textContent = 'TN-' + Math.floor(100000 + Math.random() * 900000);
-
-    // Initialisation bâtiments et pièces
-    const selectBuildingType = document.getElementById('select-building-type');
-    const selectRoomType = document.getElementById('select-room-type');
-    const inputFinalRoom = document.getElementById('input-final-room');
-    const btnToggleSearch = document.getElementById('btn-toggle-search');
-    const boxSearchRoom = document.getElementById('box-search-room');
-    const inputSearchRoom = document.getElementById('input-search-room');
-    const btnSaveCustomRoom = document.getElementById('btn-save-custom-room');
-
-    function populateBuildings() {
-      selectBuildingType.innerHTML = '';
-      for (const bldg in BUILDINGS_DB) {
-        const opt = document.createElement('option');
-        opt.value = bldg;
-        opt.textContent = bldg;
-        opt.className = 'text-slate-900 bg-white';
-        selectBuildingType.appendChild(opt);
-      }
-      populateRooms(selectBuildingType.value);
-    }
-
-    function populateRooms(bldgName, filter = '') {
-      selectRoomType.innerHTML = '';
-      let list = BUILDINGS_DB[bldgName] || [];
-      if (filter) list = list.filter(r => r.toLowerCase().includes(filter.toLowerCase()));
-
-      list.forEach(room => {
-        const opt = document.createElement('option');
-        opt.value = room;
-        opt.textContent = room;
-        opt.className = 'text-slate-900 bg-white';
-        selectRoomType.appendChild(opt);
-      });
-
-      if (selectRoomType.options.length > 0) {
-        selectRoomType.selectedIndex = 0;
-        onRoomChange();
-      } else {
-        inputFinalRoom.value = filter || 'Autre local';
-      }
-    }
-
-    function onRoomChange() {
-      const val = selectRoomType.value;
-      if (val === 'Autre') {
-        inputFinalRoom.value = '';
-        inputFinalRoom.placeholder = 'Précisez le nom du local...';
-        inputFinalRoom.focus();
-      } else {
-        inputFinalRoom.value = val;
-      }
-    }
-
-    selectBuildingType.addEventListener('change', () => {
-      populateRooms(selectBuildingType.value, inputSearchRoom.value.trim());
-      document.getElementById('print-bldg-summary').textContent = selectBuildingType.value;
-    });
-    selectRoomType.addEventListener('change', onRoomChange);
-
-    btnToggleSearch.addEventListener('click', () => {
-      boxSearchRoom.classList.toggle('hidden');
-      if (!boxSearchRoom.classList.contains('hidden')) inputSearchRoom.focus();
-      else {
-        inputSearchRoom.value = '';
-        populateRooms(selectBuildingType.value);
-      }
-    });
-
-    inputSearchRoom.addEventListener('input', (e) => populateRooms(selectBuildingType.value, e.target.value.trim()));
-
-    btnSaveCustomRoom.addEventListener('click', () => {
-      const newRoom = inputFinalRoom.value.trim();
-      const currentBldg = selectBuildingType.value;
-      if (!newRoom) return alert('Veuillez entrer un nom.');
-      if (!BUILDINGS_DB[currentBldg].includes(newRoom)) {
-        const idx = BUILDINGS_DB[currentBldg].indexOf('Autre');
-        if (idx !== -1) BUILDINGS_DB[currentBldg].splice(idx, 0, newRoom);
-        else BUILDINGS_DB[currentBldg].push(newRoom);
-        localStorage.setItem('cleaning_buildings_db_v4', JSON.stringify(BUILDINGS_DB));
-        populateRooms(currentBldg);
-        selectRoomType.value = newRoom;
-        inputFinalRoom.value = newRoom;
-        alert(`« ${newRoom} » mémorisé dans ${currentBldg}`);
-      }
-    });
-
-    // Gestion du Formulaire d'ajout
-    const formItem = document.getElementById('form-item');
-    const selectTask = document.getElementById('select-task');
-    const labelQty = document.getElementById('label-qty');
-
-    selectTask.addEventListener('change', () => {
-      const task = TASK_CATALOG[selectTask.value];
-      labelQty.textContent = `Quantité (${task.unit})`;
-    });
-
-    formItem.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const room = inputFinalRoom.value.trim() || selectRoomType.value || 'Local';
-      const taskKey = selectTask.value;
-      const qty = parseFloat(document.getElementById('input-qty').value) || 0;
-      const freq = parseInt(document.getElementById('select-freq').value, 10) || 1;
-
-      addEntry(room, taskKey, qty, freq);
-      document.getElementById('input-qty').value = '';
-    });
-
-    function addEntry(room, taskKey, qty, freq) {
-      const task = TASK_CATALOG[taskKey];
-      if (!task || qty <= 0) return;
-
-      let minutes = 0;
-      if (task.type === 'area') {
-        minutes = (qty / 1000) * task.timePer1000;
-      } else {
-        minutes = qty * task.minutesEach;
-      }
-
-      const hours = minutes / 60;
-      const priceVisit = hours * task.rateHr;
-      const priceYear = priceVisit * freq;
-
-      entries.push({
-        id: Date.now() + Math.random(),
-        room,
-        taskKey,
-        taskName: task.name,
-        unit: task.unit,
-        qty,
-        freq,
-        minutes,
-        hours,
-        priceVisit,
-        priceYear
-      });
-
-      render();
-    }
-
-    function removeEntry(id) {
-      entries = entries.filter(e => e.id !== id);
-      render();
-    }
-
-    // Gestion des données du client en direct
-    ['client-name', 'client-company', 'client-phone', 'client-email', 'client-address'].forEach(id => {
-      document.getElementById(id).addEventListener('input', updateClientPrintView);
-    });
-
-    function updateClientPrintView() {
-      document.getElementById('print-client-name').textContent = document.getElementById('client-name').value.trim() || 'Client sans nom';
-      document.getElementById('print-client-company').textContent = document.getElementById('client-company').value.trim() ? 'Entreprise : ' + document.getElementById('client-company').value.trim() : '';
-      document.getElementById('print-client-phone').textContent = document.getElementById('client-phone').value.trim() ? 'Tél : ' + document.getElementById('client-phone').value.trim() : '';
-      document.getElementById('print-client-email').textContent = document.getElementById('client-email').value.trim() ? 'Courriel : ' + document.getElementById('client-email').value.trim() : '';
-      document.getElementById('print-client-address').textContent = document.getElementById('client-address').value.trim() || 'Adresse non spécifiée';
-      document.getElementById('print-bldg-summary').textContent = selectBuildingType.value;
-    }
-
-    // Gestion des Escomptes et Taxes
-    document.getElementById('discount-type').addEventListener('change', render);
-    document.getElementById('discount-value').addEventListener('input', render);
-    document.getElementById('check-taxes').addEventListener('change', render);
-
-    // Moteur de Calcul & Rendu
-    function render() {
-      document.getElementById('count-items').textContent = `${entries.length} éléments enregistrés`;
-
-      let totalMinVisit = 0;
-      let totalSubtotalVisit = 0;
-
-      entries.forEach(e => {
-        totalMinVisit += e.minutes;
-        totalSubtotalVisit += e.priceVisit;
-      });
-
-      const totalHoursVisit = totalMinVisit / 60;
-
-      // Calcul de l'escompte
-      const discType = document.getElementById('discount-type').value;
-      const discVal = parseFloat(document.getElementById('discount-value').value) || 0;
-      let discountAmount = 0;
-
-      if (discVal > 0 && totalSubtotalVisit > 0) {
-        if (discType === 'pct') {
-          discountAmount = (totalSubtotalVisit * discVal) / 100;
-          document.getElementById('display-discount-label').textContent = `${discVal} %`;
-        } else {
-          discountAmount = Math.min(discVal, totalSubtotalVisit);
-          document.getElementById('display-discount-label').textContent = 'Montant fixe';
-        }
-      } else {
-        document.getElementById('display-discount-label').textContent = '0 %';
-      }
-
-      const netBeforeTax = Math.max(0, totalSubtotalVisit - discountAmount);
-
-      // Calcul des taxes Québec (TPS 5% + TVQ 9.975%)
-      const applyTaxes = document.getElementById('check-taxes').checked;
-      let tps = 0;
-      let tvq = 0;
-      if (applyTaxes && netBeforeTax > 0) {
-        tps = netBeforeTax * 0.05;
-        tvq = netBeforeTax * 0.09975;
-      }
-      const finalTotalWithTax = netBeforeTax + tps + tvq;
-
-      // Rendu affichage
-      document.getElementById('total-hours-visit').textContent = `${totalHoursVisit.toFixed(2)} h`;
-      document.getElementById('total-min-visit').textContent = `(${Math.round(totalMinVisit)} min)`;
-      document.getElementById('total-subtotal').textContent = totalSubtotalVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('display-discount').textContent = `- ${discountAmount.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
-      document.getElementById('total-net-before-tax').textContent = netBeforeTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('total-final-tax').textContent = finalTotalWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-
-      // Tableau client récapitulatif
-      document.getElementById('rec-subtotal').textContent = totalSubtotalVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('rec-discount').textContent = `- ${discountAmount.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
-      document.getElementById('rec-net').textContent = netBeforeTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('rec-tps').textContent = tps.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('rec-tvq').textContent = tvq.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('rec-total').textContent = finalTotalWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-
-      // Ventilation financière interne (sur le net avant taxes)[cite: 28]
-      const tbodyBreakdown = document.getElementById('breakdown-tbody');
-      tbodyBreakdown.innerHTML = '';
-      const totalProfit = netBeforeTax * 0.101266;
-      document.getElementById('badge-profit-net').textContent = `Profit Net : ${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
-
-      FINANCIAL_BREAKDOWN.forEach(item => {
-        const valVisit = (netBeforeTax * item.pct) / 100;
-        const valYear = valVisit * 1;
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td class="p-2 ${item.color}">${item.name}</td>
-          <td class="p-2 text-center text-slate-500 font-mono">${item.pct.toFixed(2)} %</td>
-          <td class="p-2 text-right font-medium">${valVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
-          <td class="p-2 text-right font-medium text-slate-600">${valYear.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
-        `;
-        tbodyBreakdown.appendChild(row);
-      });
-
-      renderRoomView();
-      renderItemView();
-      updateClientPrintView();
-    }
-
-    function renderRoomView() {
-      const container = document.getElementById('container-rooms');
-      container.innerHTML = '';
-      if (entries.length === 0) {
-        container.innerHTML = '<p class="text-center py-8 text-xs text-slate-400 italic">Aucun local ni tâche ajoutée.</p>';
-        return;
-      }
-
-      const grouped = {};
-      entries.forEach(e => {
-        if (!grouped[e.room]) grouped[e.room] = [];
-        grouped[e.room].push(e);
-      });
-
-      for (const room in grouped) {
-        const items = grouped[room];
-        let roomMin = 0;
-        let roomPrice = 0;
-        items.forEach(i => { roomMin += i.minutes; roomPrice += i.priceVisit; });
-
-        const card = document.createElement('div');
-        card.className = "border rounded-lg p-3 bg-slate-50 border-slate-200";
-        card.innerHTML = `
-          <div class="flex justify-between items-center border-b pb-2 mb-2">
-            <h4 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-location-dot text-blue-500"></i> ${room}
-            </h4>
-            <div class="text-right">
-              <span class="text-xs font-bold text-blue-900">${(roomMin / 60).toFixed(2)} h (${Math.round(roomMin)} min)</span>
-              <span class="text-xs font-black text-slate-700 ml-2">${roomPrice.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
-            </div>
-          </div>
-          <div class="space-y-1.5">
-            ${items.map(item => `
-              <div class="flex items-center justify-between text-xs bg-white p-2 rounded border border-slate-200">
-                <div>
-                  <span class="font-semibold text-slate-800">${item.taskName}</span>
-                  <span class="text-slate-500 ml-1">(${item.qty} ${item.unit})</span>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="text-slate-600 font-mono">${Math.round(item.minutes)} min</span>
-                  <span class="font-bold text-slate-800">${item.priceVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
-                  <button onclick="removeEntry(${item.id})" class="text-rose-500 hover:text-rose-700 no-print ml-1" title="Supprimer">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        `;
-        container.appendChild(card);
-      }
-    }
-
-    function renderItemView() {
-      const container = document.getElementById('container-items');
-      container.innerHTML = '';
-
-      const grouped = {};
-      entries.forEach(e => {
-        if (!grouped[e.taskKey]) {
-          grouped[e.taskKey] = {
-            taskName: e.taskName,
-            unit: e.unit,
-            totalQty: 0,
-            totalMin: 0,
-            totalPrice: 0,
-            timePer1000: TASK_CATALOG[e.taskKey].timePer1000,
-            minutesEach: TASK_CATALOG[e.taskKey].minutesEach
-          };
-        }
-        grouped[e.taskKey].totalQty += e.qty;
-        grouped[e.taskKey].totalMin += e.minutes;
-        grouped[e.taskKey].totalPrice += e.priceVisit;
-      });
-
-      for (const key in grouped) {
-        const item = grouped[key];
-        const cadence = item.timePer1000 ? `${item.timePer1000} min / 1000 pi²` : `${item.minutesEach} min / ${item.unit}`;
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td class="p-2 font-medium text-slate-800">${item.taskName}</td>
-          <td class="p-2 text-center font-bold">${item.totalQty.toLocaleString('fr-CA')} ${item.unit}</td>
-          <td class="p-2 text-center text-slate-500 font-mono">${cadence}</td>
-          <td class="p-2 text-right font-mono">${(item.totalMin / 60).toFixed(2)} h (${Math.round(item.totalMin)} min)</td>
-          <td class="p-2 text-right font-bold text-blue-900">${item.totalPrice.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
-        `;
-        container.appendChild(row);
-      }
-    }
-
-    // Bascule Fiche Client (Plein écran prêt pour remise)
-    document.getElementById('btn-toggle-client-view').addEventListener('click', () => {
-      window.print();
-    });
-
-    // Navigation onglets
-    const tabRoom = document.getElementById('tab-room');
-    const tabItem = document.getElementById('tab-item');
-    const viewRoom = document.getElementById('view-room');
-    const viewItem = document.getElementById('view-item');
-
-    tabRoom.addEventListener('click', () => {
-      tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-blue-600 text-white shadow transition";
-      tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
-      viewRoom.classList.remove('hidden');
-      viewItem.classList.add('hidden');
-    });
-
-    tabItem.addEventListener('click', () => {
-      tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-blue-600 text-white shadow transition";
-      tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
-      viewItem.classList.remove('hidden');
-      viewRoom.classList.add('hidden');
-    });
-
-    document.getElementById('btn-reset').addEventListener('click', () => {
-      if (confirm('Voulez-vous réinitialiser tous les relevés ?')) {
-        entries = [];
-        render();
-      }
-    });
-
-    // Exemple multi-niche représentatif
-    document.getElementById('btn-sample').addEventListener('click', () => {
-      entries = [];
-      document.getElementById('client-name').value = 'Mme Sophie Roy';
-      document.getElementById('client-company').value = 'Clinique Médicale & Résidence Roy';
-      document.getElementById('client-phone').value = '514-
+        "Cuisinette", "Cafétéria", "
