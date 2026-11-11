@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estimateur Résidentiel Pro - ISSA 540 - TotalNet</title>
+  <title>Estimateur Commercial & Conciergerie Pro - ISSA 540 - TotalNet</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -29,27 +29,27 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
 
-  <!-- Header principal avec Navigation -->
-  <header class="bg-blue-900 text-white shadow-lg no-print">
+  <!-- Header principal avec Navigation Inter-Domaines -->
+  <header class="bg-blue-950 text-white shadow-lg no-print">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
       <div>
         <h1 class="text-xl font-black flex items-center gap-2">
           <i class="fa-solid fa-calculator text-amber-400"></i> Estimateur Pro TotalNet
         </h1>
-        <p class="text-xs text-blue-200">Ménage Résidentiel d'Entretien & Grand Ménage (Cadences ISSA 540)</p>
+        <p class="text-xs text-blue-200">Conciergerie Commerciale, Bureaux, Médical, Copropriétés & Ateliers (ISSA 540)</p>
       </div>
 
-      <!-- Navigation inter-domaines -->
+      <!-- Navigation entre Domaines -->
       <nav class="flex items-center gap-2">
-        <a href="index.html" class="bg-amber-400 text-blue-950 font-black text-xs px-3.5 py-1.5 rounded-lg shadow flex items-center gap-1.5 border border-amber-300">
+        <a href="index.html" class="bg-blue-900/60 hover:bg-blue-900 text-blue-200 text-xs px-3.5 py-1.5 rounded-lg transition border border-blue-800 flex items-center gap-1.5">
           <i class="fa-solid fa-broom"></i> Résidentiel
         </a>
-        <a href="menage-regulier-commercial.html" class="bg-blue-800/60 hover:bg-blue-800 text-blue-200 text-xs px-3.5 py-1.5 rounded-lg transition border border-blue-700 flex items-center gap-1.5">
-          <i class="fa-solid fa-building"></i> Commercial Régulier
+        <a href="menage-regulier-commercial.html" class="bg-amber-400 text-blue-950 font-black text-xs px-3.5 py-1.5 rounded-lg shadow flex items-center gap-1.5 border border-amber-300">
+          <i class="fa-solid fa-building"></i> Commercial & Immeubles
         </a>
       </nav>
 
-      <!-- Boutons rapides -->
+      <!-- Boutons d'action -->
       <div class="flex items-center gap-2">
         <button id="btn-sample" class="bg-blue-800 hover:bg-blue-700 text-xs px-3 py-1.5 rounded font-medium border border-blue-600 transition">
           <i class="fa-solid fa-folder-open mr-1"></i> Exemple
@@ -58,7 +58,7 @@
           <i class="fa-solid fa-trash mr-1"></i> Vider
         </button>
         <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs px-3.5 py-1.5 rounded font-bold transition">
-          <i class="fa-solid fa-print mr-1"></i> Devis PDF Détaillé
+          <i class="fa-solid fa-print mr-1"></i> Devis Commercial PDF
         </button>
       </div>
     </div>
@@ -68,12 +68,12 @@
   <div class="hidden print:block max-w-7xl mx-auto p-6 bg-white border-b border-slate-300">
     <div class="flex justify-between items-start">
       <div>
-        <h1 class="text-2xl font-black text-blue-900 tracking-tight">TOTALNET ENTRETIEN RÉSIDENTIEL</h1>
-        <p class="text-xs text-slate-500">Service certifié selon les cadences et normes professionnelles ISSA 540</p>
-        <p class="text-xs text-slate-600 mt-0.5">Grand Montréal & Rive-Sud/Nord | info@totalnet.ca | (514) 555-0199</p>
+        <h1 class="text-2xl font-black text-blue-950 tracking-tight">TOTALNET CONCIERGERIE COMMERCIALE</h1>
+        <p class="text-xs text-slate-500">Service d'entretien technique d'immeubles, bureaux corporatifs et milieu de santé</p>
+        <p class="text-xs text-slate-600 mt-0.5">Québec, Canada | commercial@totalnet.ca | (514) 555-0199</p>
       </div>
       <div class="text-right">
-        <span class="inline-block bg-blue-100 text-blue-900 font-black text-xs px-3 py-1 rounded mb-1">PROPOSITION DE SERVICE OFFICIELLE</span>
+        <span class="inline-block bg-blue-100 text-blue-950 font-black text-xs px-3 py-1 rounded mb-1">SOUMISSION COMMERCIALE OFFICIELLE</span>
         <div class="text-xs text-slate-500">Date : <span id="print-date" class="font-bold text-slate-800"></span></div>
         <div class="text-xs text-slate-500">Devis N° : <span id="print-quote-id" class="font-bold text-slate-800"></span></div>
       </div>
@@ -81,29 +81,30 @@
     
     <div class="grid grid-cols-2 gap-4 mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs">
       <div>
-        <span class="font-bold text-slate-700 uppercase tracking-wider block mb-0.5">Client résidentiel :</span>
-        <div class="font-bold text-sm text-slate-900" id="print-client-name">—</div>
-        <div class="text-slate-600 font-bold" id="print-client-phone"></div>
+        <span class="font-bold text-slate-700 uppercase tracking-wider block mb-0.5">Établissement / Client :</span>
+        <div class="font-bold text-sm text-slate-900" id="print-client-company">—</div>
+        <div class="text-slate-700 font-semibold" id="print-client-name"></div>
+        <div class="text-slate-600" id="print-client-phone"></div>
         <div class="text-slate-600" id="print-client-email"></div>
       </div>
       <div>
-        <span class="font-bold text-slate-700 uppercase tracking-wider block mb-0.5">Adresse de travail :</span>
+        <span class="font-bold text-slate-700 uppercase tracking-wider block mb-0.5">Lieu d'exécution des travaux :</span>
         <div class="text-slate-800 font-medium" id="print-client-address">—</div>
-        <div class="text-slate-500 mt-1">Programme : <span id="print-service-type" class="font-semibold text-slate-800">Entretien Ménager Régulier</span></div>
+        <div class="text-slate-500 mt-1">Programme : <span id="print-service-type" class="font-semibold text-slate-800">Contrat Régulier d'Entretien</span></div>
       </div>
     </div>
   </div>
 
   <main class="max-w-7xl mx-auto px-4 py-5 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- Colonne GAUCHE : Configuration Résidentielle -->
+    <!-- Colonne GAUCHE : Configuration Commerciale -->
     <section class="lg:col-span-5 space-y-5 no-print">
 
       <!-- MODULE 1 : Taux Horaires Personnalisables -->
       <div class="bg-amber-100/90 rounded-xl shadow-sm border border-amber-300 p-4">
         <div class="flex items-center justify-between mb-1.5">
           <h2 class="text-xs font-black text-amber-950 uppercase tracking-wide flex items-center gap-1.5">
-            <i class="fa-solid fa-coins text-amber-600 text-sm"></i> Taux Horaires Personnalisés
+            <i class="fa-solid fa-coins text-amber-600 text-sm"></i> Taux Horaires d'Équipe Commerciale
           </h2>
           <span class="text-[10px] bg-amber-300 text-amber-950 font-bold px-2 py-0.5 rounded shadow-sm">Modifiables</span>
         </div>
@@ -111,31 +112,37 @@
           <div class="bg-white p-2.5 rounded-lg border border-amber-300 shadow-sm">
             <label class="block font-bold text-slate-700 mb-1">Taux Travail ($/h)</label>
             <div class="relative">
-              <input type="number" id="input-rate-prod" value="65.00" step="1" min="1" class="w-full pl-6 pr-2 py-1.5 font-black text-blue-900 bg-slate-50 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+              <input type="number" id="input-rate-prod" value="55.00" step="1" min="1" class="w-full pl-6 pr-2 py-1.5 font-black text-blue-900 bg-slate-50 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm">
               <span class="absolute left-2 top-1.5 text-slate-500 font-bold">$</span>
             </div>
-            <span class="text-[10px] text-slate-400 mt-0.5 block">Main-d'œuvre directe</span>
+            <span class="text-[10px] text-slate-400 mt-0.5 block">Conciergerie directe</span>
           </div>
           <div class="bg-white p-2.5 rounded-lg border border-amber-300 shadow-sm">
-            <label class="block font-bold text-slate-700 mb-1">Taux Route ($/h)</label>
+            <label class="block font-bold text-slate-700 mb-1">Taux Déplacement ($/h)</label>
             <div class="relative">
               <input type="number" id="input-rate-route" value="45.00" step="1" min="1" class="w-full pl-6 pr-2 py-1.5 font-black text-slate-900 bg-slate-50 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 outline-none text-sm">
               <span class="absolute left-2 top-1.5 text-slate-500 font-bold">$</span>
             </div>
-            <span class="text-[10px] text-slate-400 mt-0.5 block">Déplacement / route</span>
+            <span class="text-[10px] text-slate-400 mt-0.5 block">Transport & route</span>
           </div>
         </div>
       </div>
 
-      <!-- MODULE 2 : Coordonnées du Client -->
+      <!-- MODULE 2 : Fiche Entreprise & Contact -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-        <h2 class="text-xs font-bold text-slate-700 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-          <i class="fa-solid fa-user text-blue-600"></i> Fiche Client Résidentiel
+        <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wide mb-2 flex items-center gap-1.5">
+          <i class="fa-solid fa-briefcase text-blue-600"></i> Fiche Entreprise & Contact
         </h2>
         <div class="space-y-2.5 text-xs">
-          <div>
-            <label class="block font-semibold text-slate-600 mb-1">Nom complet du client</label>
-            <input type="text" id="client-name" placeholder="Ex: Geneviève Tremblay" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Entreprise / Syndicat</label>
+              <input type="text" id="client-company" placeholder="Ex: Clinique Santé & Dentaire Laval" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1">Responsable des installations</label>
+              <input type="text" id="client-name" placeholder="Ex: Martin Gagné, Directeur" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
@@ -144,41 +151,53 @@
             </div>
             <div>
               <label class="block font-semibold text-slate-600 mb-1">Courriel</label>
-              <input type="email" id="client-email" placeholder="client@domaine.ca" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+              <input type="email" id="client-email" placeholder="admin@etablissement.ca" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
           </div>
           <div>
-            <label class="block font-semibold text-slate-600 mb-1">Adresse de la résidence</label>
-            <input type="text" id="client-address" placeholder="123 rue des Lilas, Montréal, QC" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            <label class="block font-semibold text-slate-600 mb-1">Adresse complète de l'édifice</label>
+            <input type="text" id="client-address" placeholder="1000 rue de la Montagne, Suite 300, Montréal, QC" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
           </div>
         </div>
       </div>
 
-      <!-- MODULE 3 : Sélection Résidentielle (ISSA 540) -->
+      <!-- MODULE 3 : Sélection Commerciale Multi-Niches -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
         <h2 class="text-xs font-bold text-slate-800 uppercase tracking-wide mb-3 flex items-center gap-1.5">
-          <i class="fa-solid fa-list-check text-blue-600"></i> Choix des Tâches, Combos & Pièces
+          <i class="fa-solid fa-list-check text-blue-600"></i> Choix des Postes, Combos & Surfaces
         </h2>
 
         <form id="form-item" class="space-y-3.5">
           
-          <!-- Type d'entretien -->
+          <!-- Type de contrat : Régulier vs Ponctuel Spécialisé -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Programme de ménage :</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Programme d'intervention :</label>
             <div class="grid grid-cols-2 gap-2">
-              <button type="button" id="btn-mode-regular" class="py-2 px-2.5 rounded-lg border text-xs font-bold transition flex items-center justify-center gap-1.5 bg-blue-50 border-blue-600 text-blue-900 shadow-sm">
-                <i class="fa-solid fa-calendar-check text-blue-600"></i> Entretien Régulier
+              <button type="button" id="btn-mode-regular" class="py-2 px-2 rounded-lg border text-xs font-bold transition flex items-center justify-center gap-1.5 bg-blue-50 border-blue-600 text-blue-900 shadow-sm">
+                <i class="fa-solid fa-calendar-days text-blue-600"></i> Entretien Régulier
               </button>
-              <button type="button" id="btn-mode-sporadic" class="py-2 px-2.5 rounded-lg border text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100">
-                <i class="fa-solid fa-sparkles text-amber-500"></i> Grand Ménage / Ponctuel
+              <button type="button" id="btn-mode-sporadic" class="py-2 px-2 rounded-lg border text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> Ponctuel / Grand Ménage
               </button>
+            </div>
+          </div>
+
+          <!-- Filtres de Niches Commerciales -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Niche d'activité :</label>
+            <div class="grid grid-cols-5 gap-1 text-[11px]">
+              <button type="button" id="btn-niche-office" class="py-1.5 px-1 rounded border font-bold bg-blue-50 border-blue-600 text-blue-900 text-center">Bureaux</button>
+              <button type="button" id="btn-niche-medical" class="py-1.5 px-1 rounded border font-medium bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100 text-center">Clinique</button>
+              <button type="button" id="btn-niche-condo" class="py-1.5 px-1 rounded border font-medium bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100 text-center">Condo</button>
+              <button type="button" id="btn-niche-industrial" class="py-1.5 px-1 rounded border font-medium bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100 text-center">Atelier</button>
+              <button type="button" id="btn-niche-retail" class="py-1.5 px-1 rounded border font-medium bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100 text-center">Commerce</button>
             </div>
           </div>
 
           <!-- Liste déroulante des projets et options -->
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">
-              <i class="fa-solid fa-house-chimney text-blue-600 mr-1"></i> Pièce, Combo ou Surface :
+              <i class="fa-solid fa-tag text-blue-600 mr-1"></i> Poste, Combo ou Surface Commerciale :
             </label>
             <select id="select-project-type" class="w-full text-xs font-bold px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
               <!-- Rempli par JavaScript -->
@@ -207,80 +226,83 @@
               <input type="number" id="input-qty" value="1" min="0.1" step="any" required class="w-full text-sm font-black px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-900">
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Fréquence prévue</label>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Fréquence du contrat</label>
               <select id="select-freq" class="w-full text-xs px-2.5 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none bg-white text-slate-900 font-medium">
-                <option value="52">Hebdomadaire (52x/an)</option>
-                <option value="26" selected>Aux 2 semaines (26x/an)</option>
-                <option value="12">Mensuel (12x/an)</option>
+                <option value="260" selected>5 jours / semaine (260x/an)</option>
+                <option value="156">3 jours / semaine (156x/an)</option>
+                <option value="104">2 jours / semaine (104x/an)</option>
+                <option value="52">1 jour / semaine (52x/an)</option>
+                <option value="26">Aux 2 semaines (26x/an)</option>
+                <option value="12">1 fois par mois (12x/an)</option>
                 <option value="1">Ponctuel / 1 seule visite</option>
               </select>
             </div>
           </div>
 
-          <!-- Encombrement & Difficulté -->
+          <!-- Densité & Achalandage -->
           <div class="bg-amber-50 p-2.5 rounded-lg border border-amber-200 text-xs">
             <div class="flex items-center justify-between mb-1">
               <label class="font-bold text-amber-950">
-                <i class="fa-solid fa-couch text-amber-600 mr-1"></i> Facteur Encombrement & Animaux
+                <i class="fa-solid fa-people-group text-amber-600 mr-1"></i> Densité du Site & Achalandage
               </label>
               <span id="label-encombrement-mult" class="text-[11px] font-bold text-amber-800">x 1,00 (Standard)</span>
             </div>
             <select id="select-encombrement" class="w-full text-xs font-semibold px-2 py-1.5 bg-white text-slate-900 border border-amber-300 rounded focus:ring-2 focus:ring-amber-500 outline-none">
-              <option value="0.85">Espace épuré / Dégagé (-15% temps/prix)</option>
-              <option value="1.00" selected>Normal / Mobilier standard (Taux plein 100%)</option>
-              <option value="1.25">Encombré / Nombreux bibelots / Poils d'animaux (+25%)</option>
-              <option value="1.50">Très encombré / Chantier / Saleté lourde (+50%)</option>
+              <option value="0.85">Faible achalandage / Postes dégagés (-15%)</option>
+              <option value="1.00" selected>Normal / Bureaux & commerces standards (100%)</option>
+              <option value="1.25">Fort achalandage / Postes très denses (+25%)</option>
+              <option value="1.50">Milieu médical critique / Poussière d'atelier (+50%)</option>
             </select>
           </div>
 
-          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-2.5 rounded-lg shadow transition flex items-center justify-center gap-2">
-            <i class="fa-solid fa-circle-plus"></i> Ajouter au Devis Résidentiel
+          <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-black py-2.5 rounded-lg shadow transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-circle-plus"></i> Ajouter au Devis Commercial
           </button>
         </form>
       </div>
 
     </section>
 
-    <!-- Colonne DROITE : Double comparateur, Devis PDF & Synthèse -->
+    <!-- Colonne DROITE : Double Comparateur, Devis PDF & Synthèse -->
     <section class="lg:col-span-7 space-y-5">
 
-      <!-- DOUBLE COMPARAISON : MON TEMPS ($/h) vs RÉFÉRENCE MARCHÉ QUÉBEC 2026 -->
+      <!-- DOUBLE COMPARAISON COMMERCIALE -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 no-print">
         <div class="flex items-center justify-between border-b pb-2.5 mb-3">
           <div>
             <h2 class="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <i class="fa-solid fa-scale-balanced text-indigo-600"></i> Double Analyse : Mon Temps ($/h) vs Référence Marché (pi²)
+              <i class="fa-solid fa-scale-balanced text-indigo-600"></i> Double Comparateur : Mon Temps ($/h) vs Marché Commercial (pi² / appareil)
             </h2>
-            <p class="text-xs text-slate-500">Validation en direct pour le marché de l'entretien résidentiel au Québec</p>
+            <p class="text-xs text-slate-500">Validation de rentabilité pour contrats corporatifs au Québec</p>
           </div>
           <span id="badge-comparison" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600">En attente</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
           <div class="bg-blue-50 rounded-lg p-3 border border-blue-200 text-center">
-            <span class="text-[11px] font-bold uppercase text-blue-900">Méthode 1 : Selon Mon Temps (<span id="disp-rate-tag">65</span> $/h)</span>
+            <span class="text-[11px] font-bold uppercase text-blue-900">Méthode 1 : Selon Mon Temps (<span id="disp-rate-tag">55</span> $/h)</span>
             <div class="text-2xl font-black text-blue-900 my-0.5" id="total-price-time">0,00 $</div>
-            <div class="text-[11px] text-blue-700 font-medium" id="detail-time">Temps total : 0,00 h (0 min)</div>
+            <div class="text-[11px] text-blue-700 font-medium" id="detail-time">Temps / visite : 0,00 h (0 min)</div>
           </div>
 
           <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200 text-center">
-            <span class="text-[11px] font-bold uppercase text-emerald-900">Méthode 2 : Référence Marché Québec (pi²)</span>
+            <span class="text-[11px] font-bold uppercase text-emerald-900">Méthode 2 : Référence Marché Québec</span>
             <div class="text-2xl font-black text-emerald-900 my-0.5" id="total-price-market">0,00 $</div>
-            <div class="text-[11px] text-emerald-700 font-medium">Basé sur 0,10 $ à 0,35 $ / pi² & forfaits</div>
+            <div class="text-[11px] text-emerald-700 font-medium">Bureaux, Sanitaires & Espaces communs</div>
           </div>
         </div>
 
         <div id="diagnostic-box" class="p-3 rounded-lg text-xs font-medium bg-slate-50 border border-slate-200 text-slate-700">
-          Ajoutez des composantes résidentielles pour afficher l'analyse d'écart.
+          Ajoutez des composantes pour vérifier la rentabilité du contrat.
         </div>
       </div>
 
-      <!-- Synthèse Financière & Fiche Imprimable Devis -->
+      <!-- Synthèse Financière du Contrat -->
       <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 client-sheet">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-3 mb-3 gap-2">
           <div>
-            <h2 class="text-base font-bold text-slate-900">Synthèse Financière de la Soumission</h2>
-            <p class="text-xs text-slate-500" id="header-rate-display">Calculé selon les cadences ISSA et votre taux horaire</p>
+            <h2 class="text-base font-bold text-slate-900">Synthèse du Contrat Commercial</h2>
+            <p class="text-xs text-slate-500" id="header-rate-display">Calculé selon les cadences ISSA</p>
           </div>
           <div class="text-right">
             <div class="text-2xl font-black text-blue-700" id="total-final-tax">0,00 $</div>
@@ -300,7 +322,7 @@
             <div class="text-[10px] text-indigo-500">avant escompte</div>
           </div>
           <div class="bg-amber-50 p-2.5 rounded-lg border border-amber-100">
-            <div class="text-[11px] text-amber-800 font-medium">Escompte / Remise</div>
+            <div class="text-[11px] text-amber-800 font-medium">Escompte volume</div>
             <div class="text-base font-bold text-amber-900" id="display-discount">0,00 $</div>
             <div class="text-[10px] text-amber-600" id="display-discount-label">0 %</div>
           </div>
@@ -311,11 +333,11 @@
           </div>
         </div>
 
-        <!-- Réglages Escompte & Taxes (masqués à l'impression) -->
+        <!-- Remise de volume & Taxes -->
         <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-3 no-print text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 items-end">
             <div>
-              <label class="block font-bold text-slate-700 mb-1">Type d'escompte</label>
+              <label class="block font-bold text-slate-700 mb-1">Type d'escompte contrat</label>
               <select id="discount-type" class="w-full px-2.5 py-1.5 bg-white text-slate-900 border border-slate-300 rounded outline-none">
                 <option value="pct">Pourcentage (%)</option>
                 <option value="fixed">Montant fixe ($)</option>
@@ -334,16 +356,16 @@
           </div>
         </div>
 
-        <!-- Tableau Récapitulatif -->
+        <!-- Facture / Tableau récapitulatif -->
         <div class="border rounded-lg overflow-hidden text-xs mb-3">
           <table class="w-full">
             <tbody class="divide-y divide-slate-200">
               <tr class="bg-slate-50">
-                <td class="p-2 font-medium text-slate-700">Sous-total des travaux résidentiels</td>
+                <td class="p-2 font-medium text-slate-700">Total des prestations par visite</td>
                 <td class="p-2 text-right font-bold" id="rec-subtotal">0,00 $</td>
               </tr>
               <tr id="row-discount" class="text-amber-800">
-                <td class="p-2 font-medium">Escompte fidélité accordé</td>
+                <td class="p-2 font-medium">Remise commerciale accordée</td>
                 <td class="p-2 text-right font-bold" id="rec-discount">0,00 $</td>
               </tr>
               <tr>
@@ -358,9 +380,13 @@
                 <td class="p-2">TVQ (9,975 %)</td>
                 <td class="p-2 text-right" id="rec-tvq">0,00 $</td>
               </tr>
-              <tr class="bg-blue-50 text-blue-900 font-black text-sm">
-                <td class="p-2.5">MONTANT TOTAL PAR VISITE (TAXES COMPRISES)</td>
+              <tr class="bg-blue-50 text-blue-950 font-black text-sm">
+                <td class="p-2.5">TOTAL PAR VISITE (TAXES COMPRISES)</td>
                 <td class="p-2.5 text-right text-base" id="rec-total">0,00 $</td>
+              </tr>
+              <tr class="bg-slate-100 font-bold text-slate-700">
+                <td class="p-2">BUDGET ANNUEL DU CONTRAT</td>
+                <td class="p-2 text-right text-sm font-black text-blue-950" id="rec-annual-total">0,00 $</td>
               </tr>
             </tbody>
           </table>
@@ -373,7 +399,7 @@
               <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <i class="fa-solid fa-lock text-amber-500"></i> Ventilation Budgétaire Interne (Confidentiel)
               </h3>
-              <p class="text-[10px] text-slate-500" id="budget-desc">Calcul sur le prix net avant taxes</p>
+              <p class="text-[10px] text-slate-500" id="budget-desc">Calcul sur le prix net</p>
             </div>
             <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" id="badge-profit-net">Profit: 0,00 $</span>
           </div>
@@ -397,13 +423,13 @@
         <div class="no-print">
           <div class="flex items-center justify-between border-b pb-2 mb-3">
             <h3 class="font-bold text-xs text-slate-800 uppercase flex items-center gap-1.5">
-              <i class="fa-solid fa-pen-to-square text-blue-600"></i> Vos Éléments Enregistrés (Éditables à la volée)
+              <i class="fa-solid fa-pen-to-square text-blue-600"></i> Postes Inclus (Éditables en direct)
             </h3>
             <span class="text-xs text-slate-400" id="count-items">0 élément</span>
           </div>
 
           <div id="container-entries" class="space-y-2.5">
-            <p class="text-center py-6 text-xs text-slate-400 italic">Aucune composante ajoutée.</p>
+            <p class="text-center py-6 text-xs text-slate-400 italic">Aucune composante commerciale ajoutée.</p>
           </div>
         </div>
 
@@ -413,32 +439,32 @@
         <div class="mt-6 border-t-2 border-slate-300 pt-4">
           <div class="flex items-center justify-between mb-3">
             <h3 class="font-black text-sm text-blue-950 uppercase tracking-wide flex items-center gap-2">
-              <i class="fa-solid fa-clipboard-check text-blue-700"></i> Devis Descriptif : Détail des Travaux Inclus
+              <i class="fa-solid fa-clipboard-check text-blue-700"></i> Devis Descriptif : Protocole des Travaux Inclus
             </h3>
-            <span class="text-xs text-slate-500 italic">Prestation selon standards professionnels</span>
+            <span class="text-xs text-slate-500 italic">Normes professionnelles ISSA 540</span>
           </div>
 
           <div id="container-specs-print" class="space-y-3 text-xs">
-            <p class="text-center py-4 text-slate-400 italic">Sélectionnez des pièces pour générer le devis descriptif complet.</p>
+            <p class="text-center py-4 text-slate-400 italic">Ajoutez des composantes pour éditer le protocole d'entretien.</p>
           </div>
         </div>
 
-        <!-- Conditions et signature pour le PDF -->
+        <!-- Signature et conditions d'acceptation -->
         <div class="mt-8 pt-4 border-t border-slate-300 text-xs">
           <div class="grid grid-cols-2 gap-8">
             <div>
-              <p class="font-bold text-slate-800 mb-1">Garantie & Conditions professionnelles :</p>
+              <p class="font-bold text-slate-800 mb-1">Conditions contractuelles :</p>
               <p class="text-[10px] text-slate-500 leading-relaxed">
-                Travaux exécutés conformément aux standards ISSA 540.<br>
-                Produits biodégradables professionnels et matériel fournis par l'entreprise.<br>
-                Assurance responsabilité civile complète.<br>
-                Soumission valide pendant 30 jours à compter de la date d'émission.
+                Services réguliers conformes aux cadences officielles ISSA 540[cite: 1].<br>
+                Produits chimiques homologués, FDS à jour et équipements spécialisés fournis.<br>
+                Assurance responsabilité civile commerciale 2 000 000 $.<br>
+                Facturation mensuelle récurrente, payable net 30 jours.
               </p>
             </div>
             <div class="text-right">
-              <p class="font-bold text-slate-800 mb-8">Signature du client & Acceptation :</p>
+              <p class="font-bold text-slate-800 mb-8">Pour l'administration / Signature :</p>
               <div class="border-b border-slate-400 w-52 ml-auto"></div>
-              <p class="text-[9px] text-slate-400 mt-1">Date d'approbation : ___________________</p>
+              <p class="text-[9px] text-slate-400 mt-1">Date d'acceptation : ___________________</p>
             </div>
           </div>
         </div>
@@ -452,9 +478,10 @@
     // ----------------------------------------------------
     // PARAMÈTRES GLOBAUX & TAUX HORAIRES
     // ----------------------------------------------------
-    let currentProdRate = 65.00;
+    let currentProdRate = 55.00;
     let currentRouteRate = 45.00;
     let currentInterventionMode = 'regular'; // 'regular' ou 'sporadic'
+    let currentNiche = 'office'; // 'office', 'medical', 'condo', 'industrial', 'retail'
 
     const inputRateProd = document.getElementById('input-rate-prod');
     const inputRateRoute = document.getElementById('input-rate-route');
@@ -463,7 +490,7 @@
     const dispRateTag = document.getElementById('disp-rate-tag');
 
     function updateRates() {
-      currentProdRate = parseFloat(inputRateProd.value) || 65.00;
+      currentProdRate = parseFloat(inputRateProd.value) || 55.00;
       currentRouteRate = parseFloat(inputRateRoute.value) || 45.00;
       dispRateTag.textContent = currentProdRate.toFixed(0);
       headerRateDisplay.textContent = `Calculé selon les cadences ISSA (${currentProdRate.toFixed(2)} $/h production | ${currentRouteRate.toFixed(2)} $/h route)`;
@@ -482,438 +509,502 @@
     inputRateRoute.addEventListener('input', updateRates);
 
     // ----------------------------------------------------
-    // BANQUE EXHAUSTIVE EXPÉRIENCE 35 ANS (ISSA 540 + SPECS)
+    // BANQUE EXHAUSTIVE MULTI-NICHES AVEC CAHIER DES CHARGES
     // ----------------------------------------------------
-    const RESIDENTIAL_PROJECTS = {
-      // 1. COMBOS PAR PIÈCE COMPLÈTE
-      combo_kitch_std: {
-        category: 'rooms_regular',
-        name: 'Combo Cuisine Standard Complète (~120 pi²)',
-        unit: 'cuisine',
-        minutesEach: 35.0,
-        marketFlat: 45.00,
-        desc: 'Nettoyage complet surfaces, électros extérieurs et sol',
+    const COMMERCIAL_CATALOG = {
+      // ====================================================
+      // 1. BUREAUX CORPORATIFS & ADMINISTRATION
+      // ====================================================
+      combo_cubicle_carpet: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Combo Poste Cubicule + Panier déchet/recyclage + Moquette',
+        unit: 'poste',
+        minutesEach: 3.20,
+        marketFlat: 4.50,
+        desc: 'Bureau complet : surfaces libres, vidage tri sélectif et aspiration sol',
         specs: [
-          "Réfrigérateur : nettoyage extérieur de la porte, poignée et dessus si accessible.",
-          "Cuisinière / Four : nettoyage de la table de cuisson, brûleurs, boutons de contrôle et façade avant.",
-          "Four à micro-ondes : nettoyage complet intérieur (parois dégraissées et plateau lavé) et extérieur.",
-          "Lave-vaisselle : dégraissage de la porte avant et du bandeau de commande.",
-          "Petit électroménager : nettoyage extérieur du grille-pain (vidage ramasse-miettes) et cafetière.",
-          "Comptoirs & Dosseret : désinfection complète de la surface de travail et lessivage du dosseret carrelé.",
-          "Évier & Robinetterie : détartrage au détergent anticalcaire, récurage de la cuve inox/granite et polissage.",
-          "Poubelles : vidage des sacs, essuyage du bac et mise en place de sacs neufs.",
-          "Plancher : balayage soigné et passage de vadrouille humide dégraissante microfibre."
+          "Surfaces de travail : dépoussiérage microfibre antistatique des surfaces dégagées[cite: 2, 5].",
+          "Points de contact : désinfection du combiné téléphonique, combiné d'intercom et souris d'ordinateur[cite: 5].",
+          "Corbeille & Tri : vidage de la poubelle ordures et du bac de récupération bleu, remplacement des sacs jetables[cite: 5].",
+          "Sol moquette : aspiration complète sous le bureau et dans la zone de roulement de la chaise ergonomique[cite: 8]."
         ]
       },
-      combo_kitch_large: {
-        category: 'rooms_regular',
-        name: 'Combo Grande Cuisine avec Îlot & Coin Repas (~250 pi²)',
-        unit: 'cuisine',
-        minutesEach: 55.0,
-        marketFlat: 70.00,
-        desc: 'Grande cuisine, îlot central, table familiale, électros et plancher',
+      combo_exec_office: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Combo Bureau Direction Exécutif (Mobilier bois/cuir & sol)',
+        unit: 'bureau',
+        minutesEach: 6.50,
+        marketFlat: 9.50,
+        desc: 'Bureau direction, table de réunion privée, corbeilles et sol',
         specs: [
-          "Tous les points de la cuisine standard inclus.",
-          "Grand îlot central : dégraissage minutieux de la surface et côtés.",
-          "Table de salle à manger / coin repas : dessus lavé et barreaux de chaises essuyés.",
-          "Appareils électroménagers inox traités avec produit anti-traces protecteur.",
-          "Grand plancher de cuisine : double passage de lavage humide."
+          "Mobilier exécutif : lustrage doux des surfaces en bois verni avec produit neutre[cite: 5, 6].",
+          "Fauteuils en cuir : essuyage et désinfection soignée des accoudoirs[cite: 2, 5].",
+          "Gestion des déchets : vidage des corbeilles exécutives et déchiqueteuse sécurisée[cite: 5].",
+          "Planchers : aspiration soignée du tapis ou vadrouille microfibre à sec puis humide sur plancher de bois/stratifié[cite: 9, 10]."
         ]
       },
-      combo_bath_half: {
-        category: 'rooms_regular',
-        name: 'Combo Salle d’eau / Demi-bain (1T + 1L)',
+      combo_boardroom_complete: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Combo Salle de Conférence (Grande table 12 places & chaises)',
         unit: 'salle',
-        minutesEach: 12.0,
-        marketFlat: 18.00,
-        desc: 'Toilette, lavabo, robinetterie lustrée, miroir et plancher',
+        minutesEach: 16.00,
+        marketFlat: 24.00,
+        desc: 'Table conférence essuyée, chaises alignées, poubelles et moquette',
         specs: [
-          "Toilette : brossage intérieur avec désinfectant, désinfection assise, couvercle, réservoir et pied.",
-          "Lavabo : détartrage cuve porcelaine, robinetterie chromée nettoyée et séchée sans traînées.",
-          "Miroir et tablette : nettoyés au lave-vitre sans résidu.",
-          "Distributeur de savon essuyé et réapprovisionnement essuie-mains.",
-          "Plancher de céramique nettoyé et désinfecté à la main ou moppette."
+          "Table de conférence : nettoyage, dégraissage et lustrage sans traces sur toute la longueur.",
+          "Chaises (jusqu'à 12) : accoudoirs désinfectés[cite: 2], dossiers essuyés et chaises alignées au millimètre.",
+          "Tableau blanc / vitré : effaçage complet des inscriptions sèches et passage de nettoyant pour vitre[cite: 2, 3].",
+          "Gestion des poubelles et recyclage de la salle[cite: 5].",
+          "Aspiration intégrale de la moquette sous la table de réunion[cite: 8]."
         ]
       },
-      combo_bath_std_3pc: {
-        category: 'rooms_regular',
-        name: 'Combo Salle de Bain 3 morceaux (Toilette, lavabo, bain-douche)',
+      combo_kitchenette_breakroom: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Combo Cuisinette Employés & Coin Café (Surfaces & Électros ext.)',
+        unit: 'coin',
+        minutesEach: 22.00,
+        marketFlat: 32.00,
+        desc: 'Comptoirs, évier inox détartré, micro-ondes int/ext, frigo ext. et sol',
+        specs: [
+          "Comptoirs & tables repas : dégraissage et assainissement germicide.",
+          "Évier en acier inoxydable : détartrage au détergent acide doux, cuve frottée et robinet poli sans calcaire[cite: 6].",
+          "Micro-ondes : intérieur dégraissé à la vapeur, plateau tournant lavé, façade essuyée.",
+          "Réfrigérateur & Distributrices : façades extérieures dégraissées et poignées désinfectées.",
+          "Recharge des essuie-mains et savon à vaisselle[cite: 6].",
+          "Sol dur : balayage et lavage humide désodorisant à double seau[cite: 9]."
+        ]
+      },
+
+      // ====================================================
+      // 2. CLINIQUES MÉDICALES, DENTAIRES & SANTÉ
+      // ====================================================
+      combo_med_exam_room: {
+        niche: 'medical',
+        mode: 'regular',
+        name: 'Combo Salle d\'Examen Médical / Dentaire (Protocole aseptique)',
+        unit: 'cabinet',
+        minutesEach: 14.00,
+        marketFlat: 26.00,
+        desc: 'Table de consultation désinfectée, mobilier, évier médical et sol germicide',
+        specs: [
+          "Table d'examen / Fauteuil médical : désinfection virucide de niveau hospitalier de la sellerie vinyle et structure[cite: 4].",
+          "Mobilier clinique : essuyage désinfectant des chariots de soin, guéridons et poignées de tiroirs[cite: 4].",
+          "Évier médical inox : désinfection de la robinetterie à commande fémorale ou infrarouge[cite: 4, 6].",
+          "Déchets : remplacement des sacs ordures et vérification des contenants sécurisés[cite: 4, 5].",
+          "Sol clinique : mopping humide avec germicide désinfectant sans rinçage homologué DIN[cite: 4, 9]."
+        ]
+      },
+      combo_med_waiting_reception: {
+        niche: 'medical',
+        mode: 'regular',
+        name: 'Combo Salle d’Attente & Comptoir Réception Clinique',
         unit: 'salle',
-        minutesEach: 25.0,
-        marketFlat: 35.00,
-        desc: 'Combiné bain-douche récuré, céramique, lavabo, toilette et sol',
-        specs: [
-          "Combiné Baignoire & Douche : récurage des parois carrelées, enlèvement du cerne de savon et détartrage de la robinetterie.",
-          "Portes de douche vitrées ou rideau essuyé.",
-          "Toilette : nettoyage complet et désinfection à 100% de la porcelaine.",
-          "Lavabo & Vanité : cuve frottée, robinets polis, dessus de comptoir essuyé.",
-          "Miroir, armoire à pharmacie et porte-serviettes essuyés.",
-          "Plancher : lavage humide antibactérien avec pourtour de toilette soigné."
-        ]
-      },
-      combo_bath_master_4pc: {
-        category: 'rooms_regular',
-        name: 'Combo SDB des Maîtres (Douche vitrée, bain autoportant, double vasque)',
-        unit: 'salle',
-        minutesEach: 45.0,
-        marketFlat: 60.00,
-        desc: 'Lavage portes de verre, bain podium/autoportant, 2 lavabos et sol',
-        specs: [
-          "Douche vitrée indépendante : récurage des carreaux, coulis et élimination calcaire sur vitres avec raclette.",
-          "Baignoire autoportante ou bain podium : récurage de la cuve, robinetterie colonne chromée lustrée.",
-          "Double lavabo (vanité des maîtres) : 2 vasques récurées, miroirs panoramiques nettoyés sans trace.",
-          "Toilette complète désinfectée.",
-          "Plancher carrelé lavé avec soin dans chaque recoin."
-        ]
-      },
-      combo_bed_master: {
-        category: 'rooms_regular',
-        name: 'Combo Chambre des Maîtres (Meubles, miroir, lit fait, sol)',
-        unit: 'chambre',
-        minutesEach: 16.0,
-        marketFlat: 22.00,
-        desc: 'Dépoussiérage commode, tables de chevet, lit fait, aspiration et sol',
-        specs: [
-          "Lit : lit fait au carré (draps tendus, couette et oreillers bien alignés).",
-          "Dépoussiérage : tables de chevet, lampes, commode, dessus de téléviseur et miroirs.",
-          "Aspiration : tapis et passage de l'aspirateur sous le tour du lit lorsque accessible.",
-          "Lavage : plancher de bois franc ou flottant avec vadrouille microfibre dépoussiérante et neutre."
-        ]
-      },
-      combo_bed_secondary: {
-        category: 'rooms_regular',
-        name: 'Combo Chambre secondaire / Bureau à domicile',
-        unit: 'chambre',
-        minutesEach: 12.0,
-        marketFlat: 16.00,
-        desc: 'Bureau, surfaces dégagées, lit simple fait, aspiration et sol',
-        specs: [
-          "Lit fait avec soin ou dessus de bureau de travail dépoussiéré (écrans et périphériques effleurés).",
-          "Dépoussiérage des étagères et tablettes accessibles.",
-          "Vidage de la corbeille de bureau.",
-          "Aspiration du sol et lavage adapté au type de revêtement."
-        ]
-      },
-      combo_living_room: {
-        category: 'rooms_regular',
-        name: 'Combo Grand Salon & Salle de Séjour',
-        unit: 'salon',
-        minutesEach: 22.0,
+        minutesEach: 18.00,
         marketFlat: 30.00,
-        desc: 'Tables basses, meuble télé, aspiration canapé, tapis et planchers',
+        desc: 'Comptoir accueil, plexiglas, chaises vinyle désinfectées et planchers',
         specs: [
-          "Mobilier : dépoussiérage table basse, table d'appoint, meuble audio/télévision.",
-          "Canapé : retrait des coussins décoratifs, aspiration de l'assise du divan et remise en place harmonieuse.",
-          "Objets décoratifs et cadres légers dépoussiérés au plumeau microfibre.",
-          "Aspiration complète du grand tapis de salon.",
-          "Lavage des planchers de bois franc ou stratifié."
+          "Comptoir d'accueil & Vitres de protection plexiglas : nettoyés sans traces au produit antistatique[cite: 3].",
+          "Chaises de salle d'attente : désinfection antibactérienne systématique des assises et accoudoirs[cite: 2, 5].",
+          "Portes battantes et poignées d'accès traitées au désinfectant de contact[cite: 5].",
+          "Plancher d'accueil : dépoussiérage et mopping désinfectant haute fréquence[cite: 9]."
         ]
       },
-      combo_dining_room: {
-        category: 'rooms_regular',
-        name: 'Combo Salle à Manger (Grande table, 6-8 chaises, buffet)',
-        unit: 'salle',
-        minutesEach: 15.0,
-        marketFlat: 20.00,
-        desc: 'Table nettoyée, chaises essuyées, meuble buffet dépoussiéré et sol lavé',
-        specs: [
-          "Table de salle à manger : dessus lavé et séché au chiffon doux.",
-          "Chaises (6 à 8) : barreaux, assises et dossiers essuyés.",
-          "Meuble buffet / Vaisselier : dépoussiérage extérieur et poignées essuyées.",
-          "Lustre au-dessus de la table : plumeau doux pour retirer toiles d'araignées et poussière légère.",
-          "Aspiration et mopping du plancher."
-        ]
-      },
-      combo_entry_hall: {
-        category: 'rooms_regular',
-        name: 'Combo Hall d’Entrée, Vestibule & Tapis bottes',
-        unit: 'hall',
-        minutesEach: 12.0,
-        marketFlat: 16.00,
-        desc: 'Aspiration paillassons, banc essuyé, miroir et lavage céramique',
-        specs: [
-          "Aspiration des tapis gratte-pieds et bacs à bottes.",
-          "Nettoyage des traces de doigts sur la porte d'entrée et poignée désinfectée.",
-          "Miroir d'entrée poli sans trace.",
-          "Lavage de la céramique d'entrée pour éliminer traces de sel et saletés extérieures."
-        ]
-      },
-      combo_stairs_flight: {
-        category: 'rooms_regular',
-        name: 'Combo Escalier Résidentiel (1 volée de 12-14 marches)',
-        unit: 'escalier',
-        minutesEach: 10.0,
-        marketFlat: 15.00,
-        desc: 'Aspiration marches/contremarches, dépoussiérage rampe et barreaux',
-        specs: [
-          "Aspiration à l'embout brosse de chaque marche, coin et contremarche.",
-          "Rampe d'escalier et main courante entièrement désinfectées.",
-          "Dépoussiérage des barreaux d'escalier.",
-          "Lavage humide des marches si bois verni ou céramique."
-        ]
-      },
-
-      // 2. FORFAITS GLOBAUX CLÉ EN MAIN
-      pkg_reg_1bed: {
-        category: 'global_regular',
-        name: 'Forfait Condo 1 chambre + 1 SDB (~650 pi²)',
-        unit: 'logement',
-        minutesEach: 95.0,
-        marketFlat: 110.00,
-        desc: 'Cuisine, séjour, chambre, SDB et tous les planchers',
-        specs: [
-          "Cuisine complète (électros ext., comptoirs, évier, micro-ondes int.).",
-          "Salle de bain 3 morceaux complète détartrée et désinfectée.",
-          "Chambre des maîtres avec lit fait et dépoussiérage.",
-          "Salon et coin repas entièrement entretenus.",
-          "Aspiration et lavage de tous les planchers du condo."
-        ]
-      },
-      pkg_reg_2bed: {
-        category: 'global_regular',
-        name: 'Forfait Logement 2 chambres + 1 SDB (~900 pi²)',
-        unit: 'logement',
-        minutesEach: 130.0,
-        marketFlat: 145.00,
-        desc: 'Cuisine, salon, salle à manger, 2 chambres, 1 SDB et sols',
-        specs: [
-          "Cuisine complète, électroménagers extérieurs et coin repas.",
-          "1 Salle de bain complète récurée et désinfectée.",
-          "2 Chambres à coucher dépoussiérées avec lits faits.",
-          "Salon, salle à manger et corridor aspirés et lavés."
-        ]
-      },
-      pkg_reg_3bed_2bath: {
-        category: 'global_regular',
-        name: 'Forfait Maison 3 chambres + 2 SDB (~1 600 pi²)',
-        unit: 'maison',
-        minutesEach: 195.0,
-        marketFlat: 215.00,
-        desc: '3 chambres, 2 salles de bain, cuisine, aires de vie et escaliers',
-        specs: [
-          "Cuisine familiale complète et grand îlot.",
-          "2 Salles de bain complètes récurées, détartrées et désinfectées.",
-          "3 Chambres à coucher (meubles dépoussiérés, lits faits).",
-          "Salon, salle à manger, escaliers et hall d'entrée entretenus.",
-          "Aspiration complète et lavage des sols de la maison."
-        ]
-      },
-      pkg_reg_4bed_2halfbath: {
-        category: 'global_regular',
-        name: 'Forfait Grande Maison 4 chambres + 2.5 SDB (~2 400 pi²)',
-        unit: 'maison',
-        minutesEach: 270.0,
-        marketFlat: 310.00,
-        desc: 'Maison complète avec 2.5 SDB, sous-sol et escaliers',
-        specs: [
-          "Prestation résidentielle haut de gamme complète pour grande résidence familiale.",
-          "4 Chambres, 2 SDB complètes + 1 salle d'eau d'invités.",
-          "Aires de vie rez-de-chaussée et salle familiale sous-sol.",
-          "Escaliers multiples et planchers intégraux."
-        ]
-      },
-
-      // 3. APPAREILS SANITAIRES À L'UNITÉ
-      item_toilet_single: {
-        category: 'rooms_regular',
-        name: 'Toilette seule (Désinfection cuvette, abattant & base au sol)',
-        unit: 'toilette',
-        minutesEach: 2.5,
-        marketFlat: 5.00,
-        desc: 'Détartrage intérieur brosse, assise, extérieur porcelaine',
-        specs: ["Désinfection germicide complète : cuvette intérieure, abattant 2 côtés, réservoir et contour au plancher."]
-      },
-      item_sink_single: {
-        category: 'rooms_regular',
-        name: 'Lavabo de salle de bain & robinet chrome poli',
-        unit: 'lavabo',
-        minutesEach: 1.5,
-        marketFlat: 3.50,
-        desc: 'Décalcification buse, cuve porcelaine et miroir au-dessus',
-        specs: ["Récurage cuve lavabo, détartrage du mousseur et robinetterie lustrée sans résidu d'eau."]
-      },
-      item_shower_glass: {
-        category: 'rooms_regular',
-        name: 'Cabine de douche vitrée (Lavage murs & parois de verre)',
-        unit: 'douche',
-        minutesEach: 8.0,
-        marketFlat: 12.00,
-        desc: 'Entretien régulier céramique et assèchement vitres',
-        specs: ["Lavage régulier des carreaux, élimination des éclaboussures de savon et assèchement de la porte vitrée."]
-      },
-      item_shower_deep_scale: {
-        category: 'rooms_regular',
-        name: 'Douche vitrée – Détartrage lourd & moisissure coulis',
-        unit: 'douche',
-        minutesEach: 25.0,
-        marketFlat: 35.00,
-        desc: 'Acide anticalcaire sur verres tachés et brossage des joints',
-        specs: ["Application de décapant calcaire sur vitres embuées et brossage mécanique des joints de coulis noircis."]
-      },
-      item_bathtub_only: {
-        category: 'rooms_regular',
-        name: 'Baignoire seule (Récurage cuve & robinetterie)',
-        unit: 'bain',
-        minutesEach: 6.0,
-        marketFlat: 10.00,
-        desc: 'Élimination cerne de savon et désinfection cuve',
-        specs: ["Récurage au tampon non abrasif pour protéger l'émail ou l'acrylique et polissage de la robinetterie."]
-      },
-      item_whirlpool_tub: {
-        category: 'rooms_regular',
-        name: 'Bain tourbillon / Jacuzzi (Buses à jet & margelle)',
-        unit: 'bain',
-        minutesEach: 15.0,
-        marketFlat: 25.00,
-        desc: 'Nettoyage buses hydro-massage et margelle carrelée',
-        specs: ["Nettoyage méticuleux des buses à jet, assainissement de la cuve et lustrage de la margelle."]
-      },
-
-      // 4. EXTRAS ÉLECTROMÉNAGERS & MOBILIER
-      extra_oven_deep: {
-        category: 'rooms_regular',
-        name: 'Four cuisinière (Nettoyage intérieur complet, grilles & vitre)',
-        unit: 'four',
-        minutesEach: 45.0,
-        marketFlat: 50.00,
-        desc: 'Décapage graisses calcinées intérieur et grilles',
-        specs: [
-          "Retrait des grilles métalliques et récurage.",
-          "Application de décapant à four professionnel écologique et récurage des parois intérieures.",
-          "Décapage de la vitre intérieure de porte de four pour retrouver la transparence."
-        ]
-      },
-      extra_fridge_deep: {
-        category: 'rooms_regular',
-        name: 'Réfrigérateur (Intérieur complet, bacs lavés & tablettes)',
-        unit: 'frigo',
-        minutesEach: 40.0,
-        marketFlat: 45.00,
-        desc: 'Nettoyage intérieur complet à l\'eau savonneuse tiède',
-        specs: [
-          "Retrait des bacs à fruits/légumes et tablettes en verre.",
-          "Lavage à l'eau savonneuse tiède et séchage au chiffon propre.",
-          "Désinfection des joints de porte et réinstallation soignée des compartiments."
-        ]
-      },
-      extra_microwave_inside: {
-        category: 'rooms_regular',
-        name: 'Four micro-ondes (Nettoyage intérieur vapeur & plateau)',
-        unit: 'micro-ondes',
-        minutesEach: 6.0,
-        marketFlat: 10.00,
-        desc: 'Parois intérieures et plateau tournant dégraissés',
-        specs: ["Décollement des projections à la vapeur, dégraissage intérieur et plateau en verre lavé."]
-      },
-      extra_bed_linen_change: {
-        category: 'rooms_regular',
-        name: 'Changement complet de draps & housse de couette',
-        unit: 'lit',
-        minutesEach: 8.0,
-        marketFlat: 12.00,
-        desc: 'Retrait parure souillée et mise en place draps propres',
-        specs: ["Défaire la literie usagée, installation des draps contour propres, housse de couette et taies d'oreillers."]
-      },
-      extra_sofa_vacuum: {
-        category: 'rooms_regular',
-        name: 'Canapé en tissu 3 places (Aspiration profonde fentes/coussins)',
-        unit: 'canapé',
-        minutesEach: 10.0,
-        marketFlat: 15.00,
-        desc: 'Retrait coussins amovibles, aspiration miettes et poils',
-        specs: ["Aspiration sous les coussins d'assise, interstices de structure et brossage des tissus pour poils d'animaux."]
-      },
-      extra_window_standard: {
-        category: 'rooms_regular',
-        name: 'Fenêtre résidentielle standard (2 côtés + cadrage)',
-        unit: 'fenêtre',
-        minutesEach: 8.0,
-        marketFlat: 10.00,
-        desc: 'Vitre intérieure, extérieure accessible et cadrage essuyé',
-        specs: ["Lavage à la mouilleuse et raclette professionnelle, cadrage intérieur essuyé et moustiquaire brossée."]
-      },
-      extra_patio_door: {
-        category: 'rooms_regular',
-        name: 'Porte-patio vitrée double (Intérieur et extérieur)',
-        unit: 'porte',
-        minutesEach: 10.0,
-        marketFlat: 15.00,
-        desc: 'Deux grands panneaux coulissants vitrés sans trace',
-        specs: ["Lavage des deux vitrages pleine grandeur int/ext et aspiration du rail inférieur de coulissement."]
-      },
-      extra_blinds_dust: {
-        category: 'rooms_regular',
-        name: 'Store vénitien horizontal (Dépoussiérage lamelles)',
-        unit: 'store',
-        minutesEach: 6.0,
+      item_med_surgical_sink: {
+        niche: 'medical',
+        mode: 'regular',
+        name: 'Évier Chirurgical / Poste de Lavage Aseptique des Mains',
+        unit: 'évier',
+        minutesEach: 3.50,
         marketFlat: 8.00,
-        desc: 'Dépoussiérage soigné lamelle par lamelle',
-        specs: ["Passage du plumeau microfibre antistatique lamelle par lamelle pour enlever la poussière sèche."]
+        desc: 'Détartrage, buse médicale et parois murales éclaboussées',
+        specs: [
+          "Détartrage complet de la cuve profonde en acier inoxydable 316[cite: 6].",
+          "Désinfection du bec verseur et des parois murales carrelées adjacentes[cite: 4, 6]."
+        ]
       },
 
-      // 5. SOLS DIRECTS AU PIED CARRÉ
-      surf_carpet_regular: {
-        category: 'surface_regular',
-        name: 'Sol Tapis / Moquette - Aspiration au pi²',
-        unit: 'pi²',
-        minutesEach: 0.020,
-        marketRateSqft: 0.05,
-        desc: 'Passage régulier d\'aspirateur traîneau ou dorsal',
-        specs: ["Aspiration minutieuse en bandes parallèles de la surface textile d'entretien régulier."]
+      // ====================================================
+      // 3. COPROPRIÉTÉS & AIRES COMMUNES (CONDOS)
+      // ====================================================
+      combo_condo_lobby_entry: {
+        niche: 'condo',
+        mode: 'regular',
+        name: 'Combo Hall d’Entrée Immeuble & Sas d\'accès (Portes vitrées & tapis Nomad)',
+        unit: 'hall',
+        minutesEach: 20.00,
+        marketFlat: 30.00,
+        desc: 'Portes vitrées int/ext, combiné intercom, boîtes postales et tapis encastrés',
+        specs: [
+          "Portes vitrées principales : lavage des vitres intérieures/extérieures plain-pied et poignées en laiton/inox[cite: 3].",
+          "Système d'intercom et clavier d'accès numérique entièrement désinfectés[cite: 5].",
+          "Casiers postaux : essuyage des façades et dessus des boîtes aux lettres.",
+          "Tapis de vestibule (type Nomad 3M) : aspiration industrielle à brosse battante pour retirer sable et sel[cite: 3, 8].",
+          "Céramique du hall : balayage et lavage neutralisant d'hiver ou dégraissant[cite: 9]."
+        ]
       },
-      surf_carpet_pet_hair: {
-        category: 'surface_regular',
-        name: 'Sol Tapis / Moquette - Aspiration poils d’animaux au pi²',
-        unit: 'pi²',
-        minutesEach: 0.035,
-        marketRateSqft: 0.08,
-        desc: 'Passage croisé avec brosse rotative électrostatique',
-        specs: ["Double passage d'aspirateur avec brosse battante pour déloger les poils d'animaux en profondeur."]
+      combo_condo_elevator: {
+        niche: 'condo',
+        mode: 'regular',
+        name: 'Combo Cabine d’Ascenseur (Miroirs, inox, panneau boutons & rainures)',
+        unit: 'cabine',
+        minutesEach: 8.00,
+        marketFlat: 15.00,
+        desc: 'Polissage parois inox, miroir, panneau boutons désinfecté et rail de porte',
+        specs: [
+          "Panneau de contrôle et boutons d'étages : désinfection rigoureuse sans infiltration de liquide[cite: 3].",
+          "Parois en acier inoxydable : élimination des traces de doigts et polissage uniforme dans le sens du grain[cite: 3].",
+          "Grand miroir de fond de cabine : lavé sans rayure ni voile[cite: 3].",
+          "Rainures de portes d'ascenseur : brossage mécanique et aspiration des gravillons coincés[cite: 3].",
+          "Plancher d'ascenseur : aspiration et lavage humide[cite: 3]."
+        ]
       },
-      surf_wood_regular: {
-        category: 'surface_regular',
-        name: 'Sol Bois franc / Stratifié - Aspiration & Microfibre au pi²',
-        unit: 'pi²',
-        minutesEach: 0.030,
-        marketRateSqft: 0.07,
-        desc: 'Aspiration sans rayures et vadrouille microfibre détergent neutre',
-        specs: ["Aspiration à brosse en crin doux et nettoyage humide au détergent pH neutre spécifique pour parquets."]
+      combo_condo_hallway_flight: {
+        niche: 'condo',
+        mode: 'regular',
+        name: 'Combo Corridor d’Étage Résidentiel (~150 pi lin de moquette)',
+        unit: 'étage',
+        minutesEach: 15.00,
+        marketFlat: 22.00,
+        desc: 'Aspiration moquette corridor, plinthes, portes palières et luminaires',
+        specs: [
+          "Moquette de corridor : aspiration en bandes continues à l'aspirateur dorsal haute performance[cite: 8].",
+          "Portes d'ascenseur d'étage et portes coupe-feu : cadrages et poignées essuyés[cite: 3].",
+          "Plinthes de corridor et extincteurs muraux : dépoussiérés au chiffon microfibre[cite: 2, 9].",
+          "Luminaires d'étage : vérification et retrait des toiles d'araignées au plumeau télescopique[cite: 12]."
+        ]
       },
-      surf_tile_regular: {
-        category: 'surface_regular',
-        name: 'Sol Céramique & Coulis - Mopping humide au pi²',
+      combo_condo_garbage_room: {
+        niche: 'condo',
+        mode: 'regular',
+        name: 'Combo Local des Chutes à Déchets & Bacs Roulants',
+        unit: 'local',
+        minutesEach: 12.00,
+        marketFlat: 20.00,
+        desc: 'Trémie de chute désinfectée, poignées, balayage et mopping désodorisant',
+        specs: [
+          "Trémie et clapet de chute à déchets : dégraissage intérieur/extérieur et désinfection bactéricide[cite: 12].",
+          "Bacs roulants municipaux : essuyage des couvercles et poignées.",
+          "Plancher du local poubelles : balayage des débris et lavage à l'eau désodorisante avec neutralisant d'odeurs[cite: 12]."
+        ]
+      },
+      combo_condo_fitness_gym: {
+        niche: 'condo',
+        mode: 'regular',
+        name: 'Combo Salle d’Entraînement / Gym de Copropriété',
+        unit: 'gym',
+        minutesEach: 25.00,
+        marketFlat: 40.00,
+        desc: 'Appareils cardio désinfectés, poids libres, miroirs géants et sol caoutchouc',
+        specs: [
+          "Appareils cardio (tapis roulants, vélos, elliptiques) : désinfection des poignées, écrans et consoles.",
+          "Grands miroirs muraux : nettoyés de haut en bas sans trace[cite: 3].",
+          "Distributeur de lingettes désinfectantes rechargé et poubelles vidées[cite: 5, 6].",
+          "Plancher en caoutchouc amortissant : aspiration puis vadrouille microfibre à détergent neutre."
+        ]
+      },
+      item_condo_spa_whirlpool: {
+        niche: 'condo',
+        mode: 'regular',
+        name: 'Bain Tourbillon / Spa d’Immeuble (Margelle carrelée & parois)',
+        unit: 'spa',
+        minutesEach: 15.00,
+        marketFlat: 35.00,
+        desc: 'Désinfection margelle carrelée, ligne d\'eau et rampe d\'accès inox',
+        specs: [
+          "Récurage de la ligne d'eau pour éliminer les dépôts gras et crèmes corporelles[cite: 5].",
+          "Désinfection de la margelle antidérapante et des barres d'appui en inox[cite: 5]."
+        ]
+      },
+
+      // ====================================================
+      // 4. ATELIERS, INDUSTRIEL LÉGER & GARAGES
+      // ====================================================
+      combo_shop_workstation: {
+        niche: 'industrial',
+        mode: 'regular',
+        name: 'Combo Poste de Travail Atelier / Établi de Production',
+        unit: 'poste',
+        minutesEach: 3.50,
+        marketFlat: 4.25,
+        desc: 'Établi essuyé, bac à rebuts métalliques/cartons et balayage sol',
+        specs: [
+          "Établi d'atelier : brossage des copeaux/sciure et essuyage des surfaces dégagées.",
+          "Contenants d'atelier : vidage des poubelles industrielles et tri des retailles de carton[cite: 5].",
+          "Sol béton de zone : balayage soigné avec balai poussoir lourd et ramassage au bac[cite: 11]."
+        ]
+      },
+      combo_shop_locker_shower: {
+        niche: 'industrial',
+        mode: 'regular',
+        name: 'Combo Vestiaire d\'Usine (Casiers essuyés, 1 douche industrielle, bancs)',
+        unit: 'vestiaire',
+        minutesEach: 15.00,
+        marketFlat: 30.00,
+        desc: 'Bancs de vestiaire essuyés, 1 cabine douche récurée, casiers extérieurs et sol',
+        specs: [
+          "Bancs et façades de casiers métalliques essuyés au désinfectant[cite: 2, 4].",
+          "Cabine de douche industrielle : récurage des parois carrelées, robinetterie et grille d'évacuation[cite: 4].",
+          "Plancher antidérapant de vestiaire : lavage à grande eau dégraissante et raclette de sol[cite: 9]."
+        ]
+      },
+      surf_industrial_concrete_sweep: {
+        niche: 'industrial',
+        mode: 'regular',
+        name: 'Plancher Béton d\'Entrepôt - Balayage poussière au pi²',
+        unit: 'pi²',
+        minutesEach: 0.008,
+        marketRateSqft: 0.030,
+        desc: 'Balayage continu à sec pour grandes allées d\'entrepôt ou d\'atelier',
+        specs: ["Balayage à sec au balai poussoir large 24\" ou 36\" avec composé anti-poussière[cite: 11, 13]."]
+      },
+      surf_industrial_concrete_scrub: {
+        niche: 'industrial',
+        mode: 'regular',
+        name: 'Plancher Béton d\'Atelier - Lavage mécanique récureuse au pi²',
+        unit: 'pi²',
+        minutesEach: 0.015,
+        marketRateSqft: 0.065,
+        desc: 'Lavage dégraissant pour traces de pneus de chariots et saletés lourdes',
+        specs: ["Passage de laveuse automatique autotractée avec détergent dégraissant industriel[cite: 10, 14]."]
+      },
+
+      // ====================================================
+      // 5. COMMERCES DE DÉTAIL & RESTAURATION
+      // ====================================================
+      combo_retail_sales_floor: {
+        niche: 'retail',
+        mode: 'regular',
+        name: 'Combo Aire de Vente Magasin (~1 000 pi² plancher dur + vitrines)',
+        unit: 'aire',
+        minutesEach: 35.00,
+        marketFlat: 50.00,
+        desc: 'Balayage et lavage de l\'aire de circulation magasin, comptoirs caisses et vitrines',
+        specs: [
+          "Comptoirs caisses et terminaux de paiement (TPV) soigneusement désinfectés.",
+          "Vitrines commerciales plain-pied intérieures/extérieures lavées sans trace[cite: 3, 13].",
+          "Plancher de magasin : passage de vadrouille dépoussiérante puis mopping brillant[cite: 9, 10]."
+        ]
+      },
+      combo_resto_dining_room: {
+        niche: 'retail',
+        mode: 'regular',
+        name: 'Combo Salle à Manger Restaurant (Tables, banquettes & sol dégraissé)',
+        unit: 'salle',
+        minutesEach: 40.00,
+        marketFlat: 65.00,
+        desc: 'Tables dégraissées, banquettes vinyle essuyées, miettes et sol carrelé',
+        specs: [
+          "Tables et banquettes de restaurant : dégraissage minutieux au nettoyant de qualité alimentaire.",
+          "Chaises et pieds de table essuyés pour éliminer traces de souliers et coulisses.",
+          "Plancher carrelé de salle à manger : lavage au dégraissant émulsifiant pour éviter tout sol glissant[cite: 9]."
+        ]
+      },
+
+      // ====================================================
+      // 6. BLOCS SANITAIRES TOUTES NICHES (COMMUN)
+      // ====================================================
+      combo_bath_1t_1l: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Combo Bloc Sanitaire 1T + 1L (1 toilette, 1 lavabo, miroir & sol)',
+        unit: 'bloc',
+        minutesEach: 5.00,
+        marketFlat: 12.00,
+        desc: 'Désinfection complète cuvette, lavabo, miroir, distributeurs et sol',
+        specs: [
+          "Cuvette commerciale : détartrage intérieur à la brosse, assise, charnières et base désinfectées[cite: 4, 6].",
+          "Lavabo : vasque récurée, robinet automatique lustré et miroir nettoyé sans trace[cite: 4, 6].",
+          "Distributeurs de papier toilette, essuie-mains et savon vérifiés et remplis[cite: 6].",
+          "Poubelle sanitaire vidée et lavée[cite: 5].",
+          "Plancher carrelé : vadrouille humide au nettoyant désinfectant neutre[cite: 10]."
+        ]
+      },
+      combo_bath_multiple_2t_1u_2l: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Combo Bloc Sanitaire Multiple (2 toilettes, 1 urinoir, 2 lavabos & sol)',
+        unit: 'bloc',
+        minutesEach: 11.00,
+        marketFlat: 25.00,
+        desc: 'Bloc sanitaire complet multi-usagers avec cloisons essuyées',
+        specs: [
+          "2 Toilettes et 1 urinoir : détartrage calcaire, assises désinfectées et pastille fraîcheur[cite: 4, 6].",
+          "Cloisons métalliques entre cabines : traces de doigts et éclaboussures essuyées[cite: 13].",
+          "2 Lavabos et grands miroirs panoramiques polis[cite: 4, 6].",
+          "Réapprovisionnement complet des distributeurs de consommables[cite: 6].",
+          "Lavage intégral du sol de carreaux céramique au détergent germicide[cite: 10]."
+        ]
+      },
+      item_sanitary_toilet_fixture: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Toilette Commerciale à l\'Unité (Détartrage, assise & pied)',
+        unit: 'toilette',
+        minutesEach: 1.50,
+        marketFlat: 4.50,
+        desc: 'Nettoyage intérieur brosse, assise 2 côtés, porcelaine extérieure',
+        specs: ["Nettoyage brosse intérieure cuvette, désinfection de la lunette, levier de chasse et extérieur porcelaine[cite: 4, 6]."]
+      },
+      item_sanitary_urinal_fixture: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Urinoir Commercial à l\'Unité (Détartrage & pastille)',
+        unit: 'urinoir',
+        minutesEach: 1.25,
+        marketFlat: 4.00,
+        desc: 'Élimination des dépôts de tartre, robinet flush et grille',
+        specs: ["Récurage cuve d'urinoir, polissage du mécanisme de chasse chrome et remplacement pastille anti-odeurs[cite: 6]."]
+      },
+      item_sanitary_sink_fixture: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Lavabo Commercial & Robinetterie Chrome à l\'Unité',
+        unit: 'lavabo',
+        minutesEach: 1.20,
+        marketFlat: 3.50,
+        desc: 'Cuve désinfectée, robinetterie détartrée et miroir attenant',
+        specs: ["Désinfection de la vasque, polissage robinet et lustrage du miroir immédiatement au-dessus[cite: 4, 6]."]
+      },
+
+      // ====================================================
+      // 7. SOLS AU PIED CARRÉ (ENTRETIEN RÉGULIER)
+      // ====================================================
+      surf_carpet_vacuum_regular: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Moquette / Tapis Commercial - Aspiration régulière de circulation au pi²',
+        unit: 'pi²',
+        minutesEach: 0.021,
+        marketRateSqft: 0.050,
+        desc: 'Aspiration des voies de circulation et passages fréquents',
+        specs: ["Aspiration des couloirs de circulation et zones de passage à l'aspirateur vertical ou dorsal[cite: 8]."]
+      },
+      surf_hardfloor_microfiber_regular: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Plancher Vinyle / Stratifié / Bois - Vadrouille microfibre au pi²',
         unit: 'pi²',
         minutesEach: 0.025,
-        marketRateSqft: 0.06,
-        desc: 'Lavage dégraissant pour carrelage',
-        specs: ["Lavage humide au détergent dégraissant désodorisant et séchage uniforme."]
+        marketRateSqft: 0.065,
+        desc: 'Dépoussiérage à sec et lavage humide à plat détergent neutre',
+        specs: ["Balayage à sec pour retirer poussières puis vadrouille microfibre plate légèrement humide sans traînées[cite: 9, 10]."]
       },
-      surf_concrete_sweep: {
-        category: 'surface_regular',
-        name: 'Sol Béton Sous-sol / Garage - Balayage sec au pi²',
+      surf_tile_mop_regular: {
+        niche: 'office',
+        mode: 'regular',
+        name: 'Plancher Céramique & Coulis - Mopping double seau au pi²',
         unit: 'pi²',
-        minutesEach: 0.012,
-        marketRateSqft: 0.035,
-        desc: 'Balayage poussière et ramassage débris légers',
-        specs: ["Balayage à sec du sol béton et ramassage des débris fins."]
+        minutesEach: 0.028,
+        marketRateSqft: 0.060,
+        desc: 'Lavage humide avec détergent dégraissant pour carrelage',
+        specs: ["Lavage à la vadrouille Kentucky ou microfibre avec eau propre renouvelée pour joints impeccables[cite: 9]."]
+      },
+
+      // ====================================================
+      // 8. SERVICES PONCTUELS & GRANDS MÉNAGES SPÉCIALISÉS
+      // ====================================================
+      deep_floor_strip_wax: {
+        niche: 'office',
+        mode: 'sporadic',
+        name: 'Décapage & Cirage de Plancher Vinyle / VCT (4 couches de cire) au pi²',
+        unit: 'pi²',
+        minutesEach: 0.113,
+        marketRateSqft: 1.15,
+        desc: 'Décapage chimique complet de l\'ancienne cire, neutralisation et pose de fini protecteur',
+        specs: [
+          "Application de décapant professionnel et action à la monobrosse rotative 175 rpm équipée d'un tampon noir[cite: 10, 11].",
+          "Aspiration des boues au ramasseur d'eau industriel et rinçage neutralisant à deux reprises[cite: 10, 11].",
+          "Application méticuleuse de 4 couches de cire polymère haute teneur en solides avec temps de séchage respecté[cite: 9]."
+        ]
+      },
+      deep_carpet_wand_extract: {
+        niche: 'office',
+        mode: 'sporadic',
+        name: 'Nettoyage de Tapis par Extraction à l\'Eau Chaude (Wand) au pi²',
+        unit: 'pi²',
+        minutesEach: 0.058,
+        marketRateSqft: 0.28,
+        desc: 'Injection-extraction haute pression pour moquettes très souillées',
+        specs: [
+          "Prétraitement par pulvérisation d'un agent dégraissant et détachage manuel des taches tenaces[cite: 7].",
+          "Nettoyage par injection d'eau chaude adoucie et aspiration immédiate à la canne Wand deux jets[cite: 7].",
+          "Passage de ventilateurs axiaux d'assèchement si nécessaire."
+        ]
+      },
+      deep_carpet_encapsulation: {
+        niche: 'office',
+        mode: 'sporadic',
+        name: 'Nettoyage de Tapis par Encapsulation / Bonnet au pi²',
+        unit: 'pi²',
+        minutesEach: 0.025,
+        marketRateSqft: 0.16,
+        desc: 'Méthode d\'entretien intermédiaire à séchage rapide (45 minutes)',
+        specs: [
+          "Vaporisation d'un polymère encapsulant les molécules de graisse et de poussière[cite: 7].",
+          "Passage de la machine rotative munie d'un bonnet microfibre ou brosses cylindriques rotatives[cite: 7, 8].",
+          "Remise en circulation rapide des bureaux sans humidité résiduelle."
+        ]
+      },
+      deep_ceramic_acid_scrub: {
+        niche: 'office',
+        mode: 'sporadic',
+        name: 'Récurage Rotatif & Détartrage Coulis Céramique au pi²',
+        unit: 'pi²',
+        minutesEach: 0.045,
+        marketRateSqft: 0.45,
+        desc: 'Décrassage lourd des joints noircis et de la faïence sanitaire',
+        specs: [
+          "Application d'une solution détartrante acide contrôlée pour dissoudre calcaire et dépôts de savon[cite: 7].",
+          "Brossage rotatif agressif pour pénétrer dans les joints de coulis poreux[cite: 4, 7].",
+          "Aspiration liquide et rinçage à l'eau claire neutralisée[cite: 10]."
+        ]
+      },
+      deep_pressure_washing: {
+        niche: 'industrial',
+        mode: 'sporadic',
+        name: 'Lavage Haute Pression - Trottoir, Entrée & Quai de chargement au pi²',
+        unit: 'pi²',
+        minutesEach: 0.025,
+        marketRateSqft: 0.22,
+        desc: 'Nettoyage à l\'eau sous pression pour enlever graisses, chewing-gums et dépôts extérieurs',
+        specs: [
+          "Dégraissage haute pression (3 000 PSI) à l'eau chaude des dalles de béton ou pavé uni[cite: 12].",
+          "Élimination des résidus d'huile moteur, mousses et salissures hivernales."
+        ]
+      },
+      deep_disinfection_fogging: {
+        niche: 'medical',
+        mode: 'sporadic',
+        name: 'Nébulisation Électrostatique / Désinfection Aéroportée au pi²',
+        unit: 'pi²',
+        minutesEach: 0.015,
+        marketRateSqft: 0.15,
+        desc: 'Décontamination totale post-épidémie ou assainissement préventif clinique',
+        specs: [
+          "Brumisation à charge électrostatique d'un désinfectant DIN virucide à large spectre.",
+          "Couverture totale à 360° des surfaces, claviers, dossiers de chaises et recoins inaccessibles sans mouillage excessif."
+        ]
       }
     };
 
-    // Ventilation financière interne
+    // Ventilation interne confidentielle
     const FINANCIAL_BREAKDOWN = [
-      { name: 'Main-d’œuvre terrain directe (Préposée ménage)', pct: 44.00, color: 'text-blue-900 font-semibold' },
-      { name: 'Coordination, Administration & Service client', pct: 26.00, color: 'text-slate-700' },
-      { name: 'Frais de déplacement, Véhicule & Essence', pct: 9.00, color: 'text-slate-700' },
-      { name: 'Produits nettoyants professionnels & Équipements', pct: 6.00, color: 'text-slate-700' },
-      { name: 'Assurances commerciales & Frais généraux', pct: 5.00, color: 'text-slate-700' },
-      { name: 'Marge bénéficiaire nette (Profit entreprise)', pct: 10.00, color: 'text-emerald-700 font-bold' }
+      { name: 'Main-d’œuvre directe (Équipe d\'entretien & superviseur)', pct: 46.00, color: 'text-blue-900 font-semibold' },
+      { name: 'Administration, Soumissions & Service client', pct: 22.00, color: 'text-slate-700' },
+      { name: 'Produits chimiques professionnels, Wands & Chariots', pct: 8.00, color: 'text-slate-700' },
+      { name: 'Assurance responsabilité civile commerciale & Déplacements', pct: 9.00, color: 'text-slate-700' },
+      { name: 'Marge bénéficiaire nette (Profit entreprise)', pct: 15.00, color: 'text-emerald-700 font-bold' }
     ];
 
     let entries = [];
 
-    // Date & Devis
+    // Date & Numéro de devis
     document.getElementById('print-date').textContent = new Date().toLocaleDateString('fr-CA');
-    document.getElementById('print-quote-id').textContent = 'RES-' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('print-quote-id').textContent = 'COM-' + Math.floor(100000 + Math.random() * 900000);
 
     const selectProject = document.getElementById('select-project-type');
     const btnModeRegular = document.getElementById('btn-mode-regular');
@@ -925,91 +1016,144 @@
     const labelQty = document.getElementById('label-qty');
     const inputQty = document.getElementById('input-qty');
 
-    function populateProjectSelect(mode = 'regular') {
+    // Boutons de niches
+    const nicheBtns = {
+      office: document.getElementById('btn-niche-office'),
+      medical: document.getElementById('btn-niche-medical'),
+      condo: document.getElementById('btn-niche-condo'),
+      industrial: document.getElementById('btn-niche-industrial'),
+      retail: document.getElementById('btn-niche-retail')
+    };
+
+    function setNiche(nicheKey) {
+      currentNiche = nicheKey;
+      for (const k in nicheBtns) {
+        nicheBtns[k].className = "py-1.5 px-1 rounded border font-medium bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100 text-center";
+      }
+      nicheBtns[nicheKey].className = "py-1.5 px-1 rounded border font-bold bg-blue-50 border-blue-600 text-blue-900 text-center shadow-2xs";
+      populateProjects();
+    }
+
+    Object.keys(nicheBtns).forEach(k => {
+      nicheBtns[k].addEventListener('click', () => setNiche(k));
+    });
+
+    // Bascule Mode Régulier vs Ponctuel
+    btnModeRegular.addEventListener('click', () => {
+      currentInterventionMode = 'regular';
+      btnModeRegular.className = "py-2 px-2 rounded-lg border text-xs font-bold transition flex items-center justify-center gap-1.5 bg-blue-50 border-blue-600 text-blue-900 shadow-sm";
+      btnModeSporadic.className = "py-2 px-2 rounded-lg border text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100";
+      document.getElementById('print-service-type').textContent = 'Contrat Régulier de Conciergerie';
+      populateProjects();
+    });
+
+    btnModeSporadic.addEventListener('click', () => {
+      currentInterventionMode = 'sporadic';
+      btnModeSporadic.className = "py-2 px-2 rounded-lg border text-xs font-bold transition flex items-center justify-center gap-1.5 bg-amber-50 border-amber-500 text-amber-950 shadow-sm";
+      btnModeRegular.className = "py-2 px-2 rounded-lg border text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100";
+      document.getElementById('print-service-type').textContent = 'Grand Ménage / Intervention Ponctuelle Spécialisée';
+      populateProjects();
+    });
+
+    function populateProjects() {
       selectProject.innerHTML = '';
-      currentInterventionMode = mode;
 
       const grpCombos = document.createElement('optgroup');
-      grpCombos.label = '⚡ COMBOS PAR PIÈCE COMPLÈTE (Clé en main)';
-
-      const grpGlobal = document.createElement('optgroup');
-      grpGlobal.label = '🏡 FORFAITS LOGEMENTS COMPLETS (Surfaces)';
+      grpCombos.label = '⚡ COMBOS POSTES & ZONES CLÉ EN MAIN';
 
       const grpSanitary = document.createElement('optgroup');
-      grpSanitary.label = '🚽 APPAREILS SANITAIRES & SALLE DE BAIN';
+      grpSanitary.label = '🚽 BLOCS SANITAIRES & HYGIÈNE';
 
-      const grpExtras = document.createElement('optgroup');
-      grpExtras.label = '✨ EXTRAS ÉLECTROMÉNAGERS & TÂCHES DÉTAILLÉES';
+      const grpFloors = document.createElement('optgroup');
+      grpFloors.label = '📐 SOLS & SURFACES AU PI²';
 
-      const grpSurf = document.createElement('optgroup');
-      grpSurf.label = '📐 PLANCHERS ET SURFACES AU PI²';
+      const grpDeep = document.createElement('optgroup');
+      grpDeep.label = '✨ GRANDS TRAVAUX SPÉCIALISÉS (DÉCAPAGE, TAPIS, PRESSION)';
 
-      for (const key in RESIDENTIAL_PROJECTS) {
-        const item = RESIDENTIAL_PROJECTS[key];
-        const opt = document.createElement('option');
-        opt.value = key;
-        opt.textContent = item.name;
+      for (const key in COMMERCIAL_CATALOG) {
+        const item = COMMERCIAL_CATALOG[key];
 
-        if (key.startsWith('combo_')) grpCombos.appendChild(opt);
-        else if (key.startsWith('pkg_')) grpGlobal.appendChild(opt);
-        else if (key.startsWith('item_')) grpSanitary.appendChild(opt);
-        else if (key.startsWith('extra_')) grpExtras.appendChild(opt);
-        else if (key.startsWith('surf_')) grpSurf.appendChild(opt);
+        if (currentInterventionMode === 'regular') {
+          if (item.mode !== 'regular') continue;
+
+          // Filtrer par niche ou items communs (sanitaires/sols)
+          const isSameNiche = (item.niche === currentNiche);
+          const isCommonSanitary = (item.niche === 'office' && key.includes('sanitary'));
+          const isCommonFloor = key.startsWith('surf_');
+
+          if (key.startsWith('combo_') && isSameNiche) {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = item.name;
+            grpCombos.appendChild(opt);
+          } else if (key.includes('sanitary') && (isSameNiche || isCommonSanitary)) {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = item.name;
+            grpSanitary.appendChild(opt);
+          } else if (key.startsWith('surf_') && (isSameNiche || isCommonFloor)) {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = item.name;
+            grpFloors.appendChild(opt);
+          } else if (isSameNiche) {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = item.name;
+            grpCombos.appendChild(opt);
+          }
+        } else {
+          // Mode Sporadique / Grands travaux
+          if (item.mode === 'sporadic') {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = item.name;
+            grpDeep.appendChild(opt);
+          }
+        }
       }
 
-      if (grpCombos.children.length > 0) selectProject.appendChild(grpCombos);
-      if (grpGlobal.children.length > 0) selectProject.appendChild(grpGlobal);
-      if (grpSanitary.children.length > 0) selectProject.appendChild(grpSanitary);
-      if (grpExtras.children.length > 0) selectProject.appendChild(grpExtras);
-      if (grpSurf.children.length > 0) selectProject.appendChild(grpSurf);
+      if (currentInterventionMode === 'regular') {
+        if (grpCombos.children.length > 0) selectProject.appendChild(grpCombos);
+        if (grpSanitary.children.length > 0) selectProject.appendChild(grpSanitary);
+        if (grpFloors.children.length > 0) selectProject.appendChild(grpFloors);
+      } else {
+        if (grpDeep.children.length > 0) selectProject.appendChild(grpDeep);
+      }
 
       onProjectChange();
     }
 
-    btnModeRegular.addEventListener('click', () => {
-      btnModeRegular.className = "py-2 px-2.5 rounded-lg border text-xs font-bold transition flex items-center justify-center gap-1.5 bg-blue-50 border-blue-600 text-blue-900 shadow-sm";
-      btnModeSporadic.className = "py-2 px-2.5 rounded-lg border text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100";
-      document.getElementById('print-service-type').textContent = 'Entretien Ménager Régulier';
-      populateProjectSelect('regular');
-    });
-
-    btnModeSporadic.addEventListener('click', () => {
-      btnModeSporadic.className = "py-2 px-2.5 rounded-lg border text-xs font-bold transition flex items-center justify-center gap-1.5 bg-amber-50 border-amber-500 text-amber-950 shadow-sm";
-      btnModeRegular.className = "py-2 px-2.5 rounded-lg border text-xs font-semibold transition flex items-center justify-center gap-1.5 bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100";
-      document.getElementById('print-service-type').textContent = 'Grand Ménage / Ponctuel Approfondi';
-      populateProjectSelect('sporadic');
-    });
-
     function onProjectChange() {
       const key = selectProject.value;
-      const item = RESIDENTIAL_PROJECTS[key];
+      const item = COMMERCIAL_CATALOG[key];
       if (!item) return;
 
       if (item.marketRateSqft) {
         previewMarketRate.textContent = `${item.marketRateSqft.toFixed(2)} $ / pi²`;
-        previewMarketDesc.textContent = `Barème moyen marché QC`;
+        previewMarketDesc.textContent = `Tarif régulier moyen QC`;
         labelQty.textContent = 'Superficie (en pi²)';
-        if (inputQty.value <= 10) inputQty.value = 1000;
+        if (inputQty.value <= 10) inputQty.value = 2500;
       } else {
         previewMarketRate.textContent = `${item.marketFlat.toFixed(2)} $ / ${item.unit}`;
-        previewMarketDesc.textContent = `Prix unitaire / combo`;
-        labelQty.textContent = `Quantité (${item.unit})`;
+        previewMarketDesc.textContent = `Tarif unitaire régulier`;
+        labelQty.textContent = `Nombre (${item.unit})`;
         if (inputQty.value > 50) inputQty.value = 1;
       }
 
       const minutes = item.minutesEach;
-      previewIssaTime.textContent = `${minutes < 1 ? minutes.toFixed(2) : Math.round(minutes)} min`;
-      previewIssaHours.textContent = `(${(minutes / 60).toFixed(2)} h / unité standard)`;
+      previewIssaTime.textContent = `${minutes < 1 ? minutes.toFixed(2) : minutes.toFixed(1)} min`;
+      previewIssaHours.textContent = `(${(minutes / 60).toFixed(2)} h / unité)`;
     }
 
     selectProject.addEventListener('change', onProjectChange);
 
-    // Encombrement
+    // Encombrement & Difficulté
     const selectEncombrement = document.getElementById('select-encombrement');
     const labelEncombrementMult = document.getElementById('label-encombrement-mult');
     selectEncombrement.addEventListener('change', () => {
       const mult = parseFloat(selectEncombrement.value);
-      const textMap = { '0.85': 'x 0,85 (Épuré)', '1.00': 'x 1,00 (Standard)', '1.25': 'x 1,25 (Encombré)', '1.50': 'x 1,50 (Difficile)' };
+      const textMap = { '0.85': 'x 0,85 (Faible)', '1.00': 'x 1,00 (Standard)', '1.25': 'x 1,25 (Dense)', '1.50': 'x 1,50 (Aseptique)' };
       labelEncombrementMult.textContent = textMap[mult.toFixed(2)] || `x ${mult.toFixed(2)}`;
     });
 
@@ -1023,11 +1167,11 @@
       const encMult = parseFloat(selectEncombrement.value) || 1.0;
 
       addEntry(projectKey, qty, freq, encMult);
-      inputQty.value = RESIDENTIAL_PROJECTS[projectKey].marketRateSqft ? '1000' : '1';
+      inputQty.value = COMMERCIAL_CATALOG[projectKey].marketRateSqft ? '2500' : '1';
     });
 
     function addEntry(projectKey, qty, freq, encMult = 1.0) {
-      const item = RESIDENTIAL_PROJECTS[projectKey];
+      const item = COMMERCIAL_CATALOG[projectKey];
       if (!item || qty <= 0) return;
 
       const baseMinutes = qty * item.minutesEach;
@@ -1076,7 +1220,7 @@
       if (!entry) return;
       const q = parseFloat(newQty) || 1;
       entry.qty = q;
-      const item = RESIDENTIAL_PROJECTS[entry.projectKey];
+      const item = COMMERCIAL_CATALOG[entry.projectKey];
       entry.minutes = q * item.minutesEach * entry.encMult;
       entry.hours = entry.minutes / 60;
       if (!entry.customPriceEdited) {
@@ -1114,8 +1258,8 @@
       render();
     };
 
-    // Coordonnées client
-    ['client-name', 'client-phone', 'client-email', 'client-address'].forEach(id => {
+    // Fiche client
+    ['client-company', 'client-name', 'client-phone', 'client-email', 'client-address'].forEach(id => {
       document.getElementById(id).addEventListener('input', updateClientPrintView);
     });
 
@@ -1136,7 +1280,8 @@
     });
 
     function updateClientPrintView() {
-      document.getElementById('print-client-name').textContent = document.getElementById('client-name').value.trim() || 'Client Résidentiel';
+      document.getElementById('print-client-company').textContent = document.getElementById('client-company').value.trim() || 'Établissement Commercial';
+      document.getElementById('print-client-name').textContent = document.getElementById('client-name').value.trim() ? 'Att: ' + document.getElementById('client-name').value.trim() : '';
       document.getElementById('print-client-phone').textContent = document.getElementById('client-phone').value.trim() ? 'Tél : ' + document.getElementById('client-phone').value.trim() : '';
       document.getElementById('print-client-email').textContent = document.getElementById('client-email').value.trim() ? 'Courriel : ' + document.getElementById('client-email').value.trim() : '';
       document.getElementById('print-client-address').textContent = document.getElementById('client-address').value.trim() || 'Adresse non spécifiée';
@@ -1153,26 +1298,28 @@
       let totalMinVisit = 0;
       let totalSubtotalVisit = 0;
       let totalMarketVisit = 0;
+      let totalAnnualSubtotal = 0;
 
       entries.forEach(e => {
         totalMinVisit += e.minutes;
         totalSubtotalVisit += e.priceVisit;
         totalMarketVisit += e.marketPrice;
+        totalAnnualSubtotal += e.priceYear;
       });
 
       const totalHoursVisit = totalMinVisit / 60;
 
-      // 1. Double Analyse & Avertissements
+      // Double Analyse
       const badgeComp = document.getElementById('badge-comparison');
       const diagBox = document.getElementById('diagnostic-box');
       document.getElementById('total-price-time').textContent = totalSubtotalVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('detail-time').textContent = `Temps total : ${totalHoursVisit.toFixed(2)} h (${Math.round(totalMinVisit)} min)`;
+      document.getElementById('detail-time').textContent = `Temps / visite : ${totalHoursVisit.toFixed(2)} h (${Math.round(totalMinVisit)} min)`;
       document.getElementById('total-price-market').textContent = totalMarketVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
 
       if (entries.length === 0) {
         badgeComp.textContent = "En attente";
         badgeComp.className = "text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600";
-        diagBox.innerHTML = "Ajoutez des items ou pièces pour afficher l'analyse de compétitivité.";
+        diagBox.innerHTML = "Ajoutez des postes ou composantes pour lancer la double analyse de rentabilité.";
       } else {
         const diff = totalSubtotalVisit - totalMarketVisit;
         const pctDiff = totalMarketVisit > 0 ? (diff / totalMarketVisit) * 100 : 0;
@@ -1183,8 +1330,8 @@
           diagBox.innerHTML = `
             <div class="text-amber-950 font-semibold">
               <i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1 text-sm"></i>
-              <strong>Tarif au-dessus du marché au pi² :</strong> Votre soumission au temps (<strong>${totalSubtotalVisit.toFixed(2)} $</strong> à ${currentProdRate} $/h) dépasse de <strong>+${pctDiff.toFixed(0)} %</strong> (+${diff.toFixed(2)} $) les tarifs moyens constatés au Québec (${totalMarketVisit.toFixed(2)} $).
-              <span class="block mt-1 text-[11px] text-amber-800">Conseil : Si le client compare avec d'autres soumissions forfaitaires, vous pouvez proposer un léger escompte de fidélité.</span>
+              <strong>Tarif au temps plus élevé :</strong> Votre coût horaire (<strong>${totalSubtotalVisit.toFixed(2)} $</strong> à ${currentProdRate} $/h) est supérieur de <strong>+${pctDiff.toFixed(0)} %</strong> (+${diff.toFixed(2)} $) aux forfaits usuels du marché (${totalMarketVisit.toFixed(2)} $).
+              <span class="block mt-1 text-[11px] text-amber-800">Conseil : Sur les contrats à fréquence élevée (3 à 5 jours/sem.), appliquez un rabais de volume pour être très compétitif.</span>
             </div>
           `;
         } else if (pctDiff < -12) {
@@ -1193,8 +1340,8 @@
           diagBox.innerHTML = `
             <div class="text-rose-950 font-semibold">
               <i class="fa-solid fa-circle-exclamation text-rose-600 mr-1 text-sm"></i>
-              <strong>Attention sous-tarification :</strong> Votre estimation au temps (<strong>${totalSubtotalVisit.toFixed(2)} $</strong>) est inférieure de <strong>${Math.abs(diff).toFixed(2)} $</strong> aux barèmes usuels au pi² (${totalMarketVisit.toFixed(2)} $).
-              <span class="block mt-1 text-[11px] text-rose-800">Vous laissez de l'argent sur la table. Vous pourriez hausser votre taux horaire sans dépasser la valeur de marché.</span>
+              <strong>Attention sous-tarification commerciale :</strong> Votre prix calculé au temps (<strong>${totalSubtotalVisit.toFixed(2)} $</strong>) est inférieur de <strong>${Math.abs(diff).toFixed(2)} $</strong> aux barèmes de conciergerie (${totalMarketVisit.toFixed(2)} $).
+              <span class="block mt-1 text-[11px] text-rose-800">Vous pouvez hausser votre taux horaire à ${(totalMarketVisit / totalHoursVisit).toFixed(0)} $/h sans risquer de perdre le contrat.</span>
             </div>
           `;
         } else {
@@ -1203,13 +1350,13 @@
           diagBox.innerHTML = `
             <div class="text-emerald-950 font-semibold">
               <i class="fa-solid fa-circle-check text-emerald-600 mr-1 text-sm"></i>
-              <strong>Alignement parfait :</strong> Votre prix calculé au temps (${totalSubtotalVisit.toFixed(2)} $) s'inscrit exactement dans les barèmes résidentiels au pi² (${totalMarketVisit.toFixed(2)} $).
+              <strong>Alignement parfait :</strong> Votre prix au temps (${totalSubtotalVisit.toFixed(2)} $) correspond exactement aux ratios constatés au Québec par sanitaire et au pi² (${totalMarketVisit.toFixed(2)} $).
             </div>
           `;
         }
       }
 
-      // 2. Escompte & Taxes (TPS 5% + TVQ 9.975%)
+      // Escompte & Taxes (TPS 5% + TVQ 9.975%)
       const discType = document.getElementById('discount-type').value;
       const discVal = parseFloat(document.getElementById('discount-value').value) || 0;
       let discountAmount = 0;
@@ -1236,7 +1383,7 @@
       }
       const finalTotalWithTax = netBeforeTax + tps + tvq;
 
-      // Affichages cartes
+      // Affichages
       document.getElementById('total-hours-visit').textContent = `${totalHoursVisit.toFixed(2)} h`;
       document.getElementById('total-min-visit').textContent = `(${Math.round(totalMinVisit)} min)`;
       document.getElementById('total-subtotal').textContent = totalSubtotalVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
@@ -1244,7 +1391,7 @@
       document.getElementById('total-net-before-tax').textContent = netBeforeTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
       document.getElementById('total-final-tax').textContent = finalTotalWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
 
-      // Tableau client
+      // Tableau devis
       document.getElementById('rec-subtotal').textContent = totalSubtotalVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
       document.getElementById('rec-discount').textContent = `- ${discountAmount.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
       document.getElementById('rec-net').textContent = netBeforeTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
@@ -1252,10 +1399,15 @@
       document.getElementById('rec-tvq').textContent = tvq.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
       document.getElementById('rec-total').textContent = finalTotalWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
 
-      // Ventilation budgétaire
+      // Estimation annuelle
+      const annualNet = entries.reduce((acc, cur) => acc + cur.priceYear, 0);
+      const annualWithTax = applyTaxes ? annualNet * 1.14975 : annualNet;
+      document.getElementById('rec-annual-total').textContent = annualWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' }) + " / an";
+
+      // Ventilation interne
       const tbodyBreakdown = document.getElementById('breakdown-tbody');
       tbodyBreakdown.innerHTML = '';
-      const totalProfit = netBeforeTax * 0.10;
+      const totalProfit = netBeforeTax * 0.15;
       document.getElementById('badge-profit-net').textContent = `Profit Net : ${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
 
       FINANCIAL_BREAKDOWN.forEach(item => {
@@ -1274,13 +1426,13 @@
       updateClientPrintView();
     }
 
-    // Affichage des éléments à l'écran (avec modification in-line)
+    // Affichage des éléments enregistrés (Édition directe à l'écran)
     function renderEntriesList() {
       const container = document.getElementById('container-entries');
       container.innerHTML = '';
 
       if (entries.length === 0) {
-        container.innerHTML = '<p class="text-center py-6 text-xs text-slate-400 italic">Aucune composante ajoutée.</p>';
+        container.innerHTML = '<p class="text-center py-6 text-xs text-slate-400 italic">Aucune composante commerciale ajoutée.</p>';
         return;
       }
 
@@ -1308,11 +1460,11 @@
               <input type="number" step="any" min="1" value="${Math.round(e.minutes)}" onchange="updateEntryTime(${e.id}, this.value)" class="w-full font-mono px-2 py-1 bg-slate-50 border rounded text-slate-800 outline-none">
             </div>
             <div>
-              <label class="block text-[10px] font-bold text-slate-500">Prix Visite ($)</label>
+              <label class="block text-[10px] font-bold text-slate-500">Prix / Visite ($)</label>
               <input type="number" step="any" min="0" value="${e.priceVisit.toFixed(2)}" onchange="updateEntryPrice(${e.id}, this.value)" class="w-full font-bold px-2 py-1 bg-amber-50/60 border border-amber-300 rounded text-amber-900 outline-none">
             </div>
             <div class="text-right flex flex-col justify-end">
-              <span class="text-[10px] text-slate-400">Réf. Marché pi²</span>
+              <span class="text-[10px] text-slate-400">Réf. Marché</span>
               <span class="text-xs font-semibold text-emerald-700">${e.marketPrice.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
             </div>
           </div>
@@ -1321,13 +1473,13 @@
       });
     }
 
-    // Affichage des spécifications détaillées pour le DEVIS PDF / IMPRIMABLE
+    // Affichage des protocoles détaillés pour le DEVIS PDF / IMPRIMABLE
     function renderSpecificationsPrint() {
       const container = document.getElementById('container-specs-print');
       container.innerHTML = '';
 
       if (entries.length === 0) {
-        container.innerHTML = '<p class="text-center py-4 text-slate-400 italic">Sélectionnez des pièces pour générer le devis descriptif complet.</p>';
+        container.innerHTML = '<p class="text-center py-4 text-slate-400 italic">Ajoutez des composantes pour éditer le protocole d\'entretien.</p>';
         return;
       }
 
@@ -1344,7 +1496,7 @@
         specBox.innerHTML = `
           <div class="flex justify-between items-baseline border-b border-slate-200 pb-1">
             <h4 class="font-bold text-xs text-blue-950 flex items-center gap-1.5">
-              <span class="bg-blue-100 text-blue-900 px-1.5 py-0.2 rounded font-black text-[10px]">${idx + 1}</span>
+              <span class="bg-blue-100 text-blue-950 px-1.5 py-0.2 rounded font-black text-[10px]">${idx + 1}</span>
               ${e.name}
             </h4>
             <span class="font-bold text-[11px] text-slate-800">
@@ -1359,32 +1511,30 @@
 
     // Réinitialisation
     document.getElementById('btn-reset').addEventListener('click', () => {
-      if (confirm('Voulez-vous réinitialiser le devis résidentiel ?')) {
+      if (confirm('Voulez-vous réinitialiser le devis commercial ?')) {
         entries = [];
         render();
       }
     });
 
-    // Exemple représentatif (Maison complète avec électros)
+    // Exemple représentatif (Clinique médicale & Bureaux)
     document.getElementById('btn-sample').addEventListener('click', () => {
       entries = [];
-      document.getElementById('client-name').value = 'Mme Catherine Belzile';
+      document.getElementById('client-company').value = 'Clinique Médicale & Dentaire Bois-Franc';
+      document.getElementById('client-name').value = 'Dre Sophie Marchand, Administratrice';
       document.getElementById('client-phone').value = '514-820-0368';
-      document.getElementById('client-email').value = 'c.belzile@exemple.ca';
-      document.getElementById('client-address').value = '742 boul. Gouin O., Montréal, QC';
-      document.getElementById('discount-value').value = 0;
+      document.getElementById('client-email').value = 'direction@cliniqueboisfranc.ca';
+      document.getElementById('client-address').value = '2200 boul. Henri-Bourassa O., Suite 400, Montréal';
 
-      addEntry('combo_kitch_std', 1, 26, 1.0);
-      addEntry('combo_bath_std_3pc', 1, 26, 1.0);
-      addEntry('combo_bath_half', 1, 26, 1.0);
-      addEntry('combo_bed_master', 1, 26, 1.0);
-      addEntry('combo_living_room', 1, 26, 1.0);
-      addEntry('extra_oven_deep', 1, 1, 1.0);
+      addEntry('combo_med_waiting_reception', 1, 260, 1.0);
+      addEntry('combo_med_exam_room', 4, 260, 1.25);
+      addEntry('combo_bath_multiple_2t_1u_2l', 1, 260, 1.0);
+      addEntry('combo_kitchenette_breakroom', 1, 260, 1.0);
       render();
     });
 
-    // Démarrage
-    populateProjectSelect('regular');
+    // Lancement
+    setNiche('office');
     updateRates();
   </script>
 </body>
