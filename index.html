@@ -3,293 +3,476 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estimateur Marché pi² & Comparateur ISSA - TotalNet</title>
+  <title>Estimateur Universel de Nettoyage - TotalNet</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     @media print {
       .no-print { display: none !important; }
-      body { background: white; color: black; font-size: 11pt; }
-      .print-shadow { box-shadow: none !important; border: 1px solid #ddd !important; }
+      body { background: white !important; color: black !important; font-size: 10.5pt; }
+      .print-shadow { box-shadow: none !important; border: 1px solid #cbd5e1 !important; }
+      .client-sheet { display: block !important; }
+      .internal-budget { display: none !important; }
     }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
 
-  <!-- Header Émeraude -->
-  <header class="bg-emerald-900 text-white shadow-lg no-print">
+  <!-- Header principal -->
+  <header class="bg-blue-900 text-white shadow-lg no-print">
     <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
         <h1 class="text-2xl font-bold flex items-center gap-2">
-          <i class="fa-solid fa-scale-balanced text-emerald-400"></i> Estimateur Marché & Comparateur ISSA
+          <i class="fa-solid fa-calculator text-amber-400"></i> Estimateur & Relevé Multi-Niches
         </h1>
-        <p class="text-xs text-emerald-200 mt-1">Méthode Marché pi² modifiable vs Méthode Temps Réel (ISSA 540 @ 158 $/h)</p>
+        <p class="text-xs text-blue-200 mt-1">Norme ISSA 540 + Modèle financier de rentabilité (158,00 $/h production | 98,75 $/h route)</p>
       </div>
 
       <div class="flex items-center gap-2">
-        <button id="btn-sample" class="bg-emerald-800 hover:bg-emerald-700 text-xs px-3 py-2 rounded font-medium border border-emerald-600 transition">
+        <button id="btn-sample" class="bg-blue-800 hover:bg-blue-700 text-xs px-3 py-2 rounded font-medium border border-blue-600 transition">
           <i class="fa-solid fa-folder-open mr-1"></i> Charger exemple
         </button>
         <button id="btn-reset" class="bg-rose-800 hover:bg-rose-700 text-xs px-3 py-2 rounded font-medium transition">
           <i class="fa-solid fa-trash mr-1"></i> Vider
         </button>
-        <button onclick="window.print()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs px-4 py-2 rounded font-bold transition">
-          <i class="fa-solid fa-print mr-1"></i> Imprimer / PDF
+        <button id="btn-toggle-client-view" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-2 rounded font-bold transition">
+          <i class="fa-solid fa-eye mr-1"></i> Fiche Client
+        </button>
+        <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs px-4 py-2 rounded font-bold transition">
+          <i class="fa-solid fa-print mr-1"></i> Imprimer / Devis PDF
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Bannière impression -->
-  <div class="hidden print:block max-w-7xl mx-auto p-4 border-b border-slate-300">
-    <h1 class="text-2xl font-bold text-slate-900">SOUMISSION COMMERCIALE & ANALYSE TARIFAIRE</h1>
-    <p class="text-xs text-slate-600">Double validation au pied carré de marché et cadences de temps ISSA 540.</p>
+  <!-- Fiche En-tête Client Imprimable (Prêt à donner au client) -->
+  <div class="hidden print:block max-w-7xl mx-auto p-6 bg-white border-b border-slate-300">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-3xl font-black text-blue-900 tracking-tight">TOTALNET ENTRETIEN</h1>
+        <p class="text-xs text-slate-500">Nettoyage spécialisé résidentiel, commercial & après-sinistre</p>
+        <p class="text-xs text-slate-600 mt-1">Québec, Canada | info@totalnet.ca | (514) 555-0199</p>
+      </div>
+      <div class="text-right">
+        <span class="inline-block bg-blue-100 text-blue-900 font-black text-sm px-3 py-1 rounded mb-1">SOUMISSION OFFICIELLE</span>
+        <div class="text-xs text-slate-500">Date : <span id="print-date" class="font-bold text-slate-800"></span></div>
+        <div class="text-xs text-slate-500">Devis N° : <span id="print-quote-id" class="font-bold text-slate-800"></span></div>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-4 mt-6 p-4 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+      <div>
+        <span class="font-bold text-slate-700 uppercase tracking-wider block mb-1">Client :</span>
+        <div class="font-bold text-sm text-slate-900" id="print-client-name">—</div>
+        <div class="text-slate-600" id="print-client-company"></div>
+        <div class="text-slate-600" id="print-client-phone"></div>
+        <div class="text-slate-600" id="print-client-email"></div>
+      </div>
+      <div>
+        <span class="font-bold text-slate-700 uppercase tracking-wider block mb-1">Adresse des travaux :</span>
+        <div class="text-slate-800 font-medium" id="print-client-address">—</div>
+        <div class="text-slate-500 mt-1">Type d'intervention : <span id="print-bldg-summary" class="font-semibold text-slate-700"></span></div>
+      </div>
+    </div>
   </div>
 
   <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- Colonne GAUCHE : Formulaire & Banque de pièces -->
+    <!-- Colonne GAUCHE : Formulaires (Client, Pièces, Tâches) -->
     <section class="lg:col-span-5 space-y-6 no-print">
       
-      <!-- Module Saisie avec Taux Modifiable -->
+      <!-- Module 1 : Coordonnées du Client -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center justify-between">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-user text-blue-600"></i> Coordonnées du Client</span>
+          <span class="text-[11px] font-normal text-slate-400">Pour soumission</span>
+        </h2>
+        <div class="space-y-3 text-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Nom du contact</label>
+              <input type="text" id="client-name" placeholder="Ex: Jean Tremblay" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Entreprise / Organisation</label>
+              <input type="text" id="client-company" placeholder="Ex: Gestion Immobilière ABC" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Téléphone</label>
+              <input type="tel" id="client-phone" placeholder="Ex: 514-555-1234" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Courriel</label>
+              <input type="email" id="client-email" placeholder="client@exemple.com" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Adresse complète des travaux</label>
+            <input type="text" id="client-address" placeholder="1234 boul. René-Lévesque O., Montréal, QC" class="w-full px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+          </div>
+        </div>
+      </div>
+
+      <!-- Module 2 : Dictée Vocale -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-microphone text-rose-600"></i> Dictée Vocale Rapide
+          </h2>
+          <span id="voice-indicator" class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-500">Inactif</span>
+        </div>
+        <p class="text-[11px] text-slate-500 mb-2">
+          Ex: <em>"Cuisine intérieur four"</em>, <em>"Salon 300 pieds tapis"</em>, <em>"Entrée lavage pression 1500 pieds"</em>
+        </p>
+
+        <button id="btn-voice" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-2 transition text-xs">
+          <i class="fa-solid fa-microphone-lines"></i>
+          <span id="btn-voice-text">Activer le micro sur le terrain</span>
+        </button>
+        <div id="voice-transcript" class="mt-2 text-[11px] bg-slate-50 p-2 rounded border border-slate-200 min-h-[36px] text-slate-600 italic">
+          En attente...
+        </div>
+      </div>
+
+      <!-- Module 3 : Ajout Manuel d'un Élément (Toutes les pièces + Toutes les niches) -->
       <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
         <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-circle-plus text-emerald-600"></i> Ajouter un Élément au Devis
+          <i class="fa-solid fa-list-check text-blue-600"></i> Sélectionner Pièce & Travaux
         </h2>
 
         <form id="form-item" class="space-y-4">
           
-          <!-- Bloc Sélection de Pièce & Bâtiment -->
-          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+          <!-- Pièces et Bâtiments -->
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2.5">
             <div class="flex items-center justify-between">
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
-                <i class="fa-solid fa-building text-emerald-600 mr-1"></i> 1. Type d'immeuble
+              <label class="block text-xs font-bold text-slate-700 uppercase">
+                <i class="fa-solid fa-building text-blue-600 mr-1"></i> 1. Type d'immeuble
               </label>
-              <button type="button" id="btn-toggle-search" class="text-[11px] text-emerald-700 hover:text-emerald-900 font-semibold">
-                <i class="fa-solid fa-magnifying-glass mr-1"></i> Chercher par mot-clé
+              <button type="button" id="btn-toggle-search" class="text-[11px] text-blue-600 hover:text-blue-800 font-semibold">
+                <i class="fa-solid fa-magnifying-glass mr-1"></i> Chercher pièce
               </button>
             </div>
 
-            <!-- Liste 1 : Immeubles -->
-           <select id="select-building-type" class="w-full text-xs font-semibold px-3 py-2 bg-white text-slate-950 border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+            <select id="select-building-type" class="w-full text-xs font-semibold px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+            </select>
 
-            <!-- Recherche rapide -->
             <div id="box-search-room" class="hidden">
-              <div class="relative">
-                <input type="text" id="input-search-room" placeholder="Recherche rapide (ex: conférence, cafeteria, chambre)..." class="w-full text-xs pl-8 pr-3 py-1.5 bg-white border border-emerald-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
-                <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-2.5 top-2.5"></i>
-              </div>
+              <input type="text" id="input-search-room" placeholder="Filtrer la pièce..." class="w-full text-xs px-3 py-1.5 bg-white text-slate-900 border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
 
-            <!-- Liste 2 : Pièces du bâtiment -->
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">
-                <i class="fa-solid fa-door-open text-emerald-600 mr-1"></i> 2. Pièce ou local
+                <i class="fa-solid fa-door-open text-blue-600 mr-1"></i> 2. Pièce ou local
               </label>
-              <select id="select-room-type" class="w-full text-xs font-semibold px-3 py-2 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+              <select id="select-room-type" class="w-full text-xs font-semibold px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
               </select>
             </div>
 
-            <!-- Champ texte personnalisé si AUTRE -->
-            <div id="box-custom-room" class="pt-1">
-              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Précision ou local personnalisé :</label>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nom / Précision du local :</label>
               <div class="flex gap-2">
-                <input type="text" id="input-final-room" placeholder="Nom de la pièce..." required class="flex-1 text-xs px-3 py-2 bg-white border border-emerald-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none font-medium">
-                <button type="button" id="btn-save-custom-room" title="Enregistrer dans ma banque" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-md transition font-semibold">
-                  <i class="fa-solid fa-floppy-disk mr-1"></i> Sauvegarder
+                <input type="text" id="input-final-room" placeholder="Précisez la pièce..." required class="flex-1 text-xs px-3 py-1.5 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                <button type="button" id="btn-save-custom-room" title="Enregistrer dans ma banque" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-md transition font-semibold">
+                  <i class="fa-solid fa-floppy-disk"></i>
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Service et Choix du Service -->
+          <!-- BANQUE EXHAUSTIVE DE TOUTES LES TÂCHES / NICHES -->
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">
-              <i class="fa-solid fa-tags text-emerald-600 mr-1"></i> Service & Méthode de nettoyage
+              <i class="fa-solid fa-spray-can-sparkles text-blue-600 mr-1"></i> 3. Tâche / Niche & Équipement
             </label>
-            <select id="select-service" class="w-full text-xs px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
-              <optgroup label="Tapis commerciaux & Institutionnels">
-                <option value="carpet_hwe_std" selected>Tapis - Extraction standard HWE [Base: 0,26 $/pi²]</option>
-                <option value="carpet_hwe_narrow">Tapis - Wand 8" passages étroits [Base: 0,42 $/pi²]</option>
-                <option value="carpet_encap">Tapis - Encapsulation / Cimex [Base: 0,15 $/pi²]</option>
-                <option value="carpet_vlm">Tapis - Bonnet / Faible humidité [Base: 0,16 $/pi²]</option>
-                <option value="carpet_crb_only">Tapis - Brossage CRB seul [Base: 0,08 $/pi²]</option>
-                <option value="carpet_full_protocol">Tapis - Complet (Pre-spray + CRB + HWE) [Base: 0,38 $/pi²]</option>
-                <option value="carpet_rx20">Tapis - Tête rotative turbo RX20 [Base: 0,35 $/pi²]</option>
-                <option value="carpet_protect">Tapis - Protecteur Téflon/Scotchgard [Base: 0,08 $/pi²]</option>
-                <option value="carpet_antibact">Tapis - Neutralisant d'odeurs/Antibactérien [Base: 0,08 $/pi²]</option>
+            <select id="select-task" class="w-full text-xs px-3 py-2 bg-white text-slate-900 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+              
+              <optgroup label="🏠 Résidentiel, Ménage & Électroménagers">
+                <option value="res_oven">Poêle / Cuisinière - Nettoyage complet intérieur du four [45 min / unité]</option>
+                <option value="res_fridge">Réfrigérateur - Nettoyage complet intérieur/tiroirs [45 min / unité]</option>
+                <option value="res_cabinets">Armoires de cuisine - Lavage complet intérieur/extérieur [60 min / unité]</option>
+                <option value="res_deep_clean">Grand ménage complet en profondeur [15 min / 100 pi²]</option>
+                <option value="res_regular_clean">Entretien ménager régulier / Dépoussiérage [7 min / 100 pi²]</option>
+                <option value="res_bedding">Changement de literie & draps [10 min / lit]</option>
+                <option value="res_laundry">Lessive, séchage & pliage [30 min / brassée]</option>
+                <option value="res_shower_descaling">Douche / Bain - Détartrage approfondi calcaire [25 min / unité]</option>
               </optgroup>
-              <optgroup label="Planchers durs (Vinyle, Béton, Céramique)">
-                <option value="hard_floor_mop">Plancher dur - Lavage humide manuel [Base: 0,05 $/pi²]</option>
-                <option value="hard_floor_autoscrub">Plancher dur - Autolaveuse mécanique [Base: 0,04 $/pi²]</option>
-                <option value="hard_floor_topscrub">Plancher dur - Récurage de surface (Top Scrub) [Base: 0,18 $/pi²]</option>
-                <option value="hard_floor_strip_wax">Tuile vinyle - Décapage complet + 4 couches cire [Base: 1,15 $/pi²]</option>
-                <option value="hard_floor_wax_only">Tuile vinyle - Pose fini cire (par couche) [Base: 0,12 $/pi²]</option>
-                <option value="hard_floor_burnish">Plancher dur - Polissage haute vitesse [Base: 0,07 $/pi²]</option>
-                <option value="hard_floor_epoxy">Plancher époxy - Dégraissage & récurage [Base: 0,18 $/pi²]</option>
-                <option value="hard_floor_tile_grout">Céramique & coulis - Décapage acide rotatif [Base: 0,45 $/pi²]</option>
-                <option value="hard_floor_concrete_scrub">Béton - Récurage d'entrepôt [Base: 0,15 $/pi²]</option>
+
+              <optgroup label="🪡 Tapis & Moquettes (Norme ISSA 540)">
+                <option value="carpet_wand_15" selected>Tapis - Extraction Wand 15" grandes surfaces [115 min / 1000 pi²]</option>
+                <option value="carpet_wand_12">Tapis - Extraction Wand 12" standard [120 min / 1000 pi²]</option>
+                <option value="carpet_wand_8">Tapis - Extraction Wand 8" passages étroits / escaliers [180 min / 1000 pi²]</option>
+                <option value="carpet_crb_15">Tapis - Brossage mécanique CRB 15" [21.4 min / 1000 pi²]</option>
+                <option value="carpet_crb_11">Tapis - Brossage mécanique CRB 11" [29.2 min / 1000 pi²]</option>
+                <option value="carpet_rx20">Tapis - Tête rotative Turbo 17" RX20 [15 min / 1000 pi²]</option>
+                <option value="carpet_encapsulation">Tapis - Encapsulation / Bonnet 17" faible humidité [54 min / 1000 pi²]</option>
+                <option value="carpet_protecteur">Tapis - Protecteur Téflon / Scotchgard [10.2 min / 1000 pi²]</option>
+                <option value="carpet_antibact">Tapis - Traitement Antibactérien & Neutralisant odeurs [10.2 min / 1000 pi²]</option>
               </optgroup>
-              <optgroup label="Après-Construction, Vitres & Sanitaires">
-                <option value="post_const_rough">Après construction - Gros ménage (Rough) [Base: 0,32 $/pi²]</option>
-                <option value="post_const_final">Après construction - Finition détaillée (Final) [Base: 0,55 $/pi²]</option>
-                <option value="window_standard">Vitres commerciales rez-de-chaussée [Base: 6,00 $ / vitre]</option>
-                <option value="window_high">Vitres commerciales hauteur / perche [Base: 18,00 $ / vitre]</option>
-                <option value="restroom_toilet">Toilette - Lavage & désinfection [Base: 15,00 $ / unité]</option>
-                <option value="restroom_urinal">Urinoir - Détartrage complet [Base: 12,00 $ / unité]</option>
-                <option value="restroom_sink">Lavabo sanitaire & miroir [Base: 10,00 $ / unité]</option>
+
+              <optgroup label="🧼 Planchers Durs (Vinyle, Béton, Époxy, Coulis)">
+                <option value="floor_strip_wax">Tuile vinyle - Décapage complet & 4 couches cire [113 min / 1000 pi²]</option>
+                <option value="floor_wax_only">Tuile vinyle - Pose de cire / fini par couche [9.5 min / 1000 pi²]</option>
+                <option value="floor_top_scrub">Plancher dur - Récurage de surface (Top Scrub) [27 min / 1000 pi²]</option>
+                <option value="floor_burnish">Plancher dur - Polissage thermique haute vitesse (Burnishing) [3.5 min / 1000 pi²]</option>
+                <option value="floor_tile_grout">Céramique & Coulis - Nettoyage rotatif acide [45 min / 1000 pi²]</option>
+                <option value="floor_concrete_scrub">Béton - Récurage mécanique industriel [15 min / 1000 pi²]</option>
+                <option value="floor_epoxy">Plancher époxy - Dégraissage & récurage [20 min / 1000 pi²]</option>
+                <option value="floor_mop">Plancher dur - Lavage humide / Mopping désinfectant [14.4 min / 1000 pi²]</option>
+                <option value="floor_autoscrub">Plancher dur - Autolaveuse autotractée [6.5 min / 1000 pi²]</option>
               </optgroup>
-              <optgroup label="Ameublement & Meubles rembourrés">
-                <option value="upholstery_chair">Fauteuil rembourré simple (1 place) [Base: 55,00 $ / u]</option>
-                <option value="upholstery_loveseat">Causeuse rembourrée (2 places) [Base: 95,00 $ / u]</option>
-                <option value="upholstery_sofa">Divan rembourré 3 places [Base: 135,00 $ / u]</option>
-                <option value="upholstery_sectional">Sectionnel complet [Base: 225,00 $ / u]</option>
+
+              <optgroup label="💦 Lavage à Pression & Extérieur">
+                <option value="pressure_concrete">Pression - Trottoir, allée béton & dalles [12 min / 1000 pi²]</option>
+                <option value="pressure_siding">Pression - Façade de bâtiment / Revêtement extérieur [20 min / 1000 pi²]</option>
+                <option value="pressure_patio">Pression - Terrasse bois, patio ou pavé uni [25 min / 1000 pi²]</option>
+                <option value="pressure_bins">Pression - Conteneur à déchets / Bac roulant [8 min / unité]</option>
+                <option value="pressure_grease">Pression - Dégraissage quai de chargement & huile [35 min / 1000 pi²]</option>
               </optgroup>
+
+              <optgroup label="🪟 Vitres & Fenestration">
+                <option value="window_res_standard">Fenêtre résidentielle int/ext avec cadrage & moustiquaire [8 min / vitre]</option>
+                <option value="window_comm_ground">Vitrine commerciale plain-pied (int/ext) [2.5 min / vitre]</option>
+                <option value="window_comm_high">Vitre commerciale en hauteur / perche télescopique [7 min / vitre]</option>
+              </optgroup>
+
+              <optgroup label="🛋️ Ameublement Rembourré & Matelas">
+                <option value="upholstery_chair">Fauteuil 1 place en tissu - Extraction [10 min / unité]</option>
+                <option value="upholstery_loveseat">Causeuse 2 places en tissu - Extraction [25 min / unité]</option>
+                <option value="upholstery_couch">Divan 3 places en tissu - Extraction complète [45 min / canapé]</option>
+                <option value="upholstery_sectional">Sectionnel complet en L/U - Extraction [80 min / unité]</option>
+                <option value="upholstery_mattress">Matelas (Double / Queen / King) - Assainissement & extraction [40 min / unité]</option>
+                <option value="upholstery_office_chair">Chaise de bureau sur roulettes - Shampoing [5 min / unité]</option>
+              </optgroup>
+
+              <optgroup label="🏢 Conciergerie Commerciale & Blocs Sanitaires">
+                <option value="comm_office_sqft">Bureaux - Entretien régulier des locaux [10 min / 1000 pi²]</option>
+                <option value="comm_desk">Poste de travail / Bureau - Désinfection & époussetage [1.0 min / unité]</option>
+                <option value="comm_trash">Corbeille / Poubelle - Vider et religner [0.75 min / unité]</option>
+                <option value="comm_toilet">Toilette - Nettoyage complet & détartrage [1.5 min / unité]</option>
+                <option value="comm_urinal">Urinoir - Nettoyage & pastille [1.5 min / unité]</option>
+                <option value="comm_sink">Lavabo sanitaire - Nettoyage, robinetterie & miroir [1.0 min / unité]</option>
+                <option value="comm_dispensers">Remplissage distributeurs (savon, papier, essuie-mains) [1.0 min / unité]</option>
+              </optgroup>
+
+              <optgroup label="🔨 Après-Construction & Après-Sinistre">
+                <option value="post_const_rough">Après construction - Décapage & gros débris (Rough) [18 min / 1000 pi²]</option>
+                <option value="post_const_final">Après construction - Dépoussiérage fin & livraison (Final) [35 min / 1000 pi²]</option>
+                <option value="sinister_ozone">Assainissement - Nébulisation / Ozone anti-odeur [15 min / 1000 pi²]</option>
+              </optgroup>
+
             </select>
           </div>
 
-          <!-- NOUVEAU : TAUX UNITAIRE MODIFIABLE PAR L'UTILISATEUR -->
-          <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
-            <div class="flex items-center justify-between mb-1">
-              <label class="block text-xs font-bold text-emerald-900" id="label-unit-price">
-                <i class="fa-solid fa-pen-to-square text-emerald-600 mr-1"></i> Taux unitaire appliqué ($/pi²)
-              </label>
-              <button type="button" id="btn-reset-rate" class="text-[10px] text-emerald-700 hover:text-emerald-900 font-semibold underline" title="Rétablir le taux standard de marché">
-                <i class="fa-solid fa-rotate-left mr-0.5"></i> Rétablir taux suggéré
-              </button>
-            </div>
-            <div class="relative">
-              <input type="number" id="input-unit-price" step="0.01" min="0.01" value="0.26" required class="w-full text-sm font-bold text-emerald-900 pl-7 pr-3 py-1.5 bg-white border border-emerald-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
-              <span class="absolute left-2.5 top-1.5 text-xs font-bold text-emerald-700">$</span>
-            </div>
-            <p class="text-[10px] text-emerald-700 mt-1 italic">
-              Modifiez ce tarif librement pour cette tâche selon vos besoins.
-            </p>
-          </div>
-
-          <!-- Quantité & Dégressivité -->
+          <!-- Quantité & Tarif horaire de production -->
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1" id="label-qty">Quantité (pi²)</label>
-              <input type="number" id="input-qty" value="1500" min="1" step="any" required class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+              <input type="number" id="input-qty" value="1000" min="1" step="any" required class="w-full text-sm font-bold px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Niveau de dégressivité</label>
-              <select id="select-discount" class="w-full text-xs px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
-                <option value="auto">Automatique (selon pi²)</option>
-                <option value="1.0">Standard (x 1,00)</option>
-                <option value="0.90">-10% (Chantier moyen)</option>
-                <option value="0.82">-18% (Grand chantier)</option>
-                <option value="0.75">-25% (Très grand chantier)</option>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Fréquence annuelle</label>
+              <select id="select-freq" class="w-full text-xs px-3 py-1.5 border rounded-md focus:ring-2 focus:ring-blue-500 outline-none">
+                <option value="1">1 fois (Ponctuel / Annuel)</option>
+                <option value="2">2 fois / an</option>
+                <option value="4">4 fois / an</option>
+                <option value="12">12 fois / an (Mensuel)</option>
+                <option value="52">52 fois / an (Hebdomadaire)</option>
               </select>
             </div>
           </div>
 
-          <div class="flex items-center justify-between text-xs text-slate-500 bg-slate-50 p-2 rounded border border-slate-200">
-            <span>Minimum de facturation chantier :</span>
-            <span class="font-bold text-slate-800">175,00 $</span>
-          </div>
-
-          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg shadow transition">
-            <i class="fa-solid fa-plus-circle mr-1"></i> Ajouter à la soumission
+          <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-lg shadow transition">
+            <i class="fa-solid fa-plus-circle mr-1"></i> Ajouter à la lecture
           </button>
         </form>
       </div>
 
-      <!-- Module Sous-traitance & Opérateur Indépendant -->
-      <div class="bg-slate-900 text-white rounded-xl shadow-md p-4 space-y-3">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
-          <i class="fa-solid fa-handshake"></i> Partage Opérateur Indépendant
-        </h3>
-        <p class="text-[11px] text-slate-300">Si le chantier est délégué à un entrepreneur affilié fournissant ses équipements.</p>
-        
-        <div class="grid grid-cols-2 gap-3 pt-1">
-          <div class="bg-slate-800 p-2.5 rounded border border-slate-700 text-center">
-            <div class="text-[11px] text-slate-400">Rémunération Opérateur (65%)</div>
-            <div class="text-sm font-bold text-amber-400 mt-1" id="subcon-payout">0,00 $</div>
-          </div>
-          <div class="bg-slate-800 p-2.5 rounded border border-slate-700 text-center">
-            <div class="text-[11px] text-slate-400">Marge Brute TotalNet (35%)</div>
-            <div class="text-sm font-bold text-emerald-400 mt-1" id="subcon-margin">0,00 $</div>
-          </div>
-        </div>
-      </div>
-
     </section>
 
-    <!-- Colonne DROITE : Comparateur & Tableaux -->
+    <!-- Colonne DROITE : Résultats, Synthèse Client & Gestion des Escomptes -->
     <section class="lg:col-span-7 space-y-6">
 
-      <!-- Carte Comparateur : Méthode Marché vs Méthode Temps Réel ISSA -->
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
-        <div class="flex items-center justify-between border-b pb-3 mb-4">
+      <!-- Carte 1 : Sommaire & Escomptes / Taxes (Visible Client) -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5 client-sheet">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-3 mb-4 gap-2">
           <div>
-            <h2 class="text-lg font-bold text-slate-900">Double Évaluation du Chantier</h2>
-            <p class="text-xs text-slate-500">Comparaison entre votre prix au pi² et le temps d'équipe nécessaire (ISSA 540)</p>
+            <h2 class="text-lg font-bold text-slate-900">Synthèse de la Soumission</h2>
+            <p class="text-xs text-slate-500">Estimé officiel basé sur les cadences techniques ISSA 540</p>
           </div>
-          <span id="badge-comparison" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600">En attente</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <!-- Méthode 1 : Marché pi² -->
-          <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-200 text-center">
-            <span class="text-xs font-bold uppercase text-emerald-800">Méthode 1 : Prix Marché (Votre Taux)</span>
-            <div class="text-2xl font-black text-emerald-900 my-1" id="total-price-sqft">0,00 $</div>
-            <div class="text-[11px] text-emerald-700" id="detail-sqft">Calcul au pi² avec dégressivité</div>
-          </div>
-
-          <!-- Méthode 2 : Temps ISSA x 158$/h -->
-          <div class="bg-blue-50 rounded-xl p-4 border border-blue-200 text-center">
-            <span class="text-xs font-bold uppercase text-blue-800">Méthode 2 : Coût Temps ISSA (158 $/h)</span>
-            <div class="text-2xl font-black text-blue-900 my-1" id="total-price-issa">0,00 $</div>
-            <div class="text-[11px] text-blue-700" id="detail-issa">Temps total : 0,00 h (0 min)</div>
+          <div class="text-right">
+            <div class="text-2xl font-black text-blue-700" id="total-final-tax">0,00 $</div>
+            <div class="text-xs text-slate-500 font-semibold">Total Net à payer (Taxes incl.)</div>
           </div>
         </div>
 
-        <!-- Diagnostic de rentabilité & Recommandation -->
-        <div id="diagnostic-box" class="p-3 rounded-lg text-xs font-medium bg-slate-50 border border-slate-200 text-slate-700">
-          Ajoutez des éléments pour comparer les deux méthodes de soumission.
+        <!-- Badges d'heures et temps -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center mb-4">
+          <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+            <div class="text-xs text-blue-700 font-medium">Temps / visite</div>
+            <div class="text-base font-bold text-blue-900" id="total-hours-visit">0,0 h</div>
+            <div class="text-[10px] text-blue-500" id="total-min-visit">(0 min)</div>
+          </div>
+          <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100">
+            <div class="text-xs text-indigo-700 font-medium">Sous-total brut</div>
+            <div class="text-base font-bold text-indigo-900" id="total-subtotal">0,00 $</div>
+            <div class="text-[10px] text-indigo-500">avant escompte</div>
+          </div>
+          <div class="bg-amber-50 p-3 rounded-lg border border-amber-100">
+            <div class="text-xs text-amber-800 font-medium">Escompte / Remise</div>
+            <div class="text-base font-bold text-amber-900" id="display-discount">- 0,00 $</div>
+            <div class="text-[10px] text-amber-600" id="display-discount-label">0 %</div>
+          </div>
+          <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+            <div class="text-xs text-emerald-700 font-medium">Sous-total net</div>
+            <div class="text-base font-bold text-emerald-900" id="total-net-before-tax">0,00 $</div>
+            <div class="text-[10px] text-emerald-600">avant taxes</div>
+          </div>
+        </div>
+
+        <!-- Gestion de l'Escompte & Taxes (Formulaire) -->
+        <div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200 mb-4 no-print">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Type d'escompte</label>
+              <select id="discount-type" class="w-full text-xs px-2.5 py-1.5 bg-white border border-slate-300 rounded-md outline-none">
+                <option value="pct">Pourcentage (%)</option>
+                <option value="fixed">Montant fixe ($)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Valeur de l'escompte</label>
+              <input type="number" id="discount-value" value="0" min="0" step="any" class="w-full text-xs px-2.5 py-1.5 bg-white border border-slate-300 rounded-md outline-none font-bold">
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="inline-flex items-center text-xs font-bold text-slate-700 cursor-pointer">
+                <input type="checkbox" id="check-taxes" checked class="rounded text-blue-600 focus:ring-blue-500 mr-1.5">
+                Appliquer TPS (5%) & TVQ (9.975%)
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tableau Récapitulatif Financier Client -->
+        <div class="border rounded-lg overflow-hidden text-xs">
+          <table class="w-full">
+            <tbody class="divide-y divide-slate-200">
+              <tr class="bg-slate-50">
+                <td class="p-2 font-medium text-slate-700">Sous-total des travaux</td>
+                <td class="p-2 text-right font-bold" id="rec-subtotal">0,00 $</td>
+              </tr>
+              <tr id="row-discount" class="text-amber-800">
+                <td class="p-2 font-medium">Escompte accordé au client</td>
+                <td class="p-2 text-right font-bold" id="rec-discount">- 0,00 $</td>
+              </tr>
+              <tr>
+                <td class="p-2 font-bold text-slate-800">Total net avant taxes</td>
+                <td class="p-2 text-right font-black text-slate-900" id="rec-net">0,00 $</td>
+              </tr>
+              <tr class="text-slate-600">
+                <td class="p-2">TPS (5,000 %)</td>
+                <td class="p-2 text-right" id="rec-tps">0,00 $</td>
+              </tr>
+              <tr class="text-slate-600">
+                <td class="p-2">TVQ (9,975 %)</td>
+                <td class="p-2 text-right" id="rec-tvq">0,00 $</td>
+              </tr>
+              <tr class="bg-blue-50 text-blue-900 font-black text-sm">
+                <td class="p-2.5">MONTANT TOTAL DE LA SOUMISSION</td>
+                <td class="p-2.5 text-right text-base" id="rec-total">0,00 $</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <!-- Tableau détaillé des éléments & Bascule des vues -->
-      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+      <!-- Carte 2 : Ventilation Interne de Rentabilité (Masquée à l'impression client) -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5 internal-budget no-print">
+        <div class="flex items-center justify-between border-b pb-3 mb-3">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+              <i class="fa-solid fa-lock text-amber-500"></i> Ventilation Budgétaire Interne (Confidentiel)
+            </h3>
+            <p class="text-[11px] text-slate-500">Calcul sur le prix net avant taxes (Budget annuel 197 500 $ | 158 $/h)[cite: 28]</p>
+          </div>
+          <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800" id="badge-profit-net">Profit: 0,00 $</span>
+        </div>
+
+        <div class="border rounded-lg overflow-hidden text-xs">
+          <table class="w-full">
+            <thead class="bg-slate-100 text-slate-700 font-semibold border-b">
+              <tr>
+                <th class="text-left p-2">Catégorie Budgétaire</th>
+                <th class="text-center p-2">% Alloué</th>
+                <th class="text-right p-2">Montant / Visite</th>
+                <th class="text-right p-2">Montant Annuel</th>
+              </tr>
+            </thead>
+            <tbody id="breakdown-tbody" class="divide-y divide-slate-200">
+              <!-- Rempli en JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Carte 3 : Détail des Pièces & Items -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5 client-sheet">
         <div class="flex items-center justify-between border-b pb-3 mb-4">
-          <div class="flex gap-2">
-            <button id="tab-room" class="px-3 py-1.5 rounded-md font-bold text-xs bg-emerald-700 text-white shadow transition">
+          <div class="flex gap-2 no-print">
+            <button id="tab-room" class="px-3 py-1.5 rounded-md font-bold text-xs bg-blue-600 text-white shadow transition">
               <i class="fa-solid fa-door-open mr-1"></i> Fiche par Pièce
             </button>
             <button id="tab-item" class="px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-              <i class="fa-solid fa-cubes mr-1"></i> Synthèse par Item
+              <i class="fa-solid fa-cubes-stacked mr-1"></i> Synthèse par Item
             </button>
           </div>
-          <span class="text-xs text-slate-400" id="count-items">0 éléments</span>
+          <h3 class="hidden print:block font-bold text-sm text-slate-900">DÉTAIL DES TRAVAUX INCLUS</h3>
+          <span class="text-xs text-slate-400" id="count-items">0 éléments enregistrés</span>
         </div>
 
         <!-- Vue 1 : Par Pièce -->
-        <div id="view-room" class="space-y-3">
-          <div id="container-rooms" class="space-y-3">
-            <p class="text-center py-8 text-xs text-slate-400 italic">Aucune pièce sélectionnée.</p>
+        <div id="view-room" class="space-y-4">
+          <div id="container-rooms" class="space-y-4">
+            <p class="text-center py-8 text-xs text-slate-400 italic">Aucun local ni tâche ajoutée.</p>
           </div>
         </div>
 
-        <!-- Vue 2 : Consolidée par Item avec comparaison directe -->
+        <!-- Vue 2 : Consolidé par Item -->
         <div id="view-item" class="hidden">
           <div class="border rounded-lg overflow-x-auto text-xs">
             <table class="w-full">
               <thead class="bg-slate-100 text-slate-700 font-semibold border-b">
                 <tr>
-                  <th class="text-left p-2">Service</th>
-                  <th class="text-center p-2">Quantité</th>
-                  <th class="text-right p-2">Taux unitaire</th>
-                  <th class="text-right p-2">Total Prix pi²</th>
-                  <th class="text-right p-2">Coût ISSA (158$/h)</th>
-                  <th class="text-center p-2">Écart</th>
+                  <th class="text-left p-2">Item & Tâche</th>
+                  <th class="text-center p-2">Quantité totale</th>
+                  <th class="text-center p-2">Temps ISSA</th>
+                  <th class="text-right p-2">Temps total</th>
+                  <th class="text-right p-2">Total estimé</th>
                 </tr>
               </thead>
               <tbody id="container-items" class="divide-y divide-slate-200">
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- Signature et conditions d'acceptation (Pour impression client) -->
+        <div class="hidden print:block mt-8 pt-6 border-t border-slate-300 text-xs">
+          <div class="grid grid-cols-2 gap-8">
+            <div>
+              <p class="font-bold text-slate-800 mb-1">Conditions de service :</p>
+              <p class="text-[10px] text-slate-500">
+                - Travaux garantis selon les normes professionnelles de l'industrie.<br>
+                - Prix valide pour 30 jours à compter de la date d'émission.<br>
+                - Modalités de paiement : net 30 jours ou à la fin des travaux.
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="font-bold text-slate-800 mb-6">Signature du client & approbation :</p>
+              <div class="border-b border-slate-400 w-48 ml-auto"></div>
+              <p class="text-[9px] text-slate-400 mt-1">Date d'acceptation</p>
+            </div>
           </div>
         </div>
 
@@ -301,7 +484,7 @@
 
   <script>
     // ----------------------------------------------------
-    // BANQUE DE DONNÉES COMPLÈTE DES 16 CATÉGORIES
+    // BANQUE DE DONNÉES COMPLÈTE DES 16 BÂTIMENTS ET PIÈCES
     // ----------------------------------------------------
     const DEFAULT_BUILDINGS_DB = {
       "1. Résidentiel": [
@@ -454,61 +637,99 @@
       ]
     };
 
-    let customDb = JSON.parse(localStorage.getItem('cleaning_buildings_db_v2') || 'null');
-    let BUILDINGS_DB = customDb || JSON.parse(JSON.stringify(DEFAULT_BUILDINGS_DB));
-
-    function saveBuildingsDb() {
-      localStorage.setItem('cleaning_buildings_db_v2', JSON.stringify(BUILDINGS_DB));
-    }
+    let BUILDINGS_DB = JSON.parse(localStorage.getItem('cleaning_buildings_db_v4') || 'null') || DEFAULT_BUILDINGS_DB;
 
     // ----------------------------------------------------
-    // BANQUE DES SERVICES MARCHÉ VS COÛT ISSA
+    // CATALOGUE COMPLET TOUTES NICHES & TEMPS ISSA
     // ----------------------------------------------------
-    const SERVICES_CATALOG = {
-      // Tapis
-      carpet_hwe_std: { name: 'Tapis - Extraction standard HWE', unit: 'pi²', type: 'area', basePrice: 0.26, issaTimePer1000: 115.0 },
-      carpet_hwe_narrow: { name: 'Tapis - Wand 8" passages étroits', unit: 'pi²', type: 'area', basePrice: 0.42, issaTimePer1000: 180.0 },
-      carpet_encap: { name: 'Tapis - Encapsulation / Cimex', unit: 'pi²', type: 'area', basePrice: 0.15, issaTimePer1000: 54.0 },
-      carpet_vlm: { name: 'Tapis - Bonnet / Faible humidité', unit: 'pi²', type: 'area', basePrice: 0.16, issaTimePer1000: 54.0 },
-      carpet_crb_only: { name: 'Tapis - Brossage mécanique CRB', unit: 'pi²', type: 'area', basePrice: 0.08, issaTimePer1000: 21.44 },
-      carpet_full_protocol: { name: 'Tapis - Protocole complet (Pre-spray+CRB+HWE)', unit: 'pi²', type: 'area', basePrice: 0.38, issaTimePer1000: 146.6 },
-      carpet_rx20: { name: 'Tapis - Tête rotative Turbo RX20', unit: 'pi²', type: 'area', basePrice: 0.35, issaTimePer1000: 15.0 },
-      carpet_protect: { name: 'Tapis - Protecteur Téflon/Scotchgard', unit: 'pi²', type: 'area', basePrice: 0.08, issaTimePer1000: 10.2 },
-      carpet_antibact: { name: 'Tapis - Antibactérien / Désodorisant', unit: 'pi²', type: 'area', basePrice: 0.08, issaTimePer1000: 10.2 },
+    const TASK_CATALOG = {
+      // Résidentiel & Ménage
+      res_oven: { name: 'Four / Poêle - Nettoyage complet intérieur', unit: 'unité', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
+      res_fridge: { name: 'Réfrigérateur - Nettoyage complet intérieur', unit: 'unité', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
+      res_cabinets: { name: 'Armoires de cuisine - Intérieur & Extérieur', unit: 'unité', type: 'count', minutesEach: 60.0, rateHr: 158.0 },
+      res_deep_clean: { name: 'Grand ménage résidentiel en profondeur', unit: 'pi²', type: 'area', timePer1000: 150.0, rateHr: 158.0 },
+      res_regular_clean: { name: 'Entretien ménager résidentiel régulier', unit: 'pi²', type: 'area', timePer1000: 70.0, rateHr: 158.0 },
+      res_bedding: { name: 'Changement de literie & draps', unit: 'lit', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
+      res_laundry: { name: 'Lessive, séchage & pliage', unit: 'brassée', type: 'count', minutesEach: 30.0, rateHr: 158.0 },
+      res_shower_descaling: { name: 'Douche / Bain - Détartrage complet calcaire', unit: 'unité', type: 'count', minutesEach: 25.0, rateHr: 158.0 },
+
+      // Tapis ISSA 540
+      carpet_wand_15: { name: 'Tapis - Wand 15" grandes surfaces', unit: 'pi²', type: 'area', timePer1000: 115.0, rateHr: 158.0 },
+      carpet_wand_12: { name: 'Tapis - Wand 12" standard', unit: 'pi²', type: 'area', timePer1000: 120.0, rateHr: 158.0 },
+      carpet_wand_8: { name: 'Tapis - Wand 8" passages étroits', unit: 'pi²', type: 'area', timePer1000: 180.0, rateHr: 158.0 },
+      carpet_crb_15: { name: 'Tapis - Brossage mécanique CRB 15"', unit: 'pi²', type: 'area', timePer1000: 21.44, rateHr: 158.0 },
+      carpet_crb_11: { name: 'Tapis - Brossage mécanique CRB 11"', unit: 'pi²', type: 'area', timePer1000: 29.23, rateHr: 158.0 },
+      carpet_rx20: { name: 'Tapis - Tête Rotative Turbo 17" RX20', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 },
+      carpet_encapsulation: { name: 'Tapis - Encapsulation / Bonnet 17"', unit: 'pi²', type: 'area', timePer1000: 54.0, rateHr: 158.0 },
+      carpet_protecteur: { name: 'Tapis - Protecteur Téflon/Scotchgard', unit: 'pi²', type: 'area', timePer1000: 10.2, rateHr: 158.0 },
+      carpet_antibact: { name: 'Tapis - Désodorisant / Antibactérien', unit: 'pi²', type: 'area', timePer1000: 10.2, rateHr: 158.0 },
 
       // Planchers durs
-      hard_floor_mop: { name: 'Plancher dur - Lavage humide manuel', unit: 'pi²', type: 'area', basePrice: 0.05, issaTimePer1000: 14.4 },
-      hard_floor_autoscrub: { name: 'Plancher dur - Autolaveuse mécanique', unit: 'pi²', type: 'area', basePrice: 0.04, issaTimePer1000: 6.5 },
-      hard_floor_topscrub: { name: 'Plancher dur - Récurage de surface (Top Scrub)', unit: 'pi²', type: 'area', basePrice: 0.18, issaTimePer1000: 27.0 },
-      hard_floor_strip_wax: { name: 'Tuile vinyle - Décapage & 4 couches cire', unit: 'pi²', type: 'area', basePrice: 1.15, issaTimePer1000: 113.0 },
-      hard_floor_wax_only: { name: 'Tuile vinyle - Pose de cire (par couche)', unit: 'pi²', type: 'area', basePrice: 0.12, issaTimePer1000: 9.5 },
-      hard_floor_burnish: { name: 'Plancher dur - Polissage haute vitesse', unit: 'pi²', type: 'area', basePrice: 0.07, issaTimePer1000: 3.5 },
-      hard_floor_epoxy: { name: 'Plancher époxy - Dégraissage & récurage', unit: 'pi²', type: 'area', basePrice: 0.18, issaTimePer1000: 20.0 },
-      hard_floor_tile_grout: { name: 'Céramique & coulis - Lavage rotatif acide', unit: 'pi²', type: 'area', basePrice: 0.45, issaTimePer1000: 45.0 },
-      hard_floor_concrete_scrub: { name: 'Béton - Récurage d\'entrepôt', unit: 'pi²', type: 'area', basePrice: 0.15, issaTimePer1000: 15.0 },
+      floor_strip_wax: { name: 'Tuile vinyle - Décapage complet & 4 couches cire', unit: 'pi²', type: 'area', timePer1000: 113.0, rateHr: 158.0 },
+      floor_wax_only: { name: 'Tuile vinyle - Pose de cire (par couche)', unit: 'pi²', type: 'area', timePer1000: 9.5, rateHr: 158.0 },
+      floor_top_scrub: { name: 'Plancher dur - Récurage de surface (Top Scrub)', unit: 'pi²', type: 'area', timePer1000: 27.0, rateHr: 158.0 },
+      floor_burnish: { name: 'Plancher dur - Polissage thermique (Burnishing)', unit: 'pi²', type: 'area', timePer1000: 3.5, rateHr: 158.0 },
+      floor_tile_grout: { name: 'Céramique & Coulis - Nettoyage acide rotatif', unit: 'pi²', type: 'area', timePer1000: 45.0, rateHr: 158.0 },
+      floor_concrete_scrub: { name: 'Béton - Récurage mécanique d\'entrepôt', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 },
+      floor_epoxy: { name: 'Plancher époxy - Dégraissage & récurage', unit: 'pi²', type: 'area', timePer1000: 20.0, rateHr: 158.0 },
+      floor_mop: { name: 'Plancher dur - Mopping humide désinfectant', unit: 'pi²', type: 'area', timePer1000: 14.4, rateHr: 158.0 },
+      floor_autoscrub: { name: 'Plancher dur - Autolaveuse autotractée', unit: 'pi²', type: 'area', timePer1000: 6.5, rateHr: 158.0 },
 
-      // Spécialisé & Unités
-      post_const_rough: { name: 'Après construction - Gros ménage (Rough)', unit: 'pi²', type: 'area', basePrice: 0.32, issaTimePer1000: 18.0 },
-      post_const_final: { name: 'Après construction - Finition finale', unit: 'pi²', type: 'area', basePrice: 0.55, issaTimePer1000: 35.0 },
-      window_standard: { name: 'Vitres commerciales rez-de-chaussée', unit: 'vitre', type: 'count', basePrice: 6.00, issaMinutesEach: 2.5 },
-      window_high: { name: 'Vitres commerciales hauteur / perche', unit: 'vitre', type: 'count', basePrice: 18.00, issaMinutesEach: 7.0 },
-      restroom_toilet: { name: 'Toilette - Nettoyage complet', unit: 'unité', type: 'count', basePrice: 15.00, issaMinutesEach: 1.5 },
-      restroom_urinal: { name: 'Urinoir - Nettoyage & détartrage', unit: 'unité', type: 'count', basePrice: 12.00, issaMinutesEach: 1.5 },
-      restroom_sink: { name: 'Lavabo sanitaire & miroir', unit: 'unité', type: 'count', basePrice: 10.00, issaMinutesEach: 1.0 },
+      // Lavage à pression
+      pressure_concrete: { name: 'Pression - Trottoir & allée béton/dalles', unit: 'pi²', type: 'area', timePer1000: 12.0, rateHr: 158.0 },
+      pressure_siding: { name: 'Pression - Façade / Revêtement extérieur', unit: 'pi²', type: 'area', timePer1000: 20.0, rateHr: 158.0 },
+      pressure_patio: { name: 'Pression - Terrasse bois ou pavé uni', unit: 'pi²', type: 'area', timePer1000: 25.0, rateHr: 158.0 },
+      pressure_bins: { name: 'Pression - Conteneur à déchets / Bac roulant', unit: 'bac', type: 'count', minutesEach: 8.0, rateHr: 158.0 },
+      pressure_grease: { name: 'Pression - Dégraissage quai / Taches d\'huile', unit: 'pi²', type: 'area', timePer1000: 35.0, rateHr: 158.0 },
 
-      // Meubles
-      upholstery_chair: { name: 'Fauteuil en tissu (1 place)', unit: 'unité', type: 'count', basePrice: 55.00, issaMinutesEach: 10.0 },
-      upholstery_loveseat: { name: 'Causeuse en tissu (2 places)', unit: 'unité', type: 'count', basePrice: 95.00, issaMinutesEach: 25.0 },
-      upholstery_sofa: { name: 'Divan en tissu (3 places)', unit: 'unité', type: 'count', basePrice: 135.00, issaMinutesEach: 45.0 },
-      upholstery_sectional: { name: 'Sectionnel complet', unit: 'unité', type: 'count', basePrice: 225.00, issaMinutesEach: 80.0 }
+      // Vitres
+      window_res_standard: { name: 'Fenêtre résidentielle int/ext + moustiquaire', unit: 'vitre', type: 'count', minutesEach: 8.0, rateHr: 158.0 },
+      window_comm_ground: { name: 'Vitrine commerciale plain-pied', unit: 'vitre', type: 'count', minutesEach: 2.5, rateHr: 158.0 },
+      window_comm_high: { name: 'Vitre commerciale hauteur / perche', unit: 'vitre', type: 'count', minutesEach: 7.0, rateHr: 158.0 },
+
+      // Ameublement
+      upholstery_chair: { name: 'Fauteuil 1 place en tissu - Extraction', unit: 'unité', type: 'count', minutesEach: 10.0, rateHr: 158.0 },
+      upholstery_loveseat: { name: 'Causeuse 2 places en tissu - Extraction', unit: 'unité', type: 'count', minutesEach: 25.0, rateHr: 158.0 },
+      upholstery_couch: { name: 'Divan 3 places en tissu - Extraction', unit: 'canapé', type: 'count', minutesEach: 45.0, rateHr: 158.0 },
+      upholstery_sectional: { name: 'Sectionnel complet - Extraction', unit: 'unité', type: 'count', minutesEach: 80.0, rateHr: 158.0 },
+      upholstery_mattress: { name: 'Matelas - Assainissement & extraction', unit: 'matelas', type: 'count', minutesEach: 40.0, rateHr: 158.0 },
+      upholstery_office_chair: { name: 'Chaise de bureau sur roulettes', unit: 'chaise', type: 'count', minutesEach: 5.0, rateHr: 158.0 },
+
+      // Conciergerie & Sanitaires
+      comm_office_sqft: { name: 'Bureaux - Entretien régulier des locaux', unit: 'pi²', type: 'area', timePer1000: 10.0, rateHr: 158.0 },
+      comm_desk: { name: 'Poste de travail - Époussetage & désinfection', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
+      comm_trash: { name: 'Corbeille / Poubelle - Vider et religner', unit: 'unité', type: 'count', minutesEach: 0.75, rateHr: 158.0 },
+      comm_toilet: { name: 'Toilette - Nettoyage complet & désinfection', unit: 'unité', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
+      comm_urinal: { name: 'Urinoir - Nettoyage & détartrage', unit: 'unité', type: 'count', minutesEach: 1.5, rateHr: 158.0 },
+      comm_sink: { name: 'Lavabo sanitaire - Lavage & miroir', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
+      comm_dispensers: { name: 'Remplissage distributeurs sanitaires', unit: 'unité', type: 'count', minutesEach: 1.0, rateHr: 158.0 },
+
+      // Après construction
+      post_const_rough: { name: 'Après construction - Gros ménage (Rough)', unit: 'pi²', type: 'area', timePer1000: 18.0, rateHr: 158.0 },
+      post_const_final: { name: 'Après construction - Finition fine (Final)', unit: 'pi²', type: 'area', timePer1000: 35.0, rateHr: 158.0 },
+      sinister_ozone: { name: 'Assainissement / Nébulisation anti-odeur', unit: 'pi²', type: 'area', timePer1000: 15.0, rateHr: 158.0 }
     };
 
-    const TARGET_HOURLY_RATE = 158.00;
+    // ----------------------------------------------------
+    // VENTILATION FINANCIÈRE INTERNE (CONFIDENTIEL)[cite: 28]
+    // ----------------------------------------------------
+    const FINANCIAL_BREAKDOWN = [
+      { name: 'Main-d’œuvre terrain directe (Technicien + Aide)', pct: 43.5443, color: 'text-blue-900 font-semibold' },
+      { name: 'Vente, Marketing & Administration', pct: 28.3544, color: 'text-slate-700' },
+      { name: 'Frais généraux & Loyer d’atelier', pct: 8.9114, color: 'text-slate-700' },
+      { name: 'Véhicule, Camion & Essence (Transport)', pct: 6.0759, color: 'text-slate-700' },
+      { name: 'Équipements, Wands & Produits consommables', pct: 2.9873, color: 'text-slate-700' },
+      { name: 'Bénéfice net d’exploitation (Profit)', pct: 10.1266, color: 'text-emerald-700 font-bold' }
+    ];
+
     let entries = [];
 
-    // ----------------------------------------------------
-    // INITIALISATION DES MENUS DÉROULANTS
-    // ----------------------------------------------------
+    // Date du jour & devis
+    const today = new Date().toLocaleDateString('fr-CA');
+    document.getElementById('print-date').textContent = today;
+    document.getElementById('print-quote-id').textContent = 'TN-' + Math.floor(100000 + Math.random() * 900000);
+
+    // Initialisation bâtiments et pièces
     const selectBuildingType = document.getElementById('select-building-type');
     const selectRoomType = document.getElementById('select-room-type');
     const inputFinalRoom = document.getElementById('input-final-room');
@@ -523,6 +744,7 @@
         const opt = document.createElement('option');
         opt.value = bldg;
         opt.textContent = bldg;
+        opt.className = 'text-slate-900 bg-white';
         selectBuildingType.appendChild(opt);
       }
       populateRooms(selectBuildingType.value);
@@ -537,6 +759,7 @@
         const opt = document.createElement('option');
         opt.value = room;
         opt.textContent = room;
+        opt.className = 'text-slate-900 bg-white';
         selectRoomType.appendChild(opt);
       });
 
@@ -544,7 +767,7 @@
         selectRoomType.selectedIndex = 0;
         onRoomChange();
       } else {
-        inputFinalRoom.value = filter || 'Autre';
+        inputFinalRoom.value = filter || 'Autre local';
       }
     }
 
@@ -559,7 +782,10 @@
       }
     }
 
-    selectBuildingType.addEventListener('change', () => populateRooms(selectBuildingType.value, inputSearchRoom.value.trim()));
+    selectBuildingType.addEventListener('change', () => {
+      populateRooms(selectBuildingType.value, inputSearchRoom.value.trim());
+      document.getElementById('print-bldg-summary').textContent = selectBuildingType.value;
+    });
     selectRoomType.addEventListener('change', onRoomChange);
 
     btnToggleSearch.addEventListener('click', () => {
@@ -581,178 +807,179 @@
         const idx = BUILDINGS_DB[currentBldg].indexOf('Autre');
         if (idx !== -1) BUILDINGS_DB[currentBldg].splice(idx, 0, newRoom);
         else BUILDINGS_DB[currentBldg].push(newRoom);
-        saveBuildingsDb();
+        localStorage.setItem('cleaning_buildings_db_v4', JSON.stringify(BUILDINGS_DB));
         populateRooms(currentBldg);
         selectRoomType.value = newRoom;
         inputFinalRoom.value = newRoom;
-        alert(`« ${newRoom} » enregistré dans ${currentBldg}`);
-      } else {
-        alert('Cette pièce existe déjà.');
+        alert(`« ${newRoom} » mémorisé dans ${currentBldg}`);
       }
     });
 
-    // ----------------------------------------------------
-    // GESTION DU TAUX MODIFIABLE & FORMULAIRE
-    // ----------------------------------------------------
+    // Gestion du Formulaire d'ajout
     const formItem = document.getElementById('form-item');
-    const selectService = document.getElementById('select-service');
-    const inputUnitPrice = document.getElementById('input-unit-price');
-    const btnResetRate = document.getElementById('btn-reset-rate');
-    const labelUnitPrice = document.getElementById('label-unit-price');
-    const inputQty = document.getElementById('input-qty');
-    const selectDiscount = document.getElementById('select-discount');
+    const selectTask = document.getElementById('select-task');
     const labelQty = document.getElementById('label-qty');
 
-    function updateServiceFields() {
-      const s = SERVICES_CATALOG[selectService.value];
-      labelQty.textContent = `Quantité (${s.unit})`;
-      labelUnitPrice.innerHTML = `<i class="fa-solid fa-pen-to-square text-emerald-600 mr-1"></i> Taux unitaire appliqué ($/${s.unit})`;
-      inputUnitPrice.value = s.basePrice.toFixed(2);
-    }
-
-    selectService.addEventListener('change', updateServiceFields);
-
-    btnResetRate.addEventListener('click', () => {
-      const s = SERVICES_CATALOG[selectService.value];
-      inputUnitPrice.value = s.basePrice.toFixed(2);
+    selectTask.addEventListener('change', () => {
+      const task = TASK_CATALOG[selectTask.value];
+      labelQty.textContent = `Quantité (${task.unit})`;
     });
 
     formItem.addEventListener('submit', (e) => {
       e.preventDefault();
       const room = inputFinalRoom.value.trim() || selectRoomType.value || 'Local';
-      const serviceKey = selectService.value;
-      const qty = parseFloat(inputQty.value) || 0;
-      const customUnitPrice = parseFloat(inputUnitPrice.value) || 0;
-      const discountVal = selectDiscount.value;
+      const taskKey = selectTask.value;
+      const qty = parseFloat(document.getElementById('input-qty').value) || 0;
+      const freq = parseInt(document.getElementById('select-freq').value, 10) || 1;
 
-      if (qty <= 0 || customUnitPrice <= 0) return;
+      addEntry(room, taskKey, qty, freq);
+      document.getElementById('input-qty').value = '';
+    });
 
-      const service = SERVICES_CATALOG[serviceKey];
+    function addEntry(room, taskKey, qty, freq) {
+      const task = TASK_CATALOG[taskKey];
+      if (!task || qty <= 0) return;
 
-      // Dégressivité
-      let mult = 1.0;
-      if (discountVal === 'auto') {
-        if (service.type === 'area') {
-          if (qty < 1000) mult = 1.20;
-          else if (qty <= 2500) mult = 1.00;
-          else if (qty <= 5000) mult = 0.90;
-          else if (qty <= 10000) mult = 0.82;
-          else if (qty <= 25000) mult = 0.75;
-          else mult = 0.68;
-        }
+      let minutes = 0;
+      if (task.type === 'area') {
+        minutes = (qty / 1000) * task.timePer1000;
       } else {
-        mult = parseFloat(discountVal);
+        minutes = qty * task.minutesEach;
       }
 
-      // Méthode 1 : Prix Marché avec le taux saisi par l'utilisateur
-      const effectiveUnitPrice = customUnitPrice * mult;
-      const priceSqft = qty * effectiveUnitPrice;
-
-      // Méthode 2 : Coût Temps ISSA 540 x 158 $/h
-      let issaMin = 0;
-      if (service.type === 'area') {
-        issaMin = (qty / 1000) * service.issaTimePer1000;
-      } else {
-        issaMin = qty * service.issaMinutesEach;
-      }
-      const issaHours = issaMin / 60;
-      const priceIssa = issaHours * TARGET_HOURLY_RATE;
+      const hours = minutes / 60;
+      const priceVisit = hours * task.rateHr;
+      const priceYear = priceVisit * freq;
 
       entries.push({
         id: Date.now() + Math.random(),
         room,
-        serviceKey,
-        serviceName: service.name,
-        unit: service.unit,
+        taskKey,
+        taskName: task.name,
+        unit: task.unit,
         qty,
-        customUnitPrice,
-        effectiveUnitPrice,
-        mult,
-        priceSqft,
-        issaMin,
-        issaHours,
-        priceIssa
+        freq,
+        minutes,
+        hours,
+        priceVisit,
+        priceYear
       });
 
-      inputQty.value = '';
       render();
-    });
+    }
 
     function removeEntry(id) {
       entries = entries.filter(e => e.id !== id);
       render();
     }
 
-    // ----------------------------------------------------
-    // RENDU & DIAGNOSTIC DE SÉCURITÉ TARIFAIRE
-    // ----------------------------------------------------
-    function render() {
-      document.getElementById('count-items').textContent = `${entries.length} éléments`;
+    // Gestion des données du client en direct
+    ['client-name', 'client-company', 'client-phone', 'client-email', 'client-address'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateClientPrintView);
+    });
 
-      let totalSqft = 0;
-      let totalIssa = 0;
-      let totalMin = 0;
+    function updateClientPrintView() {
+      document.getElementById('print-client-name').textContent = document.getElementById('client-name').value.trim() || 'Client sans nom';
+      document.getElementById('print-client-company').textContent = document.getElementById('client-company').value.trim() ? 'Entreprise : ' + document.getElementById('client-company').value.trim() : '';
+      document.getElementById('print-client-phone').textContent = document.getElementById('client-phone').value.trim() ? 'Tél : ' + document.getElementById('client-phone').value.trim() : '';
+      document.getElementById('print-client-email').textContent = document.getElementById('client-email').value.trim() ? 'Courriel : ' + document.getElementById('client-email').value.trim() : '';
+      document.getElementById('print-client-address').textContent = document.getElementById('client-address').value.trim() || 'Adresse non spécifiée';
+      document.getElementById('print-bldg-summary').textContent = selectBuildingType.value;
+    }
+
+    // Gestion des Escomptes et Taxes
+    document.getElementById('discount-type').addEventListener('change', render);
+    document.getElementById('discount-value').addEventListener('input', render);
+    document.getElementById('check-taxes').addEventListener('change', render);
+
+    // Moteur de Calcul & Rendu
+    function render() {
+      document.getElementById('count-items').textContent = `${entries.length} éléments enregistrés`;
+
+      let totalMinVisit = 0;
+      let totalSubtotalVisit = 0;
 
       entries.forEach(e => {
-        totalSqft += e.priceSqft;
-        totalIssa += e.priceIssa;
-        totalMin += e.issaMin;
+        totalMinVisit += e.minutes;
+        totalSubtotalVisit += e.priceVisit;
       });
 
-      const minBilling = 175.00;
-      const finalPriceSqft = Math.max(totalSqft, entries.length > 0 ? minBilling : 0);
-      const totalHours = totalMin / 60;
+      const totalHoursVisit = totalMinVisit / 60;
 
-      document.getElementById('total-price-sqft').textContent = finalPriceSqft.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('detail-sqft').textContent = totalSqft < minBilling && entries.length > 0 
-        ? `Minimum appliqué (Calcul brut: ${totalSqft.toFixed(2)} $)`
-        : `Calcul direct avec vos taux`;
+      // Calcul de l'escompte
+      const discType = document.getElementById('discount-type').value;
+      const discVal = parseFloat(document.getElementById('discount-value').value) || 0;
+      let discountAmount = 0;
 
-      document.getElementById('total-price-issa').textContent = totalIssa.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('detail-issa').textContent = `Temps estimé : ${totalHours.toFixed(2)} h (${Math.round(totalMin)} min)`;
-
-      // Partage sous-traitant (65% / 35%)
-      const payout = finalPriceSqft * 0.65;
-      const margin = finalPriceSqft * 0.35;
-      document.getElementById('subcon-payout').textContent = payout.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-      document.getElementById('subcon-margin').textContent = margin.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
-
-      // Diagnostic d'écart
-      const badge = document.getElementById('badge-comparison');
-      const diag = document.getElementById('diagnostic-box');
-
-      if (entries.length === 0) {
-        badge.textContent = "En attente";
-        badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600";
-        diag.innerHTML = "Ajoutez des éléments pour comparer les deux méthodes de soumission.";
-      } else {
-        const diff = finalPriceSqft - totalIssa;
-        const pctDiff = (diff / totalIssa) * 100;
-
-        if (pctDiff >= 0) {
-          badge.textContent = `Rentable (+${pctDiff.toFixed(1)}%)`;
-          badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800";
-          diag.innerHTML = `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Vos taux couvrent largement les coûts :</span> Vos taux au pi² génèrent un profit excédentaire de <strong>${diff.toFixed(2)} $</strong> par rapport à votre objectif de 158 $/h. Vous pouvez soumissionner sans crainte.`;
-        } else if (pctDiff >= -12) {
-          badge.textContent = `Compétitif (${pctDiff.toFixed(1)}%)`;
-          badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-800";
-          diag.innerHTML = `<span class="text-amber-700 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Légère pression sur la rentabilité :</span> Votre prix total est inférieur de <strong>${Math.abs(diff).toFixed(2)} $</strong> aux heures ISSA. Vous êtes très agressif, mais votre rendement horaire réel d'équipe sera d'environ <strong>${(finalPriceSqft / totalHours).toFixed(2)} $/h</strong> au lieu de 158 $/h.`;
+      if (discVal > 0 && totalSubtotalVisit > 0) {
+        if (discType === 'pct') {
+          discountAmount = (totalSubtotalVisit * discVal) / 100;
+          document.getElementById('display-discount-label').textContent = `${discVal} %`;
         } else {
-          badge.textContent = `Alerte sous-tarification (${pctDiff.toFixed(1)}%)`;
-          badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-rose-100 text-rose-800";
-          diag.innerHTML = `<span class="text-rose-700 font-bold"><i class="fa-solid fa-circle-xmark mr-1"></i> Vos taux sont trop bas :</span> Le temps de travail requis par les outils ISSA (<strong>${totalHours.toFixed(1)} h</strong>) dépasse le prix soumissionné de <strong>${Math.abs(diff).toFixed(2)} $</strong>. Augmentez vos taux au pi² ou chargez au moins <strong>${totalIssa.toFixed(2)} $</strong>.`;
+          discountAmount = Math.min(discVal, totalSubtotalVisit);
+          document.getElementById('display-discount-label').textContent = 'Montant fixe';
         }
+      } else {
+        document.getElementById('display-discount-label').textContent = '0 %';
       }
+
+      const netBeforeTax = Math.max(0, totalSubtotalVisit - discountAmount);
+
+      // Calcul des taxes Québec (TPS 5% + TVQ 9.975%)
+      const applyTaxes = document.getElementById('check-taxes').checked;
+      let tps = 0;
+      let tvq = 0;
+      if (applyTaxes && netBeforeTax > 0) {
+        tps = netBeforeTax * 0.05;
+        tvq = netBeforeTax * 0.09975;
+      }
+      const finalTotalWithTax = netBeforeTax + tps + tvq;
+
+      // Rendu affichage
+      document.getElementById('total-hours-visit').textContent = `${totalHoursVisit.toFixed(2)} h`;
+      document.getElementById('total-min-visit').textContent = `(${Math.round(totalMinVisit)} min)`;
+      document.getElementById('total-subtotal').textContent = totalSubtotalVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('display-discount').textContent = `- ${discountAmount.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+      document.getElementById('total-net-before-tax').textContent = netBeforeTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('total-final-tax').textContent = finalTotalWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+
+      // Tableau client récapitulatif
+      document.getElementById('rec-subtotal').textContent = totalSubtotalVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('rec-discount').textContent = `- ${discountAmount.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+      document.getElementById('rec-net').textContent = netBeforeTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('rec-tps').textContent = tps.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('rec-tvq').textContent = tvq.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('rec-total').textContent = finalTotalWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+
+      // Ventilation financière interne (sur le net avant taxes)[cite: 28]
+      const tbodyBreakdown = document.getElementById('breakdown-tbody');
+      tbodyBreakdown.innerHTML = '';
+      const totalProfit = netBeforeTax * 0.101266;
+      document.getElementById('badge-profit-net').textContent = `Profit Net : ${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+
+      FINANCIAL_BREAKDOWN.forEach(item => {
+        const valVisit = (netBeforeTax * item.pct) / 100;
+        const valYear = valVisit * 1;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="p-2 ${item.color}">${item.name}</td>
+          <td class="p-2 text-center text-slate-500 font-mono">${item.pct.toFixed(2)} %</td>
+          <td class="p-2 text-right font-medium">${valVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+          <td class="p-2 text-right font-medium text-slate-600">${valYear.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+        `;
+        tbodyBreakdown.appendChild(row);
+      });
 
       renderRoomView();
       renderItemView();
+      updateClientPrintView();
     }
 
     function renderRoomView() {
       const container = document.getElementById('container-rooms');
       container.innerHTML = '';
       if (entries.length === 0) {
-        container.innerHTML = '<p class="text-center py-8 text-xs text-slate-400 italic">Aucune pièce sélectionnée.</p>';
+        container.innerHTML = '<p class="text-center py-8 text-xs text-slate-400 italic">Aucun local ni tâche ajoutée.</p>';
         return;
       }
 
@@ -764,33 +991,33 @@
 
       for (const room in grouped) {
         const items = grouped[room];
-        let roomSqft = 0;
         let roomMin = 0;
-        items.forEach(i => { roomSqft += i.priceSqft; roomMin += i.issaMin; });
+        let roomPrice = 0;
+        items.forEach(i => { roomMin += i.minutes; roomPrice += i.priceVisit; });
 
         const card = document.createElement('div');
         card.className = "border rounded-lg p-3 bg-slate-50 border-slate-200";
         card.innerHTML = `
           <div class="flex justify-between items-center border-b pb-2 mb-2">
             <h4 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-location-dot text-emerald-600"></i> ${room}
+              <i class="fa-solid fa-location-dot text-blue-500"></i> ${room}
             </h4>
             <div class="text-right">
-              <span class="text-xs font-black text-emerald-900">${roomSqft.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
-              <span class="text-[11px] text-slate-500 ml-2">(${Math.round(roomMin)} min ISSA)</span>
+              <span class="text-xs font-bold text-blue-900">${(roomMin / 60).toFixed(2)} h (${Math.round(roomMin)} min)</span>
+              <span class="text-xs font-black text-slate-700 ml-2">${roomPrice.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
             </div>
           </div>
           <div class="space-y-1.5">
             ${items.map(item => `
               <div class="flex items-center justify-between text-xs bg-white p-2 rounded border border-slate-200">
                 <div>
-                  <span class="font-semibold text-slate-800">${item.serviceName}</span>
-                  <span class="text-slate-500 ml-1">(${item.qty} ${item.unit} @ ${item.effectiveUnitPrice.toFixed(2)}$/${item.unit})</span>
+                  <span class="font-semibold text-slate-800">${item.taskName}</span>
+                  <span class="text-slate-500 ml-1">(${item.qty} ${item.unit})</span>
                 </div>
                 <div class="flex items-center gap-3">
-                  <span class="text-emerald-800 font-bold">${item.priceSqft.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
-                  <span class="text-slate-400 text-[10px]">vs ISSA: ${item.priceIssa.toFixed(0)}$</span>
-                  <button onclick="removeEntry(${item.id})" class="text-rose-500 hover:text-rose-700 ml-1" title="Supprimer">
+                  <span class="text-slate-600 font-mono">${Math.round(item.minutes)} min</span>
+                  <span class="font-bold text-slate-800">${item.priceVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
+                  <button onclick="removeEntry(${item.id})" class="text-rose-500 hover:text-rose-700 no-print ml-1" title="Supprimer">
                     <i class="fa-solid fa-xmark"></i>
                   </button>
                 </div>
@@ -808,37 +1035,41 @@
 
       const grouped = {};
       entries.forEach(e => {
-        if (!grouped[e.serviceKey]) {
-          grouped[e.serviceKey] = {
-            name: e.serviceName,
+        if (!grouped[e.taskKey]) {
+          grouped[e.taskKey] = {
+            taskName: e.taskName,
             unit: e.unit,
-            qty: 0,
-            priceSqft: 0,
-            priceIssa: 0,
-            unitRate: e.effectiveUnitPrice
+            totalQty: 0,
+            totalMin: 0,
+            totalPrice: 0,
+            timePer1000: TASK_CATALOG[e.taskKey].timePer1000,
+            minutesEach: TASK_CATALOG[e.taskKey].minutesEach
           };
         }
-        grouped[e.serviceKey].qty += e.qty;
-        grouped[e.serviceKey].priceSqft += e.priceSqft;
-        grouped[e.serviceKey].priceIssa += e.priceIssa;
+        grouped[e.taskKey].totalQty += e.qty;
+        grouped[e.taskKey].totalMin += e.minutes;
+        grouped[e.taskKey].totalPrice += e.priceVisit;
       });
 
-      for (const k in grouped) {
-        const item = grouped[k];
-        const diff = item.priceSqft - item.priceIssa;
-        const diffColor = diff >= 0 ? 'text-emerald-700' : 'text-rose-600';
+      for (const key in grouped) {
+        const item = grouped[key];
+        const cadence = item.timePer1000 ? `${item.timePer1000} min / 1000 pi²` : `${item.minutesEach} min / ${item.unit}`;
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td class="p-2 font-medium text-slate-800">${item.name}</td>
-          <td class="p-2 text-center font-bold">${item.qty.toLocaleString('fr-CA')} ${item.unit}</td>
-          <td class="p-2 text-right font-mono text-slate-600">${item.unitRate.toFixed(2)} $/${item.unit}</td>
-          <td class="p-2 text-right font-bold text-emerald-900">${item.priceSqft.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
-          <td class="p-2 text-right font-semibold text-blue-900">${item.priceIssa.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
-          <td class="p-2 text-center font-mono font-bold ${diffColor}">${diff >= 0 ? '+' : ''}${diff.toFixed(0)} $</td>
+          <td class="p-2 font-medium text-slate-800">${item.taskName}</td>
+          <td class="p-2 text-center font-bold">${item.totalQty.toLocaleString('fr-CA')} ${item.unit}</td>
+          <td class="p-2 text-center text-slate-500 font-mono">${cadence}</td>
+          <td class="p-2 text-right font-mono">${(item.totalMin / 60).toFixed(2)} h (${Math.round(item.totalMin)} min)</td>
+          <td class="p-2 text-right font-bold text-blue-900">${item.totalPrice.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
         `;
         container.appendChild(row);
       }
     }
+
+    // Bascule Fiche Client (Plein écran prêt pour remise)
+    document.getElementById('btn-toggle-client-view').addEventListener('click', () => {
+      window.print();
+    });
 
     // Navigation onglets
     const tabRoom = document.getElementById('tab-room');
@@ -847,54 +1078,29 @@
     const viewItem = document.getElementById('view-item');
 
     tabRoom.addEventListener('click', () => {
-      tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-emerald-700 text-white shadow transition";
+      tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-blue-600 text-white shadow transition";
       tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
       viewRoom.classList.remove('hidden');
       viewItem.classList.add('hidden');
     });
 
     tabItem.addEventListener('click', () => {
-      tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-emerald-700 text-white shadow transition";
+      tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-blue-600 text-white shadow transition";
       tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
       viewItem.classList.remove('hidden');
       viewRoom.classList.add('hidden');
     });
 
     document.getElementById('btn-reset').addEventListener('click', () => {
-      if (confirm('Voulez-vous réinitialiser ?')) {
+      if (confirm('Voulez-vous réinitialiser tous les relevés ?')) {
         entries = [];
         render();
       }
     });
 
-    // Exemple représentatif
+    // Exemple multi-niche représentatif
     document.getElementById('btn-sample').addEventListener('click', () => {
       entries = [];
-      const s1 = SERVICES_CATALOG['carpet_hwe_std'];
-      const q1 = 2500;
-      const rate1 = 0.26;
-      entries.push({
-        id: 1, room: 'Corridor & Entrée', serviceKey: 'carpet_hwe_std', serviceName: s1.name, unit: s1.unit,
-        qty: q1, customUnitPrice: rate1, effectiveUnitPrice: rate1, mult: 1.0, priceSqft: q1 * rate1, issaMin: (q1/1000)*s1.issaTimePer1000,
-        issaHours: ((q1/1000)*s1.issaTimePer1000)/60, priceIssa: (((q1/1000)*s1.issaTimePer1000)/60) * TARGET_HOURLY_RATE
-      });
-
-      const s2 = SERVICES_CATALOG['hard_floor_strip_wax'];
-      const q2 = 1000;
-      const rate2 = 1.15;
-      entries.push({
-        id: 2, room: 'Cafétéria', serviceKey: 'hard_floor_strip_wax', serviceName: s2.name, unit: s2.unit,
-        qty: q2, customUnitPrice: rate2, effectiveUnitPrice: rate2, mult: 1.0, priceSqft: q2 * rate2, issaMin: (q2/1000)*s2.issaTimePer1000,
-        issaHours: ((q2/1000)*s2.issaTimePer1000)/60, priceIssa: (((q2/1000)*s2.issaTimePer1000)/60) * TARGET_HOURLY_RATE
-      });
-
-      render();
-    });
-
-    // Lancement
-    populateBuildings();
-    updateServiceFields();
-    render();
-  </script>
-</body>
-</html>
+      document.getElementById('client-name').value = 'Mme Sophie Roy';
+      document.getElementById('client-company').value = 'Clinique Médicale & Résidence Roy';
+      document.getElementById('client-phone').value = '514-
