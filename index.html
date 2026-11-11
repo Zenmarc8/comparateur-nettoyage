@@ -1,1 +1,863 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estimateur Marché pi² & Comparateur ISSA - TotalNet</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; color: black; font-size: 11pt; }
+      .print-shadow { box-shadow: none !important; border: 1px solid #ddd !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
 
+  <!-- Header Émeraude / Forêt Distinctif -->
+  <header class="bg-emerald-900 text-white shadow-lg no-print">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-scale-balanced text-emerald-400"></i> Estimateur Marché & Comparateur ISSA
+        </h1>
+        <p class="text-xs text-emerald-200 mt-1">Méthode Marché pi² dégressif vs Méthode Temps Réel (ISSA 540 @ 158 $/h)</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-sample" class="bg-emerald-800 hover:bg-emerald-700 text-xs px-3 py-2 rounded font-medium border border-emerald-600 transition">
+          <i class="fa-solid fa-folder-open mr-1"></i> Charger exemple
+        </button>
+        <button id="btn-reset" class="bg-rose-800 hover:bg-rose-700 text-xs px-3 py-2 rounded font-medium transition">
+          <i class="fa-solid fa-trash mr-1"></i> Vider
+        </button>
+        <button onclick="window.print()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 text-xs px-4 py-2 rounded font-bold transition">
+          <i class="fa-solid fa-print mr-1"></i> Imprimer / PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Bannière impression -->
+  <div class="hidden print:block max-w-7xl mx-auto p-4 border-b border-slate-300">
+    <h1 class="text-2xl font-bold text-slate-900">SOUMISSION COMMERCIALE & ANALYSE TARIFAIRE</h1>
+    <p class="text-xs text-slate-600">Double validation au pied carré de marché et cadences de temps ISSA 540.</p>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Colonne GAUCHE : Formulaire & Banque de pièces -->
+    <section class="lg:col-span-5 space-y-6 no-print">
+      
+      <!-- Module Saisie avec Sélecteur Intelligent -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <h2 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-circle-plus text-emerald-600"></i> Ajouter un Élément au Devis
+        </h2>
+
+        <form id="form-item" class="space-y-4">
+          
+          <!-- Bloc Sélection de Pièce & Bâtiment -->
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+                <i class="fa-solid fa-building text-emerald-600 mr-1"></i> 1. Type d'immeuble
+              </label>
+              <button type="button" id="btn-toggle-search" class="text-[11px] text-emerald-700 hover:text-emerald-900 font-semibold">
+                <i class="fa-solid fa-magnifying-glass mr-1"></i> Chercher par mot-clé
+              </button>
+            </div>
+
+            <!-- Liste 1 : Immeubles -->
+            <select id="select-building-type" class="w-full text-xs font-medium px-3 py-2 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+            </select>
+
+            <!-- Recherche rapide -->
+            <div id="box-search-room" class="hidden">
+              <div class="relative">
+                <input type="text" id="input-search-room" placeholder="Recherche rapide (ex: conférence, cafeteria, chambre)..." class="w-full text-xs pl-8 pr-3 py-1.5 bg-white border border-emerald-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-2.5 top-2.5"></i>
+              </div>
+            </div>
+
+            <!-- Liste 2 : Pièces du bâtiment -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">
+                <i class="fa-solid fa-door-open text-emerald-600 mr-1"></i> 2. Pièce ou local
+              </label>
+              <select id="select-room-type" class="w-full text-xs font-semibold px-3 py-2 bg-white border border-slate-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+              </select>
+            </div>
+
+            <!-- Champ texte personnalisé si AUTRE -->
+            <div id="box-custom-room" class="pt-1">
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Précision ou local personnalisé :</label>
+              <div class="flex gap-2">
+                <input type="text" id="input-final-room" placeholder="Nom de la pièce..." required class="flex-1 text-xs px-3 py-2 bg-white border border-emerald-300 rounded-md focus:ring-2 focus:ring-emerald-500 outline-none font-medium">
+                <button type="button" id="btn-save-custom-room" title="Enregistrer dans ma banque" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-2 rounded-md transition font-semibold">
+                  <i class="fa-solid fa-floppy-disk mr-1"></i> Sauvegarder
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Service et Tarification Marché Québec -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              <i class="fa-solid fa-tags text-emerald-600 mr-1"></i> Service & Méthode (Tarif Marché 2026)
+            </label>
+            <select id="select-service" class="w-full text-xs px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+              <optgroup label="Tapis commerciaux & Institutionnels">
+                <option value="carpet_hwe_std" selected>Tapis - Extraction eau chaude (HWE) [0,26 $/pi² | 115 min/1000]</option>
+                <option value="carpet_hwe_narrow">Tapis - Wand 8" passages restreints [0,42 $/pi² | 180 min/1000]</option>
+                <option value="carpet_encap">Tapis - Encapsulation / Cimex [0,15 $/pi² | 54 min/1000]</option>
+                <option value="carpet_vlm">Tapis - Bonnet / Faible humidité [0,16 $/pi² | 54 min/1000]</option>
+                <option value="carpet_crb_only">Tapis - Brossage CRB seul [0,08 $/pi² | 21.4 min/1000]</option>
+                <option value="carpet_full_protocol">Tapis - Complet (Pre-spray + CRB + HWE) [0,38 $/pi² | 146 min/1000]</option>
+                <option value="carpet_rx20">Tapis - Tête rotative turbo RX20 [0,35 $/pi² | 15 min/1000]</option>
+                <option value="carpet_protect">Tapis - Protecteur Téflon/Scotchgard [0,08 $/pi² | 10.2 min/1000]</option>
+                <option value="carpet_antibact">Tapis - Neutralisant d'odeurs/Antibactérien [0,08 $/pi² | 10.2 min/1000]</option>
+              </optgroup>
+              <optgroup label="Planchers durs (Vinyle, Béton, Céramique)">
+                <option value="hard_floor_mop">Plancher dur - Lavage humide manuel [0,05 $/pi² | 14.4 min/1000]</option>
+                <option value="hard_floor_autoscrub">Plancher dur - Autolaveuse mécanique [0,04 $/pi² | 6.5 min/1000]</option>
+                <option value="hard_floor_topscrub">Plancher dur - Récurage de surface (Top Scrub) [0,18 $/pi² | 27 min/1000]</option>
+                <option value="hard_floor_strip_wax">Tuile vinyle - Décapage complet + 4 couches cire [1,15 $/pi² | 113 min/1000]</option>
+                <option value="hard_floor_wax_only">Tuile vinyle - Pose fini cire (par couche) [0,12 $/pi² | 9.5 min/1000]</option>
+                <option value="hard_floor_burnish">Plancher dur - Polissage haute vitesse (Burnishing) [0,07 $/pi² | 3.5 min/1000]</option>
+                <option value="hard_floor_epoxy">Plancher époxy - Dégraissage & récurage [0,18 $/pi² | 20 min/1000]</option>
+                <option value="hard_floor_tile_grout">Céramique & coulis - Décapage acide rotatif [0,45 $/pi² | 45 min/1000]</option>
+                <option value="hard_floor_concrete_scrub">Béton - Récurage d'entrepôt [0,15 $/pi² | 15 min/1000]</option>
+              </optgroup>
+              <optgroup label="Après-Construction, Vitres & Sanitaires">
+                <option value="post_const_rough">Après construction - Gros ménage (Rough) [0,32 $/pi² | 18 min/1000]</option>
+                <option value="post_const_final">Après construction - Finition détaillée (Final) [0,55 $/pi² | 35 min/1000]</option>
+                <option value="window_standard">Vitres commerciales rez-de-chaussée [6,00 $ / vitre | 2.5 min/u]</option>
+                <option value="window_high">Vitres commerciales hauteur / perche [18,00 $ / vitre | 7.0 min/u]</option>
+                <option value="restroom_toilet">Toilette - Lavage & désinfection [15,00 $ / u | 1.5 min/u]</option>
+                <option value="restroom_urinal">Urinoir - Détartrage complet [12,00 $ / u | 1.5 min/u]</option>
+                <option value="restroom_sink">Lavabo sanitaire & miroir [10,00 $ / u | 1.0 min/u]</option>
+              </optgroup>
+              <optgroup label="Ameublement & Meubles rembourrés">
+                <option value="upholstery_chair">Fauteuil rembourré simple (1 place) [55,00 $ / u | 10 min/u]</option>
+                <option value="upholstery_loveseat">Causeuse rembourrée (2 places) [95,00 $ / u | 25 min/u]</option>
+                <option value="upholstery_sofa">Divan rembourré 3 places [135,00 $ / u | 45 min/u]</option>
+                <option value="upholstery_sectional">Sectionnel complet [225,00 $ / u | 80 min/u]</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Paliers & Dégressivité -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1" id="label-qty">Quantité (pi²)</label>
+              <input type="number" id="input-qty" value="1500" min="1" step="any" required class="w-full text-sm px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Niveau de dégressivité</label>
+              <select id="select-discount" class="w-full text-xs px-3 py-2 border rounded-md focus:ring-2 focus:ring-emerald-500 outline-none">
+                <option value="auto">Automatique (selon pi²)</option>
+                <option value="1.0">Standard (x 1,00)</option>
+                <option value="0.90">-10% (Chantier moyen)</option>
+                <option value="0.82">-18% (Grand chantier)</option>
+                <option value="0.75">-25% (Très grand chantier)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between text-xs text-slate-500 bg-slate-50 p-2 rounded border border-slate-200">
+            <span>Minimum de facturation chantier :</span>
+            <span class="font-bold text-slate-800">175,00 $</span>
+          </div>
+
+          <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg shadow transition">
+            <i class="fa-solid fa-plus-circle mr-1"></i> Ajouter à la soumission
+          </button>
+        </form>
+      </div>
+
+      <!-- Module Sous-traitance & Opérateur Indépendant -->
+      <div class="bg-slate-900 text-white rounded-xl shadow-md p-4 space-y-3">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+          <i class="fa-solid fa-handshake"></i> Partage Opérateur Indépendant
+        </h3>
+        <p class="text-[11px] text-slate-300">Si le chantier est délégué à un entrepreneur affilié fournissant ses équipements.</p>
+        
+        <div class="grid grid-cols-2 gap-3 pt-1">
+          <div class="bg-slate-800 p-2.5 rounded border border-slate-700 text-center">
+            <div class="text-[11px] text-slate-400">Rémunération Opérateur (65%)</div>
+            <div class="text-sm font-bold text-amber-400 mt-1" id="subcon-payout">0,00 $</div>
+          </div>
+          <div class="bg-slate-800 p-2.5 rounded border border-slate-700 text-center">
+            <div class="text-[11px] text-slate-400">Marge Brute TotalNet (35%)</div>
+            <div class="text-sm font-bold text-emerald-400 mt-1" id="subcon-margin">0,00 $</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Colonne DROITE : Comparateur & Tableaux -->
+    <section class="lg:col-span-7 space-y-6">
+
+      <!-- Carte Comparateur : Méthode Marché vs Méthode Temps Réel ISSA -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <div class="flex items-center justify-between border-b pb-3 mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-900">Double Évaluation du Chantier</h2>
+            <p class="text-xs text-slate-500">Comparaison entre les prix du marché québécois et vos coûts réels d'équipe</p>
+          </div>
+          <span id="badge-comparison" class="text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600">En attente</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <!-- Méthode 1 : Marché pi² -->
+          <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-200 text-center">
+            <span class="text-xs font-bold uppercase text-emerald-800">Méthode 1 : Prix Marché pi²</span>
+            <div class="text-2xl font-black text-emerald-900 my-1" id="total-price-sqft">0,00 $</div>
+            <div class="text-[11px] text-emerald-700" id="detail-sqft">Tarif unitaire avec dégressivité</div>
+          </div>
+
+          <!-- Méthode 2 : Temps ISSA x 158$/h -->
+          <div class="bg-blue-50 rounded-xl p-4 border border-blue-200 text-center">
+            <span class="text-xs font-bold uppercase text-blue-800">Méthode 2 : Coût Temps ISSA (158 $/h)</span>
+            <div class="text-2xl font-black text-blue-900 my-1" id="total-price-issa">0,00 $</div>
+            <div class="text-[11px] text-blue-700" id="detail-issa">Temps total : 0,00 h (0 min)</div>
+          </div>
+        </div>
+
+        <!-- Diagnostic de rentabilité & Recommandation -->
+        <div id="diagnostic-box" class="p-3 rounded-lg text-xs font-medium bg-slate-50 border border-slate-200 text-slate-700">
+          Ajoutez des éléments pour comparer les deux méthodes de soumission.
+        </div>
+      </div>
+
+      <!-- Tableau détaillé des éléments & Bascule des vues -->
+      <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5">
+        <div class="flex items-center justify-between border-b pb-3 mb-4">
+          <div class="flex gap-2">
+            <button id="tab-room" class="px-3 py-1.5 rounded-md font-bold text-xs bg-emerald-700 text-white shadow transition">
+              <i class="fa-solid fa-door-open mr-1"></i> Fiche par Pièce
+            </button>
+            <button id="tab-item" class="px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+              <i class="fa-solid fa-cubes mr-1"></i> Synthèse par Item
+            </button>
+          </div>
+          <span class="text-xs text-slate-400" id="count-items">0 éléments</span>
+        </div>
+
+        <!-- Vue 1 : Par Pièce -->
+        <div id="view-room" class="space-y-3">
+          <div id="container-rooms" class="space-y-3">
+            <p class="text-center py-8 text-xs text-slate-400 italic">Aucune pièce sélectionnée.</p>
+          </div>
+        </div>
+
+        <!-- Vue 2 : Consolidée par Item avec comparaison directe -->
+        <div id="view-item" class="hidden">
+          <div class="border rounded-lg overflow-x-auto text-xs">
+            <table class="w-full">
+              <thead class="bg-slate-100 text-slate-700 font-semibold border-b">
+                <tr>
+                  <th class="text-left p-2">Service</th>
+                  <th class="text-center p-2">Quantité</th>
+                  <th class="text-right p-2">Prix Marché (pi²)</th>
+                  <th class="text-right p-2">Coût ISSA (158$/h)</th>
+                  <th class="text-center p-2">Écart</th>
+                </tr>
+              </thead>
+              <tbody id="container-items" class="divide-y divide-slate-200">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // ----------------------------------------------------
+    // BANQUE DE DONNÉES COMPLÈTE DES 16 CATÉGORIES
+    // ----------------------------------------------------
+    const DEFAULT_BUILDINGS_DB = {
+      "1. Résidentiel": [
+        "Chambre principale", "Chambre secondaire", "Chambre d'enfant", "Chambre d'amis", "Salon",
+        "Salle familiale", "Salle à manger", "Cuisine", "Cuisinette", "Coin-repas", "Bureau à domicile",
+        "Salle de bain complète", "Salle d'eau", "Salle de douche", "Salle de lavage", "Buanderie",
+        "Walk-in", "Garde-robe", "Vestibule", "Hall d'entrée", "Corridor", "Escalier",
+        "Sous-sol aménagé", "Sous-sol non aménagé", "Salle de jeux", "Salle de cinéma maison",
+        "Véranda", "Solarium", "Salle de rangement", "Débarras", "Garage", "Atelier résidentiel",
+        "Cave à vin", "Grenier", "Salle mécanique", "Autre"
+      ],
+      "2. Bureaux et administration": [
+        "Bureau individuel", "Bureau de direction", "Bureau partagé", "Aire de travail ouverte",
+        "Poste de travail", "Salle de conférence", "Salle de réunion", "Salle de formation",
+        "Salle de présentation", "Salle de visioconférence", "Réception", "Hall d'accueil",
+        "Salle d'attente", "Aire de détente", "Salle de repos", "Cuisine des employés",
+        "Cuisinette", "Cafétéria", "Salle à manger des employés", "Salle d'impression",
+        "Salle de photocopieurs", "Salle informatique", "Salle de serveurs", "Centre d'appels",
+        "Archives", "Salle de classement", "Salle de courrier", "Salle de reprographie",
+        "Local administratif", "Corridor", "Escalier", "Ascenseur", "Vestibule", "Vestiaire",
+        "Toilettes", "Salle de bain", "Local d'entretien ménager", "Salle de rangement", "Autre"
+      ],
+      "3. Industriel et usine": [
+        "Aire de production", "Plancher de production", "Ligne de production", "Zone d'assemblage",
+        "Zone de fabrication", "Atelier mécanique", "Atelier de réparation", "Atelier de soudure",
+        "Atelier de peinture", "Atelier d'usinage", "Atelier de menuiserie", "Atelier d'ébénisterie",
+        "Atelier de maintenance", "Atelier électrique", "Atelier d'entretien", "Zone d'emballage",
+        "Zone d'expédition", "Réception des marchandises", "Quai de chargement", "Entrepôt",
+        "Aire d'entreposage", "Zone de stockage", "Chambre froide", "Congélateur industriel",
+        "Salle de contrôle", "Salle des opérateurs", "Salle électrique", "Local mécanique",
+        "Local technique", "Local de compresseurs", "Local de pompes", "Local de chaudières",
+        "Salle des machines", "Salle des équipements", "Salle de ventilation", "Local de filtration",
+        "Salle de lavage industriel", "Zone de décontamination", "Vestiaire des employés",
+        "Douches industrielles", "Toilettes industrielles", "Cafétéria", "Salle de repas",
+        "Salle de repos", "Bureau d'usine", "Salle de supervision", "Laboratoire de contrôle qualité",
+        "Corridor industriel", "Escalier industriel", "Autre"
+      ],
+      "4. Commercial et magasins": [
+        "Surface de vente", "Aire commerciale", "Salle d'exposition", "Salle de montre",
+        "Vitrine intérieure", "Zone de caisse", "Comptoir de service", "Comptoir d'accueil",
+        "Cabine d'essayage", "Réserve", "Arrière-boutique", "Entrepôt commercial",
+        "Réception des marchandises", "Préparation des commandes", "Aire d'attente",
+        "Salle de repos des employés", "Bureau administratif", "Cuisine des employés",
+        "Cafétéria", "Toilettes publiques", "Salle de bain des employés", "Corridor",
+        "Hall d'entrée", "Escalier", "Ascenseur", "Aire commune de centre commercial",
+        "Aire de restauration", "Kiosque commercial", "Autre"
+      ],
+      "5. Restaurants et hôtels": [
+        "Salle à manger", "Salle privée", "Salle de réception", "Bar", "Comptoir de service",
+        "Cuisine commerciale", "Cuisine de préparation", "Zone de cuisson", "Zone de plonge",
+        "Laverie de vaisselle", "Chambre froide", "Chambre de congélation", "Garde-manger",
+        "Réserve alimentaire", "Zone de livraison", "Salle des employés", "Vestiaire",
+        "Toilettes publiques", "Toilettes du personnel", "Hall d'entrée", "Réception d'hôtel",
+        "Lobby", "Chambre d'hôtel", "Suite", "Salle de bain d'hôtel", "Corridor d'hôtel",
+        "Salle de réunion", "Salle de banquet", "Salle de déjeuner", "Cuisine d'hôtel",
+        "Buanderie d'hôtel", "Local d'entretien ménager", "Ascenseur", "Escalier", "Autre"
+      ],
+      "6. Santé et médical": [
+        "Salle d'attente", "Réception médicale", "Salle de consultation", "Salle d'examen",
+        "Salle de traitement", "Salle de soins", "Salle d'opération", "Salle de réveil",
+        "Chambre de patient", "Chambre privée", "Chambre semi-privée", "Salle commune",
+        "Salle de prélèvement", "Laboratoire médical", "Laboratoire d'analyse",
+        "Salle de radiologie", "Salle d'imagerie médicale", "Salle d'échographie",
+        "Salle de physiothérapie", "Salle de réadaptation", "Salle de stérilisation",
+        "Salle de désinfection", "Salle d'isolement", "Salle de médicaments", "Pharmacie",
+        "Salle du personnel médical", "Poste infirmier", "Vestiaire médical",
+        "Salle de repos du personnel", "Cuisine du personnel", "Cafétéria", "Toilettes",
+        "Salle de bain adaptée", "Corridor médical", "Ascenseur", "Escalier",
+        "Local biomédical", "Local technique", "Autre"
+      ],
+      "7. Laboratoires et sciences": [
+        "Laboratoire de recherche", "Laboratoire d'analyse", "Laboratoire chimique",
+        "Laboratoire biologique", "Laboratoire pharmaceutique", "Laboratoire alimentaire",
+        "Laboratoire microbiologique", "Laboratoire de contrôle qualité", "Salle blanche",
+        "Salle propre", "Salle de préparation", "Salle de pesée", "Salle d'échantillonnage",
+        "Salle de manipulation", "Salle de culture", "Salle d'incubation", "Salle de stérilisation",
+        "Salle de lavage de matériel", "Salle d'entreposage", "Chambre froide",
+        "Local de produits chimiques", "Local de déchets biologiques", "Vestiaire de laboratoire",
+        "Zone de décontamination", "Sas d'entrée", "Corridor contrôlé", "Autre"
+      ],
+      "8. Écoles et garderies": [
+        "Salle de classe", "Salle de cours", "Salle informatique", "Laboratoire scolaire",
+        "Bibliothèque", "Salle de lecture", "Salle d'étude", "Salle de conférence",
+        "Auditorium", "Amphithéâtre", "Gymnase", "Salle d'entraînement", "Vestiaire sportif",
+        "Douches", "Toilettes", "Garderie", "Salle de jeux", "Salle de sieste", "Salle de repos",
+        "Salle des enseignants", "Bureau de direction", "Secrétariat", "Réception",
+        "Cafétéria", "Cuisine", "Salle polyvalente", "Salle d'activités", "Corridor",
+        "Hall d'entrée", "Escalier", "Ascenseur", "Local d'entretien", "Local de rangement", "Autre"
+      ],
+      "9. Copropriétés et immeubles à logements": [
+        "Hall d'entrée", "Lobby", "Vestibule", "Corridor d'étage", "Corridor de sous-sol",
+        "Cage d'escalier", "Ascenseur", "Salle de courrier", "Salle des colis",
+        "Salle communautaire", "Salle multifonctionnelle", "Salle de réception",
+        "Salle de jeux", "Salle de cinéma", "Gym", "Salle d'entraînement", "Salle de yoga",
+        "Piscine intérieure", "Vestiaire de piscine", "Sauna", "Bain vapeur", "Salle de billard",
+        "Salle de lavage commune", "Buanderie", "Salle de rangement", "Casiers",
+        "Garage intérieur", "Stationnement intérieur", "Local à vélos", "Local à déchets",
+        "Local de recyclage", "Local mécanique", "Local électrique", "Salle des compteurs",
+        "Terrasse commune", "Cuisine commune", "Toilettes communes", "Autre"
+      ],
+      "10. Sport et loisirs": [
+        "Gymnase", "Salle d'entraînement", "Salle de musculation", "Salle de cardio",
+        "Studio de yoga", "Studio de danse", "Salle de spinning", "Salle d'aérobie",
+        "Salle de boxe", "Dojo", "Salle de combat", "Vestiaire hommes", "Vestiaire femmes",
+        "Vestiaire familial", "Douches", "Toilettes", "Piscine intérieure", "Piscine extérieure",
+        "Plage de piscine", "Sauna", "Bain vapeur", "Spa", "Salle de massage",
+        "Salle de physiothérapie", "Salle de réception", "Gradins", "Tribune",
+        "Salle des arbitres", "Salle des entraîneurs", "Salle d'équipement", "Corridor",
+        "Hall d'entrée", "Autre"
+      ],
+      "11. Institutions et bâtiments publics": [
+        "Hôtel de ville", "Bureau municipal", "Salle du conseil", "Salle communautaire",
+        "Centre communautaire", "Bibliothèque publique", "Salle de spectacle",
+        "Auditorium", "Théâtre", "Salle de réception", "Salle polyvalente", "Salle d'exposition",
+        "Musée", "Galerie d'art", "Centre culturel", "Centre de loisirs", "Centre de services",
+        "Salle d'attente", "Réception", "Bureau administratif", "Salle de réunion",
+        "Cafétéria", "Cuisine", "Toilettes publiques", "Vestiaire", "Corridor",
+        "Hall d'entrée", "Escalier", "Ascenseur", "Local technique", "Autre"
+      ],
+      "12. Transport et logistique": [
+        "Terminal de transport", "Salle d'attente", "Hall de départ", "Hall d'arrivée",
+        "Billetterie", "Comptoir de service", "Salle des employés", "Salle de contrôle",
+        "Bureau administratif", "Quai", "Entrepôt logistique", "Zone de tri",
+        "Zone de manutention", "Quai de chargement", "Aire de stationnement",
+        "Garage mécanique", "Atelier de réparation", "Salle de repos des chauffeurs",
+        "Vestiaire", "Toilettes", "Cuisine", "Cafétéria", "Corridor", "Autre"
+      ],
+      "13. Locaux techniques et spécialisés": [
+        "Salle de serveurs", "Centre de données", "Salle électrique", "Salle mécanique",
+        "Local de ventilation", "Local de climatisation", "Local de chauffage",
+        "Local de plomberie", "Local de pompage", "Local de filtration",
+        "Local de génératrice", "Local de transformateurs", "Salle de batteries",
+        "Local d'entreposage", "Salle de produits d'entretien", "Salle de déchets",
+        "Local de recyclage", "Salle de décontamination", "Salle de lavage",
+        "Salle de séchage", "Salle de préparation", "Salle de stockage", "Chambre forte",
+        "Local de sécurité", "Salle de surveillance", "Poste de garde", "Autre"
+      ],
+      "14. Espaces de circulation": [
+        "Corridor", "Passage", "Escalier", "Palier", "Rampe", "Ascenseur",
+        "Vestibule", "Entrée", "Sortie", "Sas", "Passerelle", "Mezzanine", "Autre"
+      ],
+      "15. Espaces extérieurs": [
+        "Balcon", "Terrasse", "Patio", "Véranda", "Entrée extérieure", "Escalier extérieur",
+        "Passage couvert", "Aire de chargement extérieure", "Quai extérieur", "Trottoir",
+        "Stationnement extérieur", "Garage extérieur", "Aire de repos extérieure", "Autre"
+      ],
+      "16. Espaces sanitaires": [
+        "Toilette individuelle", "Toilettes multiples", "Urinoirs", "Lavabos",
+        "Douches", "Baignoires", "Vestiaire", "Salle de change", "Salle de bain accessible", "Autre"
+      ]
+    };
+
+    let customDb = JSON.parse(localStorage.getItem('cleaning_buildings_db_v2') || 'null');
+    let BUILDINGS_DB = customDb || JSON.parse(JSON.stringify(DEFAULT_BUILDINGS_DB));
+
+    function saveBuildingsDb() {
+      localStorage.setItem('cleaning_buildings_db_v2', JSON.stringify(BUILDINGS_DB));
+    }
+
+    // ----------------------------------------------------
+    // BANQUE DES SERVICES MARCHÉ VS COÛT ISSA
+    // ----------------------------------------------------
+    const SERVICES_CATALOG = {
+      // Tapis
+      carpet_hwe_std: { name: 'Tapis - Extraction standard HWE', unit: 'pi²', type: 'area', basePrice: 0.26, issaTimePer1000: 115.0 },
+      carpet_hwe_narrow: { name: 'Tapis - Wand 8" passages étroits', unit: 'pi²', type: 'area', basePrice: 0.42, issaTimePer1000: 180.0 },
+      carpet_encap: { name: 'Tapis - Encapsulation / Cimex', unit: 'pi²', type: 'area', basePrice: 0.15, issaTimePer1000: 54.0 },
+      carpet_vlm: { name: 'Tapis - Bonnet / Faible humidité', unit: 'pi²', type: 'area', basePrice: 0.16, issaTimePer1000: 54.0 },
+      carpet_crb_only: { name: 'Tapis - Brossage mécanique CRB', unit: 'pi²', type: 'area', basePrice: 0.08, issaTimePer1000: 21.44 },
+      carpet_full_protocol: { name: 'Tapis - Protocole complet (Pre-spray+CRB+HWE)', unit: 'pi²', type: 'area', basePrice: 0.38, issaTimePer1000: 146.6 },
+      carpet_rx20: { name: 'Tapis - Tête rotative Turbo RX20', unit: 'pi²', type: 'area', basePrice: 0.35, issaTimePer1000: 15.0 },
+      carpet_protect: { name: 'Tapis - Protecteur Téflon/Scotchgard', unit: 'pi²', type: 'area', basePrice: 0.08, issaTimePer1000: 10.2 },
+      carpet_antibact: { name: 'Tapis - Antibactérien / Désodorisant', unit: 'pi²', type: 'area', basePrice: 0.08, issaTimePer1000: 10.2 },
+
+      // Planchers durs
+      hard_floor_mop: { name: 'Plancher dur - Lavage humide manuel', unit: 'pi²', type: 'area', basePrice: 0.05, issaTimePer1000: 14.4 },
+      hard_floor_autoscrub: { name: 'Plancher dur - Autolaveuse mécanique', unit: 'pi²', type: 'area', basePrice: 0.04, issaTimePer1000: 6.5 },
+      hard_floor_topscrub: { name: 'Plancher dur - Récurage de surface (Top Scrub)', unit: 'pi²', type: 'area', basePrice: 0.18, issaTimePer1000: 27.0 },
+      hard_floor_strip_wax: { name: 'Tuile vinyle - Décapage & 4 couches cire', unit: 'pi²', type: 'area', basePrice: 1.15, issaTimePer1000: 113.0 },
+      hard_floor_wax_only: { name: 'Tuile vinyle - Pose de cire (par couche)', unit: 'pi²', type: 'area', basePrice: 0.12, issaTimePer1000: 9.5 },
+      hard_floor_burnish: { name: 'Plancher dur - Polissage haute vitesse', unit: 'pi²', type: 'area', basePrice: 0.07, issaTimePer1000: 3.5 },
+      hard_floor_epoxy: { name: 'Plancher époxy - Dégraissage & récurage', unit: 'pi²', type: 'area', basePrice: 0.18, issaTimePer1000: 20.0 },
+      hard_floor_tile_grout: { name: 'Céramique & coulis - Lavage rotatif acide', unit: 'pi²', type: 'area', basePrice: 0.45, issaTimePer1000: 45.0 },
+      hard_floor_concrete_scrub: { name: 'Béton - Récurage d\'entrepôt', unit: 'pi²', type: 'area', basePrice: 0.15, issaTimePer1000: 15.0 },
+
+      // Spécialisé & Unités
+      post_const_rough: { name: 'Après construction - Gros ménage (Rough)', unit: 'pi²', type: 'area', basePrice: 0.32, issaTimePer1000: 18.0 },
+      post_const_final: { name: 'Après construction - Finition finale', unit: 'pi²', type: 'area', basePrice: 0.55, issaTimePer1000: 35.0 },
+      window_standard: { name: 'Vitres commerciales rez-de-chaussée', unit: 'vitre', type: 'count', basePrice: 6.00, issaMinutesEach: 2.5 },
+      window_high: { name: 'Vitres commerciales hauteur / perche', unit: 'vitre', type: 'count', basePrice: 18.00, issaMinutesEach: 7.0 },
+      restroom_toilet: { name: 'Toilette - Nettoyage complet', unit: 'unité', type: 'count', basePrice: 15.00, issaMinutesEach: 1.5 },
+      restroom_urinal: { name: 'Urinoir - Nettoyage & détartrage', unit: 'unité', type: 'count', basePrice: 12.00, issaMinutesEach: 1.5 },
+      restroom_sink: { name: 'Lavabo sanitaire & miroir', unit: 'unité', type: 'count', basePrice: 10.00, issaMinutesEach: 1.0 },
+
+      // Meubles
+      upholstery_chair: { name: 'Fauteuil en tissu (1 place)', unit: 'unité', type: 'count', basePrice: 55.00, issaMinutesEach: 10.0 },
+      upholstery_loveseat: { name: 'Causeuse en tissu (2 places)', unit: 'unité', type: 'count', basePrice: 95.00, issaMinutesEach: 25.0 },
+      upholstery_sofa: { name: 'Divan en tissu (3 places)', unit: 'unité', type: 'count', basePrice: 135.00, issaMinutesEach: 45.0 },
+      upholstery_sectional: { name: 'Sectionnel complet', unit: 'unité', type: 'count', basePrice: 225.00, issaMinutesEach: 80.0 }
+    };
+
+    const TARGET_HOURLY_RATE = 158.00; // Taux horaire d'équipe en production ($/h)
+    let entries = [];
+
+    // ----------------------------------------------------
+    // INITIALISATION DES MENUS DÉROULANTS
+    // ----------------------------------------------------
+    const selectBuildingType = document.getElementById('select-building-type');
+    const selectRoomType = document.getElementById('select-room-type');
+    const inputFinalRoom = document.getElementById('input-final-room');
+    const btnToggleSearch = document.getElementById('btn-toggle-search');
+    const boxSearchRoom = document.getElementById('box-search-room');
+    const inputSearchRoom = document.getElementById('input-search-room');
+    const btnSaveCustomRoom = document.getElementById('btn-save-custom-room');
+
+    function populateBuildings() {
+      selectBuildingType.innerHTML = '';
+      for (const bldg in BUILDINGS_DB) {
+        const opt = document.createElement('option');
+        opt.value = bldg;
+        opt.textContent = bldg;
+        selectBuildingType.appendChild(opt);
+      }
+      populateRooms(selectBuildingType.value);
+    }
+
+    function populateRooms(bldgName, filter = '') {
+      selectRoomType.innerHTML = '';
+      let list = BUILDINGS_DB[bldgName] || [];
+      if (filter) list = list.filter(r => r.toLowerCase().includes(filter.toLowerCase()));
+
+      list.forEach(room => {
+        const opt = document.createElement('option');
+        opt.value = room;
+        opt.textContent = room;
+        selectRoomType.appendChild(opt);
+      });
+
+      if (selectRoomType.options.length > 0) {
+        selectRoomType.selectedIndex = 0;
+        onRoomChange();
+      } else {
+        inputFinalRoom.value = filter || 'Autre';
+      }
+    }
+
+    function onRoomChange() {
+      const val = selectRoomType.value;
+      if (val === 'Autre') {
+        inputFinalRoom.value = '';
+        inputFinalRoom.placeholder = 'Précisez le nom du local...';
+        inputFinalRoom.focus();
+      } else {
+        inputFinalRoom.value = val;
+      }
+    }
+
+    selectBuildingType.addEventListener('change', () => populateRooms(selectBuildingType.value, inputSearchRoom.value.trim()));
+    selectRoomType.addEventListener('change', onRoomChange);
+
+    btnToggleSearch.addEventListener('click', () => {
+      boxSearchRoom.classList.toggle('hidden');
+      if (!boxSearchRoom.classList.contains('hidden')) inputSearchRoom.focus();
+      else {
+        inputSearchRoom.value = '';
+        populateRooms(selectBuildingType.value);
+      }
+    });
+
+    inputSearchRoom.addEventListener('input', (e) => populateRooms(selectBuildingType.value, e.target.value.trim()));
+
+    btnSaveCustomRoom.addEventListener('click', () => {
+      const newRoom = inputFinalRoom.value.trim();
+      const currentBldg = selectBuildingType.value;
+      if (!newRoom) return alert('Veuillez entrer un nom.');
+      if (!BUILDINGS_DB[currentBldg].includes(newRoom)) {
+        const idx = BUILDINGS_DB[currentBldg].indexOf('Autre');
+        if (idx !== -1) BUILDINGS_DB[currentBldg].splice(idx, 0, newRoom);
+        else BUILDINGS_DB[currentBldg].push(newRoom);
+        saveBuildingsDb();
+        populateRooms(currentBldg);
+        selectRoomType.value = newRoom;
+        inputFinalRoom.value = newRoom;
+        alert(`« ${newRoom} » enregistré dans ${currentBldg}`);
+      } else {
+        alert('Cette pièce existe déjà.');
+      }
+    });
+
+    // ----------------------------------------------------
+    // AJOUT D'ÉLÉMENTS & CALCUL DES DEUX MÉTHODES
+    // ----------------------------------------------------
+    const formItem = document.getElementById('form-item');
+    const selectService = document.getElementById('select-service');
+    const inputQty = document.getElementById('input-qty');
+    const selectDiscount = document.getElementById('select-discount');
+    const labelQty = document.getElementById('label-qty');
+
+    selectService.addEventListener('change', () => {
+      const s = SERVICES_CATALOG[selectService.value];
+      labelQty.textContent = `Quantité (${s.unit})`;
+    });
+
+    formItem.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const room = inputFinalRoom.value.trim() || selectRoomType.value || 'Local';
+      const serviceKey = selectService.value;
+      const qty = parseFloat(inputQty.value) || 0;
+      const discountVal = selectDiscount.value;
+
+      if (qty <= 0) return;
+
+      const service = SERVICES_CATALOG[serviceKey];
+
+      // 1. Dégressivité automatique ou manuelle
+      let mult = 1.0;
+      if (discountVal === 'auto') {
+        if (service.type === 'area') {
+          if (qty < 1000) mult = 1.20;
+          else if (qty <= 2500) mult = 1.00;
+          else if (qty <= 5000) mult = 0.90;
+          else if (qty <= 10000) mult = 0.82;
+          else if (qty <= 25000) mult = 0.75;
+          else mult = 0.68;
+        }
+      } else {
+        mult = parseFloat(discountVal);
+      }
+
+      // 2. Méthode A : Marché au pi²
+      const unitPriceSqft = service.basePrice * mult;
+      const priceSqft = qty * unitPriceSqft;
+
+      // 3. Méthode B : Temps ISSA 540 x 158 $/h
+      let issaMin = 0;
+      if (service.type === 'area') {
+        issaMin = (qty / 1000) * service.issaTimePer1000;
+      } else {
+        issaMin = qty * service.issaMinutesEach;
+      }
+      const issaHours = issaMin / 60;
+      const priceIssa = issaHours * TARGET_HOURLY_RATE;
+
+      entries.push({
+        id: Date.now() + Math.random(),
+        room,
+        serviceKey,
+        serviceName: service.name,
+        unit: service.unit,
+        qty,
+        mult,
+        priceSqft,
+        issaMin,
+        issaHours,
+        priceIssa
+      });
+
+      inputQty.value = '';
+      render();
+    });
+
+    function removeEntry(id) {
+      entries = entries.filter(e => e.id !== id);
+      render();
+    }
+
+    // ----------------------------------------------------
+    // RENDU & DIAGNOSTIC DE SÉCURITÉ TARIFAIRE
+    // ----------------------------------------------------
+    function render() {
+      document.getElementById('count-items').textContent = `${entries.length} éléments`;
+
+      let totalSqft = 0;
+      let totalIssa = 0;
+      let totalMin = 0;
+
+      entries.forEach(e => {
+        totalSqft += e.priceSqft;
+        totalIssa += e.priceIssa;
+        totalMin += e.issaMin;
+      });
+
+      // Application du minimum de facturation si nécessaire
+      const minBilling = 175.00;
+      const finalPriceSqft = Math.max(totalSqft, entries.length > 0 ? minBilling : 0);
+      const totalHours = totalMin / 60;
+
+      document.getElementById('total-price-sqft').textContent = finalPriceSqft.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('detail-sqft').textContent = totalSqft < minBilling && entries.length > 0 
+        ? `Minimum appliqué (Calcul brut: ${totalSqft.toFixed(2)} $)`
+        : `Calcul direct marché`;
+
+      document.getElementById('total-price-issa').textContent = totalIssa.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('detail-issa').textContent = `Temps estimé : ${totalHours.toFixed(2)} h (${Math.round(totalMin)} min)`;
+
+      // Partage sous-traitant (65% / 35%)
+      const payout = finalPriceSqft * 0.65;
+      const margin = finalPriceSqft * 0.35;
+      document.getElementById('subcon-payout').textContent = payout.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+      document.getElementById('subcon-margin').textContent = margin.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' });
+
+      // Analyse d'écart entre les deux méthodes
+      const badge = document.getElementById('badge-comparison');
+      const diag = document.getElementById('diagnostic-box');
+
+      if (entries.length === 0) {
+        badge.textContent = "En attente";
+        badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-slate-100 text-slate-600";
+        diag.innerHTML = "Ajoutez des éléments pour comparer les deux méthodes de soumission.";
+      } else {
+        const diff = finalPriceSqft - totalIssa;
+        const pctDiff = (diff / totalIssa) * 100;
+
+        if (pctDiff >= 0) {
+          badge.textContent = `Rentable (+${pctDiff.toFixed(1)}%)`;
+          badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800";
+          diag.innerHTML = `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Prix du marché supérieur aux coûts réels :</span> Le prix au pi² dégage un profit excédentaire de <strong>${diff.toFixed(2)} $</strong> par rapport à votre objectif de 158 $/h. Vous pouvez soumissionner au prix du marché sans risque.`;
+        } else if (pctDiff >= -12) {
+          badge.textContent = `Compétitif (${pctDiff.toFixed(1)}%)`;
+          badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-800";
+          diag.innerHTML = `<span class="text-amber-700 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Légère pression sur la marge :</span> Le prix au pi² est inférieur de <strong>${Math.abs(diff).toFixed(2)} $</strong>. Vous êtes très compétitif, mais votre rendement horaire réel sera d'environ <strong>${(finalPriceSqft / totalHours).toFixed(2)} $/h</strong> au lieu de 158 $/h.`;
+        } else {
+          badge.textContent = `Alerte sous-tarification (${pctDiff.toFixed(1)}%)`;
+          badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-rose-100 text-rose-800";
+          diag.innerHTML = `<span class="text-rose-700 font-bold"><i class="fa-solid fa-circle-xmark mr-1"></i> Attention danger de marge :</span> Le temps de travail requis par les outils ISSA (<strong>${totalHours.toFixed(1)} h</strong>) dépasse largement le prix au pi². Ajustez à la hausse ou facturez selon la Méthode 2 (<strong>${totalIssa.toFixed(2)} $</strong>).`;
+        }
+      }
+
+      renderRoomView();
+      renderItemView();
+    }
+
+    function renderRoomView() {
+      const container = document.getElementById('container-rooms');
+      container.innerHTML = '';
+      if (entries.length === 0) {
+        container.innerHTML = '<p class="text-center py-8 text-xs text-slate-400 italic">Aucune pièce sélectionnée.</p>';
+        return;
+      }
+
+      const grouped = {};
+      entries.forEach(e => {
+        if (!grouped[e.room]) grouped[e.room] = [];
+        grouped[e.room].push(e);
+      });
+
+      for (const room in grouped) {
+        const items = grouped[room];
+        let roomSqft = 0;
+        let roomIssa = 0;
+        let roomMin = 0;
+        items.forEach(i => { roomSqft += i.priceSqft; roomIssa += i.priceIssa; roomMin += i.issaMin; });
+
+        const card = document.createElement('div');
+        card.className = "border rounded-lg p-3 bg-slate-50 border-slate-200";
+        card.innerHTML = `
+          <div class="flex justify-between items-center border-b pb-2 mb-2">
+            <h4 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-location-dot text-emerald-600"></i> ${room}
+            </h4>
+            <div class="text-right">
+              <span class="text-xs font-black text-emerald-900">${roomSqft.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
+              <span class="text-[11px] text-slate-500 ml-2">(${Math.round(roomMin)} min ISSA)</span>
+            </div>
+          </div>
+          <div class="space-y-1.5">
+            ${items.map(item => `
+              <div class="flex items-center justify-between text-xs bg-white p-2 rounded border border-slate-200">
+                <div>
+                  <span class="font-semibold text-slate-800">${item.serviceName}</span>
+                  <span class="text-slate-500 ml-1">(${item.qty} ${item.unit})</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-emerald-800 font-bold">${item.priceSqft.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</span>
+                  <span class="text-slate-400 text-[10px]">vs ISSA: ${item.priceIssa.toFixed(0)}$</span>
+                  <button onclick="removeEntry(${item.id})" class="text-rose-500 hover:text-rose-700 ml-1" title="Supprimer">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    function renderItemView() {
+      const container = document.getElementById('container-items');
+      container.innerHTML = '';
+
+      const grouped = {};
+      entries.forEach(e => {
+        if (!grouped[e.serviceKey]) {
+          grouped[e.serviceKey] = {
+            name: e.serviceName,
+            unit: e.unit,
+            qty: 0,
+            priceSqft: 0,
+            priceIssa: 0
+          };
+        }
+        grouped[e.serviceKey].qty += e.qty;
+        grouped[e.serviceKey].priceSqft += e.priceSqft;
+        grouped[e.serviceKey].priceIssa += e.priceIssa;
+      });
+
+      for (const k in grouped) {
+        const item = grouped[k];
+        const diff = item.priceSqft - item.priceIssa;
+        const diffColor = diff >= 0 ? 'text-emerald-700' : 'text-rose-600';
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="p-2 font-medium text-slate-800">${item.name}</td>
+          <td class="p-2 text-center font-bold">${item.qty.toLocaleString('fr-CA')} ${item.unit}</td>
+          <td class="p-2 text-right font-bold text-emerald-900">${item.priceSqft.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+          <td class="p-2 text-right font-semibold text-blue-900">${item.priceIssa.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+          <td class="p-2 text-center font-mono font-bold ${diffColor}">${diff >= 0 ? '+' : ''}${diff.toFixed(0)} $</td>
+        `;
+        container.appendChild(row);
+      }
+    }
+
+    // Navigation onglets
+    const tabRoom = document.getElementById('tab-room');
+    const tabItem = document.getElementById('tab-item');
+    const viewRoom = document.getElementById('view-room');
+    const viewItem = document.getElementById('view-item');
+
+    tabRoom.addEventListener('click', () => {
+      tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-emerald-700 text-white shadow transition";
+      tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+      viewRoom.classList.remove('hidden');
+      viewItem.classList.add('hidden');
+    });
+
+    tabItem.addEventListener('click', () => {
+      tabItem.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-emerald-700 text-white shadow transition";
+      tabRoom.className = "px-3 py-1.5 rounded-md font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+      viewItem.classList.remove('hidden');
+      viewRoom.classList.add('hidden');
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (confirm('Voulez-vous réinitialiser ?')) {
+        entries = [];
+        render();
+      }
+    });
+
+    // Exemple représentatif
+    document.getElementById('btn-sample').addEventListener('click', () => {
+      entries = [];
+      const s1 = SERVICES_CATALOG['carpet_hwe_std'];
+      const q1 = 2500;
+      entries.push({
+        id: 1, room: 'Corridor & Entrée', serviceKey: 'carpet_hwe_std', serviceName: s1.name, unit: s1.unit,
+        qty: q1, mult: 1.0, priceSqft: q1 * s1.basePrice, issaMin: (q1/1000)*s1.issaTimePer1000,
+        issaHours: ((q1/1000)*s1.issaTimePer1000)/60, priceIssa: (((q1/1000)*s1.issaTimePer1000)/60) * TARGET_HOURLY_RATE
+      });
+
+      const s2 = SERVICES_CATALOG['hard_floor_strip_wax'];
+      const q2 = 1000;
+      entries.push({
+        id: 2, room: 'Cafétéria', serviceKey: 'hard_floor_strip_wax', serviceName: s2.name, unit: s2.unit,
+        qty: q2, mult: 1.0, priceSqft: q2 * s2.basePrice, issaMin: (q2/1000)*s2.issaTimePer1000,
+        issaHours: ((q2/1000)*s2.issaTimePer1000)/60, priceIssa: (((q2/1000)*s2.issaTimePer1000)/60) * TARGET_HOURLY_RATE
+      });
+
+      render();
+    });
+
+    // Lancement
+    populateBuildings();
+    render();
+  </script>
+</body>
+</html>
