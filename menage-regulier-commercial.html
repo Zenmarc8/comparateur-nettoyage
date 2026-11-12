@@ -1427,21 +1427,42 @@
       document.getElementById('rec-annual-total').textContent = annualWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' }) + " / an";
 
       // Ventilation interne
-      const tbodyBreakdown = document.getElementById('breakdown-tbody');
+const tbodyBreakdown = document.getElementById('breakdown-tbody');
       tbodyBreakdown.innerHTML = '';
-      const totalProfit = netBeforeTax * 0.15;
-      document.getElementById('badge-profit-net').textContent = `Profit Net : ${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+      const totalProfit = netBeforeTax * 0.125; // 12,50 % de profit pur entreprise
+      document.getElementById('badge-profit-net').textContent = `Profit Pur (12,5%) : ${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
 
       FINANCIAL_BREAKDOWN.forEach(item => {
         const valVisit = (netBeforeTax * item.pct) / 100;
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td class="py-1 ${item.color}">${item.name}</td>
-          <td class="py-1 text-center text-slate-500 font-mono">${item.pct.toFixed(1)} %</td>
-          <td class="py-1 text-right font-medium">${valVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+          <td class="py-1.5 px-1 ${item.color}">${item.name}</td>
+          <td class="py-1.5 px-1 text-center text-slate-600 font-mono">${item.pct.toFixed(2).replace('.', ',')} %</td>
+          <td class="py-1.5 px-1 text-right font-semibold ${item.color}">${valVisit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
         `;
         tbodyBreakdown.appendChild(row);
       });
+
+      // Ligne TOTAL (100,00 %)
+      const totalRow = document.createElement('tr');
+      totalRow.className = "bg-slate-200/80 font-black text-slate-950 border-t-2 border-slate-400";
+      totalRow.innerHTML = `
+        <td class="py-1.5 px-1">TOTAL</td>
+        <td class="py-1.5 px-1 text-center font-mono">100,00 %</td>
+        <td class="py-1.5 px-1 text-right">${netBeforeTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}</td>
+      `;
+      tbodyBreakdown.appendChild(totalRow);
+
+      // Calcul du Rendement Propriétaire-Opérateur (Salaire Technicien 49,50% + Profit Pur 12,50%)
+      const techSalary = netBeforeTax * 0.495;
+      const ownerTotalIncome = techSalary + totalProfit;
+      const ownerHourlyYield = totalHoursVisit > 0 ? (ownerTotalIncome / totalHoursVisit) : 0;
+
+      document.getElementById('owner-calc-detail').textContent = 
+        `Salaire tech. (${techSalary.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}) + Profit pur (${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}) = ${ownerTotalIncome.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+      
+      document.getElementById('owner-hourly-rate').textContent = 
+        `${ownerHourlyYield.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })} / h`;
 
       renderEntriesList();
       renderSpecificationsPrint();
