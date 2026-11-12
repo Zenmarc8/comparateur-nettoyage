@@ -404,6 +404,24 @@
             </div>
             <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" id="badge-profit-net">Profit Pur (12,5%): 0,00 $</span>
           </div>
+          <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" id="badge-profit-net">Profit Pur (12,5%): 0,00 $</span>
+          </div>
+
+          <!-- Sélecteur de configuration d'équipe terrain (49,50% de masse salariale) -->
+          <div class="mb-2.5 p-2 bg-white rounded border border-slate-300 text-xs">
+            <label class="block font-bold text-slate-700 mb-1">
+              <i class="fa-solid fa-users-gear text-blue-600 mr-1"></i> Configuration de l'équipe sur le chantier :
+            </label>
+            <select id="select-crew-config" class="w-full px-2 py-1.5 bg-slate-50 border border-slate-300 rounded font-bold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="solo">1 personne : Propriétaire seul (49,50% proprio | Temps ÷ 1)</option>
+              <option value="duo" selected>2 personnes : Propriétaire (30%) + 1 Aide/Conjoint (19,5%) | Temps ÷ 2</option>
+              <option value="trio">3 personnes : Propriétaire (19,5%) + 2 Employés (30%) | Temps ÷ 3</option>
+              <option value="quad">4 personnes : Propriétaire (15%) + 3 Employés (34,5%) | Temps ÷ 4</option>
+              <option value="absent">Propriétaire ABSENT (0%) : Équipe techniciens seule (49,5%) | Profit pur seul</option>
+            </select>
+          </div>
+
+          <div class="overflow-x-auto text-xs">
           <div class="overflow-x-auto text-xs">
             <table class="w-full">
               <thead class="text-slate-600 border-b">
