@@ -899,14 +899,18 @@
       }
     };
 
-    // Ventilation financière interne
+    // Ventilation interne confidentielle (Répartition exacte 100%)
     const FINANCIAL_BREAKDOWN = [
-      { name: 'Main-d’œuvre terrain directe (Préposée ménage)', pct: 44.00, color: 'text-blue-900 font-semibold' },
-      { name: 'Coordination, Administration & Service client', pct: 26.00, color: 'text-slate-700' },
-      { name: 'Frais de déplacement, Véhicule & Essence', pct: 9.00, color: 'text-slate-700' },
-      { name: 'Produits nettoyants professionnels & Équipements', pct: 6.00, color: 'text-slate-700' },
-      { name: 'Assurances commerciales & Frais généraux', pct: 5.00, color: 'text-slate-700' },
-      { name: 'Marge bénéficiaire nette (Profit entreprise)', pct: 10.00, color: 'text-emerald-700 font-bold' }
+      { name: 'Amortissement', pct: 6.00, color: 'text-purple-800 font-medium' },
+      { name: 'Produits équipement', pct: 6.50, color: 'text-blue-700 font-medium' },
+      { name: 'Véhicule et essence', pct: 4.50, color: 'text-amber-800 font-medium' },
+      { name: 'Salaire Technicien (1 650 h)', pct: 49.50, color: 'text-emerald-700 font-bold' },
+      { name: 'Frais généraux et fixes', pct: 3.60, color: 'text-amber-900 font-medium' },
+      { name: 'Administration (frais + salaire)', pct: 6.60, color: 'text-blue-800 font-medium' },
+      { name: 'Marketing (frais + salaire)', pct: 6.00, color: 'text-rose-700 font-medium' },
+      { name: 'Ventes (salaire 120 h)', pct: 4.80, color: 'text-blue-700 font-medium' },
+      { name: 'Divers', pct: 0.00, color: 'text-slate-600' },
+      { name: 'Profit pur entreprise', pct: 12.50, color: 'text-amber-700 font-black' }
     ];
 
     let entries = [];
