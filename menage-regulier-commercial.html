@@ -29,6 +29,59 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
 
+  <!-- ==================================================== -->
+  <!-- ÉCRAN DE VERROUILLAGE INTERNE (TOTALNET)             -->
+  <!-- ==================================================== -->
+  <div id="auth-lock-screen" class="fixed inset-0 z-50 bg-slate-900 flex items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-slate-200 text-center">
+      <div class="w-14 h-14 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <h2 class="text-xl font-black text-slate-900">Accès Réservé TotalNet</h2>
+      <p class="text-xs text-slate-500 mt-1 mb-5">Estimateur interne & Barèmes ISSA 540</p>
+      
+      <form id="auth-form" class="space-y-3 text-left">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Mot de passe d'équipe</label>
+          <input type="password" id="auth-password" placeholder="Entrez le mot de passe..." required class="w-full px-3.5 py-2.5 border border-slate-300 rounded-lg text-sm font-bold focus:ring-2 focus:ring-blue-600 outline-none">
+        </div>
+        <div id="auth-error" class="hidden text-xs text-rose-600 font-bold bg-rose-50 p-2 rounded border border-rose-200">
+          <i class="fa-solid fa-circle-exclamation mr-1"></i> Mot de passe incorrect.
+        </div>
+        <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-black py-2.5 rounded-lg shadow transition text-sm">
+          <i class="fa-solid fa-unlock mr-1.5"></i> Déverrouiller l'outil
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const MOT_DE_PASSE_EQUIPE = "TotalNet2026";
+      const lockScreen = document.getElementById('auth-lock-screen');
+      const authForm = document.getElementById('auth-form');
+      const authInput = document.getElementById('auth-password');
+      const authError = document.getElementById('auth-error');
+
+      if (sessionStorage.getItem('totalnet_unlocked') === 'true') {
+        lockScreen.style.display = 'none';
+      }
+
+      authForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (authInput.value === MOT_DE_PASSE_EQUIPE) {
+          sessionStorage.setItem('totalnet_unlocked', 'true');
+          lockScreen.style.display = 'none';
+        } else {
+          authError.classList.remove('hidden');
+          authInput.value = '';
+          authInput.focus();
+        }
+      });
+    })();
+  </script>
+  <!-- ==================================================== -->
+
   <!-- Header principal avec Navigation Inter-Domaines -->
   <header class="bg-blue-950 text-white shadow-lg no-print">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -401,7 +454,7 @@
               </h3>
               <p class="text-[10px] text-slate-500" id="budget-desc">Calcul sur le prix net</p>
             </div>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" id="badge-profit-net">Profit: 0,00 $</span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" id="badge-profit-net">Profit Pur (12,5%): 0,00 $</span>
           </div>
           <div class="overflow-x-auto text-xs">
             <table class="w-full">
@@ -415,28 +468,22 @@
               <tbody id="breakdown-tbody" class="divide-y divide-slate-200"></tbody>
             </table>
           </div>
-          </thead>
-            <tbody id="breakdown-tbody" class="divide-y divide-slate-200"></tbody>
-          </table>
-        </div>
 
-        <!-- Encadré Rendement Propriétaire-Opérateur ($/h) -->
-        <div id="owner-operator-box" class="mt-3 p-2.5 bg-blue-950 text-white rounded-lg border border-blue-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <div>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">
-              <i class="fa-solid fa-user-tie mr-1"></i> Rendement Propriétaire-Opérateur
-            </span>
-            <span class="text-[10px] text-blue-200" id="owner-calc-detail">
-              Salaire tech. (0,00 $) + Profit pur (0,00 $) = 0,00 $
-            </span>
+          <!-- Encadré Rendement Propriétaire-Opérateur ($/h) -->
+          <div id="owner-operator-box" class="mt-3 p-2.5 bg-blue-950 text-white rounded-lg border border-blue-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-amber-400 block">
+                <i class="fa-solid fa-user-tie mr-1"></i> Rendement Propriétaire-Opérateur
+              </span>
+              <span class="text-[10px] text-blue-200" id="owner-calc-detail">
+                Salaire tech. (0,00 $) + Profit pur (0,00 $) = 0,00 $
+              </span>
+            </div>
+            <div class="text-right">
+              <div class="text-lg font-black text-emerald-400" id="owner-hourly-rate">0,00 $ / h</div>
+              <span class="text-[10px] text-blue-300 block">Revenu net réel par heure travaillée</span>
+            </div>
           </div>
-          <div class="text-right">
-            <div class="text-lg font-black text-emerald-400" id="owner-hourly-rate">0,00 $ / h</div>
-            <span class="text-[10px] text-blue-300 block">Revenu net réel par heure travaillée</span>
-          </div>
-        </div>
-
-      </div>
         </div>
 
         <!-- ---------------------------------------------------- -->
@@ -477,7 +524,7 @@
             <div>
               <p class="font-bold text-slate-800 mb-1">Conditions contractuelles :</p>
               <p class="text-[10px] text-slate-500 leading-relaxed">
-                Services réguliers conformes aux cadences officielles ISSA 540[cite: 1].<br>
+                Services réguliers conformes aux cadences officielles ISSA 540.<br>
                 Produits chimiques homologués, FDS à jour et équipements spécialisés fournis.<br>
                 Assurance responsabilité civile commerciale 2 000 000 $.<br>
                 Facturation mensuelle récurrente, payable net 30 jours.
@@ -534,9 +581,7 @@
     // BANQUE EXHAUSTIVE MULTI-NICHES AVEC CAHIER DES CHARGES
     // ----------------------------------------------------
     const COMMERCIAL_CATALOG = {
-      // ====================================================
       // 1. BUREAUX CORPORATIFS & ADMINISTRATION
-      // ====================================================
       combo_cubicle_carpet: {
         niche: 'office',
         mode: 'regular',
@@ -546,10 +591,10 @@
         marketFlat: 4.50,
         desc: 'Bureau complet : surfaces libres, vidage tri sélectif et aspiration sol',
         specs: [
-          "Surfaces de travail : dépoussiérage microfibre antistatique des surfaces dégagées[cite: 2, 5].",
-          "Points de contact : désinfection du combiné téléphonique, combiné d'intercom et souris d'ordinateur[cite: 5].",
-          "Corbeille & Tri : vidage de la poubelle ordures et du bac de récupération bleu, remplacement des sacs jetables[cite: 5].",
-          "Sol moquette : aspiration complète sous le bureau et dans la zone de roulement de la chaise ergonomique[cite: 8]."
+          "Surfaces de travail : dépoussiérage microfibre antistatique des surfaces dégagées.",
+          "Points de contact : désinfection du combiné téléphonique et souris d'ordinateur.",
+          "Corbeille & Tri : vidage de la poubelle ordures et du bac de récupération bleu, remplacement des sacs jetables.",
+          "Sol moquette : aspiration complète sous le bureau et dans la zone de roulement de la chaise ergonomique."
         ]
       },
       combo_exec_office: {
@@ -561,10 +606,10 @@
         marketFlat: 9.50,
         desc: 'Bureau direction, table de réunion privée, corbeilles et sol',
         specs: [
-          "Mobilier exécutif : lustrage doux des surfaces en bois verni avec produit neutre[cite: 5, 6].",
-          "Fauteuils en cuir : essuyage et désinfection soignée des accoudoirs[cite: 2, 5].",
-          "Gestion des déchets : vidage des corbeilles exécutives et déchiqueteuse sécurisée[cite: 5].",
-          "Planchers : aspiration soignée du tapis ou vadrouille microfibre à sec puis humide sur plancher de bois/stratifié[cite: 9, 10]."
+          "Mobilier exécutif : lustrage doux des surfaces en bois verni avec produit neutre.",
+          "Fauteuils en cuir : essuyage et désinfection soignée des accoudoirs.",
+          "Gestion des déchets : vidage des corbeilles exécutives et déchiqueteuse sécurisée.",
+          "Planchers : aspiration soignée du tapis ou vadrouille microfibre à sec puis humide sur plancher de bois/stratifié."
         ]
       },
       combo_boardroom_complete: {
@@ -577,10 +622,10 @@
         desc: 'Table conférence essuyée, chaises alignées, poubelles et moquette',
         specs: [
           "Table de conférence : nettoyage, dégraissage et lustrage sans traces sur toute la longueur.",
-          "Chaises (jusqu'à 12) : accoudoirs désinfectés[cite: 2], dossiers essuyés et chaises alignées au millimètre.",
-          "Tableau blanc / vitré : effaçage complet des inscriptions sèches et passage de nettoyant pour vitre[cite: 2, 3].",
-          "Gestion des poubelles et recyclage de la salle[cite: 5].",
-          "Aspiration intégrale de la moquette sous la table de réunion[cite: 8]."
+          "Chaises (jusqu'à 12) : accoudoirs désinfectés, dossiers essuyés et chaises alignées au millimètre.",
+          "Tableau blanc / vitré : effaçage complet des inscriptions sèches et passage de nettoyant pour vitre.",
+          "Gestion des poubelles et recyclage de la salle.",
+          "Aspiration intégrale de la moquette sous la table de réunion."
         ]
       },
       combo_kitchenette_breakroom: {
@@ -593,17 +638,15 @@
         desc: 'Comptoirs, évier inox détartré, micro-ondes int/ext, frigo ext. et sol',
         specs: [
           "Comptoirs & tables repas : dégraissage et assainissement germicide.",
-          "Évier en acier inoxydable : détartrage au détergent acide doux, cuve frottée et robinet poli sans calcaire[cite: 6].",
+          "Évier en acier inoxydable : détartrage au détergent acide doux, cuve frottée et robinet poli sans calcaire.",
           "Micro-ondes : intérieur dégraissé à la vapeur, plateau tournant lavé, façade essuyée.",
           "Réfrigérateur & Distributrices : façades extérieures dégraissées et poignées désinfectées.",
-          "Recharge des essuie-mains et savon à vaisselle[cite: 6].",
-          "Sol dur : balayage et lavage humide désodorisant à double seau[cite: 9]."
+          "Recharge des essuie-mains et savon à vaisselle.",
+          "Sol dur : balayage et lavage humide désodorisant à double seau."
         ]
       },
 
-      // ====================================================
       // 2. CLINIQUES MÉDICALES, DENTAIRES & SANTÉ
-      // ====================================================
       combo_med_exam_room: {
         niche: 'medical',
         mode: 'regular',
@@ -613,11 +656,11 @@
         marketFlat: 26.00,
         desc: 'Table de consultation désinfectée, mobilier, évier médical et sol germicide',
         specs: [
-          "Table d'examen / Fauteuil médical : désinfection virucide de niveau hospitalier de la sellerie vinyle et structure[cite: 4].",
-          "Mobilier clinique : essuyage désinfectant des chariots de soin, guéridons et poignées de tiroirs[cite: 4].",
-          "Évier médical inox : désinfection de la robinetterie à commande fémorale ou infrarouge[cite: 4, 6].",
-          "Déchets : remplacement des sacs ordures et vérification des contenants sécurisés[cite: 4, 5].",
-          "Sol clinique : mopping humide avec germicide désinfectant sans rinçage homologué DIN[cite: 4, 9]."
+          "Table d'examen / Fauteuil médical : désinfection virucide de niveau hospitalier de la sellerie vinyle et structure.",
+          "Mobilier clinique : essuyage désinfectant des chariots de soin, guéridons et poignées de tiroirs.",
+          "Évier médical inox : désinfection de la robinetterie à commande fémorale ou infrarouge.",
+          "Déchets : remplacement des sacs ordures et vérification des contenants sécurisés.",
+          "Sol clinique : mopping humide avec germicide désinfectant sans rinçage homologué DIN."
         ]
       },
       combo_med_waiting_reception: {
@@ -629,10 +672,10 @@
         marketFlat: 30.00,
         desc: 'Comptoir accueil, plexiglas, chaises vinyle désinfectées et planchers',
         specs: [
-          "Comptoir d'accueil & Vitres de protection plexiglas : nettoyés sans traces au produit antistatique[cite: 3].",
-          "Chaises de salle d'attente : désinfection antibactérienne systématique des assises et accoudoirs[cite: 2, 5].",
-          "Portes battantes et poignées d'accès traitées au désinfectant de contact[cite: 5].",
-          "Plancher d'accueil : dépoussiérage et mopping désinfectant haute fréquence[cite: 9]."
+          "Comptoir d'accueil & Vitres de protection plexiglas : nettoyés sans traces au produit antistatique.",
+          "Chaises de salle d'attente : désinfection antibactérienne systématique des assises et accoudoirs.",
+          "Portes battantes et poignées d'accès traitées au désinfectant de contact.",
+          "Plancher d'accueil : dépoussiérage et mopping désinfectant haute fréquence."
         ]
       },
       item_med_surgical_sink: {
@@ -644,14 +687,12 @@
         marketFlat: 8.00,
         desc: 'Détartrage, buse médicale et parois murales éclaboussées',
         specs: [
-          "Détartrage complet de la cuve profonde en acier inoxydable 316[cite: 6].",
-          "Désinfection du bec verseur et des parois murales carrelées adjacentes[cite: 4, 6]."
+          "Détartrage complet de la cuve profonde en acier inoxydable 316.",
+          "Désinfection du bec verseur et des parois murales carrelées adjacentes."
         ]
       },
 
-      // ====================================================
       // 3. COPROPRIÉTÉS & AIRES COMMUNES (CONDOS)
-      // ====================================================
       combo_condo_lobby_entry: {
         niche: 'condo',
         mode: 'regular',
@@ -661,11 +702,11 @@
         marketFlat: 30.00,
         desc: 'Portes vitrées int/ext, combiné intercom, boîtes postales et tapis encastrés',
         specs: [
-          "Portes vitrées principales : lavage des vitres intérieures/extérieures plain-pied et poignées en laiton/inox[cite: 3].",
-          "Système d'intercom et clavier d'accès numérique entièrement désinfectés[cite: 5].",
+          "Portes vitrées principales : lavage des vitres intérieures/extérieures plain-pied et poignées en laiton/inox.",
+          "Système d'intercom et clavier d'accès numérique entièrement désinfectés.",
           "Casiers postaux : essuyage des façades et dessus des boîtes aux lettres.",
-          "Tapis de vestibule (type Nomad 3M) : aspiration industrielle à brosse battante pour retirer sable et sel[cite: 3, 8].",
-          "Céramique du hall : balayage et lavage neutralisant d'hiver ou dégraissant[cite: 9]."
+          "Tapis de vestibule (type Nomad 3M) : aspiration industrielle à brosse battante pour retirer sable et sel.",
+          "Céramique du hall : balayage et lavage neutralisant d'hiver ou dégraissant."
         ]
       },
       combo_condo_elevator: {
@@ -677,11 +718,11 @@
         marketFlat: 15.00,
         desc: 'Polissage parois inox, miroir, panneau boutons désinfecté et rail de porte',
         specs: [
-          "Panneau de contrôle et boutons d'étages : désinfection rigoureuse sans infiltration de liquide[cite: 3].",
-          "Parois en acier inoxydable : élimination des traces de doigts et polissage uniforme dans le sens du grain[cite: 3].",
-          "Grand miroir de fond de cabine : lavé sans rayure ni voile[cite: 3].",
-          "Rainures de portes d'ascenseur : brossage mécanique et aspiration des gravillons coincés[cite: 3].",
-          "Plancher d'ascenseur : aspiration et lavage humide[cite: 3]."
+          "Panneau de contrôle et boutons d'étages : désinfection rigoureuse sans infiltration de liquide.",
+          "Parois en acier inoxydable : élimination des traces de doigts et polissage uniforme dans le sens du grain.",
+          "Grand miroir de fond de cabine : lavé sans rayure ni voile.",
+          "Rainures de portes d'ascenseur : brossage mécanique et aspiration des gravillons coincés.",
+          "Plancher d'ascenseur : aspiration et lavage humide."
         ]
       },
       combo_condo_hallway_flight: {
@@ -693,10 +734,10 @@
         marketFlat: 22.00,
         desc: 'Aspiration moquette corridor, plinthes, portes palières et luminaires',
         specs: [
-          "Moquette de corridor : aspiration en bandes continues à l'aspirateur dorsal haute performance[cite: 8].",
-          "Portes d'ascenseur d'étage et portes coupe-feu : cadrages et poignées essuyés[cite: 3].",
-          "Plinthes de corridor et extincteurs muraux : dépoussiérés au chiffon microfibre[cite: 2, 9].",
-          "Luminaires d'étage : vérification et retrait des toiles d'araignées au plumeau télescopique[cite: 12]."
+          "Moquette de corridor : aspiration en bandes continues à l'aspirateur dorsal haute performance.",
+          "Portes d'ascenseur d'étage et portes coupe-feu : cadrages et poignées essuyés.",
+          "Plinthes de corridor et extincteurs muraux : dépoussiérés au chiffon microfibre.",
+          "Luminaires d'étage : vérification et retrait des toiles d'araignées au plumeau télescopique."
         ]
       },
       combo_condo_garbage_room: {
@@ -708,9 +749,9 @@
         marketFlat: 20.00,
         desc: 'Trémie de chute désinfectée, poignées, balayage et mopping désodorisant',
         specs: [
-          "Trémie et clapet de chute à déchets : dégraissage intérieur/extérieur et désinfection bactéricide[cite: 12].",
+          "Trémie et clapet de chute à déchets : dégraissage intérieur/extérieur et désinfection bactéricide.",
           "Bacs roulants municipaux : essuyage des couvercles et poignées.",
-          "Plancher du local poubelles : balayage des débris et lavage à l'eau désodorisante avec neutralisant d'odeurs[cite: 12]."
+          "Plancher du local poubelles : balayage des débris et lavage à l'eau désodorisante avec neutralisant d'odeurs."
         ]
       },
       combo_condo_fitness_gym: {
@@ -723,8 +764,8 @@
         desc: 'Appareils cardio désinfectés, poids libres, miroirs géants et sol caoutchouc',
         specs: [
           "Appareils cardio (tapis roulants, vélos, elliptiques) : désinfection des poignées, écrans et consoles.",
-          "Grands miroirs muraux : nettoyés de haut en bas sans trace[cite: 3].",
-          "Distributeur de lingettes désinfectantes rechargé et poubelles vidées[cite: 5, 6].",
+          "Grands miroirs muraux : nettoyés de haut en bas sans trace.",
+          "Distributeur de lingettes désinfectantes rechargé et poubelles vidées.",
           "Plancher en caoutchouc amortissant : aspiration puis vadrouille microfibre à détergent neutre."
         ]
       },
@@ -737,14 +778,12 @@
         marketFlat: 35.00,
         desc: 'Désinfection margelle carrelée, ligne d\'eau et rampe d\'accès inox',
         specs: [
-          "Récurage de la ligne d'eau pour éliminer les dépôts gras et crèmes corporelles[cite: 5].",
-          "Désinfection de la margelle antidérapante et des barres d'appui en inox[cite: 5]."
+          "Récurage de la ligne d'eau pour éliminer les dépôts gras et crèmes corporelles.",
+          "Désinfection de la margelle antidérapante et des barres d'appui en inox."
         ]
       },
 
-      // ====================================================
       // 4. ATELIERS, INDUSTRIEL LÉGER & GARAGES
-      // ====================================================
       combo_shop_workstation: {
         niche: 'industrial',
         mode: 'regular',
@@ -755,8 +794,8 @@
         desc: 'Établi essuyé, bac à rebuts métalliques/cartons et balayage sol',
         specs: [
           "Établi d'atelier : brossage des copeaux/sciure et essuyage des surfaces dégagées.",
-          "Contenants d'atelier : vidage des poubelles industrielles et tri des retailles de carton[cite: 5].",
-          "Sol béton de zone : balayage soigné avec balai poussoir lourd et ramassage au bac[cite: 11]."
+          "Contenants d'atelier : vidage des poubelles industrielles et tri des retailles de carton.",
+          "Sol béton de zone : balayage soigné avec balai poussoir lourd et ramassage au bac."
         ]
       },
       combo_shop_locker_shower: {
@@ -768,9 +807,9 @@
         marketFlat: 30.00,
         desc: 'Bancs de vestiaire essuyés, 1 cabine douche récurée, casiers extérieurs et sol',
         specs: [
-          "Bancs et façades de casiers métalliques essuyés au désinfectant[cite: 2, 4].",
-          "Cabine de douche industrielle : récurage des parois carrelées, robinetterie et grille d'évacuation[cite: 4].",
-          "Plancher antidérapant de vestiaire : lavage à grande eau dégraissante et raclette de sol[cite: 9]."
+          "Bancs et façades de casiers métalliques essuyés au désinfectant.",
+          "Cabine de douche industrielle : récurage des parois carrelées, robinetterie et grille d'évacuation.",
+          "Plancher antidérapant de vestiaire : lavage à grande eau dégraissante et raclette de sol."
         ]
       },
       surf_industrial_concrete_sweep: {
@@ -781,7 +820,7 @@
         minutesEach: 0.008,
         marketRateSqft: 0.030,
         desc: 'Balayage continu à sec pour grandes allées d\'entrepôt ou d\'atelier',
-        specs: ["Balayage à sec au balai poussoir large 24\" ou 36\" avec composé anti-poussière[cite: 11, 13]."]
+        specs: ["Balayage à sec au balai poussoir large 24\" ou 36\" avec composé anti-poussière."]
       },
       surf_industrial_concrete_scrub: {
         niche: 'industrial',
@@ -791,12 +830,10 @@
         minutesEach: 0.015,
         marketRateSqft: 0.065,
         desc: 'Lavage dégraissant pour traces de pneus de chariots et saletés lourdes',
-        specs: ["Passage de laveuse automatique autotractée avec détergent dégraissant industriel[cite: 10, 14]."]
+        specs: ["Passage de laveuse automatique autotractée avec détergent dégraissant industriel."]
       },
 
-      // ====================================================
       // 5. COMMERCES DE DÉTAIL & RESTAURATION
-      // ====================================================
       combo_retail_sales_floor: {
         niche: 'retail',
         mode: 'regular',
@@ -807,8 +844,8 @@
         desc: 'Balayage et lavage de l\'aire de circulation magasin, comptoirs caisses et vitrines',
         specs: [
           "Comptoirs caisses et terminaux de paiement (TPV) soigneusement désinfectés.",
-          "Vitrines commerciales plain-pied intérieures/extérieures lavées sans trace[cite: 3, 13].",
-          "Plancher de magasin : passage de vadrouille dépoussiérante puis mopping brillant[cite: 9, 10]."
+          "Vitrines commerciales plain-pied intérieures/extérieures lavées sans trace.",
+          "Plancher de magasin : passage de vadrouille dépoussiérante puis mopping brillant."
         ]
       },
       combo_resto_dining_room: {
@@ -822,13 +859,11 @@
         specs: [
           "Tables et banquettes de restaurant : dégraissage minutieux au nettoyant de qualité alimentaire.",
           "Chaises et pieds de table essuyés pour éliminer traces de souliers et coulisses.",
-          "Plancher carrelé de salle à manger : lavage au dégraissant émulsifiant pour éviter tout sol glissant[cite: 9]."
+          "Plancher carrelé de salle à manger : lavage au détergent émulsifiant pour éviter tout sol glissant."
         ]
       },
 
-      // ====================================================
       // 6. BLOCS SANITAIRES TOUTES NICHES (COMMUN)
-      // ====================================================
       combo_bath_1t_1l: {
         niche: 'office',
         mode: 'regular',
@@ -838,11 +873,11 @@
         marketFlat: 12.00,
         desc: 'Désinfection complète cuvette, lavabo, miroir, distributeurs et sol',
         specs: [
-          "Cuvette commerciale : détartrage intérieur à la brosse, assise, charnières et base désinfectées[cite: 4, 6].",
-          "Lavabo : vasque récurée, robinet automatique lustré et miroir nettoyé sans trace[cite: 4, 6].",
-          "Distributeurs de papier toilette, essuie-mains et savon vérifiés et remplis[cite: 6].",
-          "Poubelle sanitaire vidée et lavée[cite: 5].",
-          "Plancher carrelé : vadrouille humide au nettoyant désinfectant neutre[cite: 10]."
+          "Cuvette commerciale : détartrage intérieur à la brosse, assise, charnières et base désinfectées.",
+          "Lavabo : vasque récurée, robinet automatique lustré et miroir nettoyé sans trace.",
+          "Distributeurs de papier toilette, essuie-mains et savon vérifiés et remplis.",
+          "Poubelle sanitaire vidée et lavée.",
+          "Plancher carrelé : vadrouille humide au nettoyant désinfectant neutre."
         ]
       },
       combo_bath_multiple_2t_1u_2l: {
@@ -854,11 +889,11 @@
         marketFlat: 25.00,
         desc: 'Bloc sanitaire complet multi-usagers avec cloisons essuyées',
         specs: [
-          "2 Toilettes et 1 urinoir : détartrage calcaire, assises désinfectées et pastille fraîcheur[cite: 4, 6].",
-          "Cloisons métalliques entre cabines : traces de doigts et éclaboussures essuyées[cite: 13].",
-          "2 Lavabos et grands miroirs panoramiques polis[cite: 4, 6].",
-          "Réapprovisionnement complet des distributeurs de consommables[cite: 6].",
-          "Lavage intégral du sol de carreaux céramique au détergent germicide[cite: 10]."
+          "2 Toilettes et 1 urinoir : détartrage calcaire, assises désinfectées et pastille fraîcheur.",
+          "Cloisons métalliques entre cabines : traces de doigts et éclaboussures essuyées.",
+          "2 Lavabos et grands miroirs panoramiques polis.",
+          "Réapprovisionnement complet des distributeurs de consommables.",
+          "Lavage intégral du sol de carreaux céramique au détergent germicide."
         ]
       },
       item_sanitary_toilet_fixture: {
@@ -869,7 +904,7 @@
         minutesEach: 1.50,
         marketFlat: 4.50,
         desc: 'Nettoyage intérieur brosse, assise 2 côtés, porcelaine extérieure',
-        specs: ["Nettoyage brosse intérieure cuvette, désinfection de la lunette, levier de chasse et extérieur porcelaine[cite: 4, 6]."]
+        specs: ["Nettoyage brosse intérieure cuvette, désinfection de la lunette, levier de chasse et extérieur porcelaine."]
       },
       item_sanitary_urinal_fixture: {
         niche: 'office',
@@ -879,7 +914,7 @@
         minutesEach: 1.25,
         marketFlat: 4.00,
         desc: 'Élimination des dépôts de tartre, robinet flush et grille',
-        specs: ["Récurage cuve d'urinoir, polissage du mécanisme de chasse chrome et remplacement pastille anti-odeurs[cite: 6]."]
+        specs: ["Récurage cuve d'urinoir, polissage du mécanisme de chasse chrome et remplacement pastille anti-odeurs."]
       },
       item_sanitary_sink_fixture: {
         niche: 'office',
@@ -889,12 +924,10 @@
         minutesEach: 1.20,
         marketFlat: 3.50,
         desc: 'Cuve désinfectée, robinetterie détartrée et miroir attenant',
-        specs: ["Désinfection de la vasque, polissage robinet et lustrage du miroir immédiatement au-dessus[cite: 4, 6]."]
+        specs: ["Désinfection de la vasque, polissage robinet et lustrage du miroir immédiatement au-dessus."]
       },
 
-      // ====================================================
       // 7. SOLS AU PIED CARRÉ (ENTRETIEN RÉGULIER)
-      // ====================================================
       surf_carpet_vacuum_regular: {
         niche: 'office',
         mode: 'regular',
@@ -903,7 +936,7 @@
         minutesEach: 0.021,
         marketRateSqft: 0.050,
         desc: 'Aspiration des voies de circulation et passages fréquents',
-        specs: ["Aspiration des couloirs de circulation et zones de passage à l'aspirateur vertical ou dorsal[cite: 8]."]
+        specs: ["Aspiration des couloirs de circulation et zones de passage à l'aspirateur vertical ou dorsal."]
       },
       surf_hardfloor_microfiber_regular: {
         niche: 'office',
@@ -913,7 +946,7 @@
         minutesEach: 0.025,
         marketRateSqft: 0.065,
         desc: 'Dépoussiérage à sec et lavage humide à plat détergent neutre',
-        specs: ["Balayage à sec pour retirer poussières puis vadrouille microfibre plate légèrement humide sans traînées[cite: 9, 10]."]
+        specs: ["Balayage à sec pour retirer poussières puis vadrouille microfibre plate légèrement humide sans traînées."]
       },
       surf_tile_mop_regular: {
         niche: 'office',
@@ -923,12 +956,10 @@
         minutesEach: 0.028,
         marketRateSqft: 0.060,
         desc: 'Lavage humide avec détergent dégraissant pour carrelage',
-        specs: ["Lavage à la vadrouille Kentucky ou microfibre avec eau propre renouvelée pour joints impeccables[cite: 9]."]
+        specs: ["Lavage à la vadrouille Kentucky ou microfibre avec eau propre renouvelée pour joints impeccables."]
       },
 
-      // ====================================================
       // 8. SERVICES PONCTUELS & GRANDS MÉNAGES SPÉCIALISÉS
-      // ====================================================
       deep_floor_strip_wax: {
         niche: 'office',
         mode: 'sporadic',
@@ -938,9 +969,9 @@
         marketRateSqft: 1.15,
         desc: 'Décapage chimique complet de l\'ancienne cire, neutralisation et pose de fini protecteur',
         specs: [
-          "Application de décapant professionnel et action à la monobrosse rotative 175 rpm équipée d'un tampon noir[cite: 10, 11].",
-          "Aspiration des boues au ramasseur d'eau industriel et rinçage neutralisant à deux reprises[cite: 10, 11].",
-          "Application méticuleuse de 4 couches de cire polymère haute teneur en solides avec temps de séchage respecté[cite: 9]."
+          "Application de décapant professionnel et action à la monobrosse rotative 175 rpm équipée d'un tampon noir.",
+          "Aspiration des boues au ramasseur d'eau industriel et rinçage neutralisant à deux reprises.",
+          "Application méticuleuse de 4 couches de cire polymère haute teneur en solides avec temps de séchage respecté."
         ]
       },
       deep_carpet_wand_extract: {
@@ -952,8 +983,8 @@
         marketRateSqft: 0.28,
         desc: 'Injection-extraction haute pression pour moquettes très souillées',
         specs: [
-          "Prétraitement par pulvérisation d'un agent dégraissant et détachage manuel des taches tenaces[cite: 7].",
-          "Nettoyage par injection d'eau chaude adoucie et aspiration immédiate à la canne Wand deux jets[cite: 7].",
+          "Prétraitement par pulvérisation d'un agent dégraissant et détachage manuel des taches tenaces.",
+          "Nettoyage par injection d'eau chaude adoucie et aspiration immédiate à la canne Wand deux jets.",
           "Passage de ventilateurs axiaux d'assèchement si nécessaire."
         ]
       },
@@ -966,8 +997,8 @@
         marketRateSqft: 0.16,
         desc: 'Méthode d\'entretien intermédiaire à séchage rapide (45 minutes)',
         specs: [
-          "Vaporisation d'un polymère encapsulant les molécules de graisse et de poussière[cite: 7].",
-          "Passage de la machine rotative munie d'un bonnet microfibre ou brosses cylindriques rotatives[cite: 7, 8].",
+          "Vaporisation d'un polymère encapsulant les molécules de graisse et de poussière.",
+          "Passage de la machine rotative munie d'un bonnet microfibre ou brosses cylindriques rotatives.",
           "Remise en circulation rapide des bureaux sans humidité résiduelle."
         ]
       },
@@ -980,9 +1011,9 @@
         marketRateSqft: 0.45,
         desc: 'Décrassage lourd des joints noircis et de la faïence sanitaire',
         specs: [
-          "Application d'une solution détartrante acide contrôlée pour dissoudre calcaire et dépôts de savon[cite: 7].",
-          "Brossage rotatif agressif pour pénétrer dans les joints de coulis poreux[cite: 4, 7].",
-          "Aspiration liquide et rinçage à l'eau claire neutralisée[cite: 10]."
+          "Application d'une solution détartrante acide contrôlée pour dissoudre calcaire et dépôts de savon.",
+          "Brossage rotatif agressif pour pénétrer dans les joints de coulis poreux.",
+          "Aspiration liquide et rinçage à l'eau claire neutralisée."
         ]
       },
       deep_pressure_washing: {
@@ -994,7 +1025,7 @@
         marketRateSqft: 0.22,
         desc: 'Nettoyage à l\'eau sous pression pour enlever graisses, chewing-gums et dépôts extérieurs',
         specs: [
-          "Dégraissage haute pression (3 000 PSI) à l'eau chaude des dalles de béton ou pavé uni[cite: 12].",
+          "Dégraissage haute pression (3 000 PSI) à l'eau chaude des dalles de béton ou pavé uni.",
           "Élimination des résidus d'huile moteur, mousses et salissures hivernales."
         ]
       },
@@ -1013,13 +1044,18 @@
       }
     };
 
-    // Ventilation interne confidentielle
+    // Ventilation interne confidentielle (Répartition exacte 100%)
     const FINANCIAL_BREAKDOWN = [
-      { name: 'Main-d’œuvre directe (Équipe d\'entretien & superviseur)', pct: 46.00, color: 'text-blue-900 font-semibold' },
-      { name: 'Administration, Soumissions & Service client', pct: 22.00, color: 'text-slate-700' },
-      { name: 'Produits chimiques professionnels, Wands & Chariots', pct: 8.00, color: 'text-slate-700' },
-      { name: 'Assurance responsabilité civile commerciale & Déplacements', pct: 9.00, color: 'text-slate-700' },
-      { name: 'Marge bénéficiaire nette (Profit entreprise)', pct: 15.00, color: 'text-emerald-700 font-bold' }
+      { name: 'Amortissement', pct: 6.00, color: 'text-purple-800 font-medium' },
+      { name: 'Produits équipement', pct: 6.50, color: 'text-blue-700 font-medium' },
+      { name: 'Véhicule et essence', pct: 4.50, color: 'text-amber-800 font-medium' },
+      { name: 'Salaire Technicien (1 650 h)', pct: 49.50, color: 'text-emerald-700 font-bold' },
+      { name: 'Frais généraux et fixes', pct: 3.60, color: 'text-amber-900 font-medium' },
+      { name: 'Administration (frais + salaire)', pct: 6.60, color: 'text-blue-800 font-medium' },
+      { name: 'Marketing (frais + salaire)', pct: 6.00, color: 'text-rose-700 font-medium' },
+      { name: 'Ventes (salaire 120 h)', pct: 4.80, color: 'text-blue-700 font-medium' },
+      { name: 'Divers', pct: 0.00, color: 'text-slate-600' },
+      { name: 'Profit pur entreprise', pct: 12.50, color: 'text-amber-700 font-black' }
     ];
 
     let entries = [];
@@ -1038,7 +1074,6 @@
     const labelQty = document.getElementById('label-qty');
     const inputQty = document.getElementById('input-qty');
 
-    // Boutons de niches
     const nicheBtns = {
       office: document.getElementById('btn-niche-office'),
       medical: document.getElementById('btn-niche-medical'),
@@ -1060,7 +1095,6 @@
       nicheBtns[k].addEventListener('click', () => setNiche(k));
     });
 
-    // Bascule Mode Régulier vs Ponctuel
     btnModeRegular.addEventListener('click', () => {
       currentInterventionMode = 'regular';
       btnModeRegular.className = "py-2 px-2 rounded-lg border text-xs font-bold transition flex items-center justify-center gap-1.5 bg-blue-50 border-blue-600 text-blue-900 shadow-sm";
@@ -1098,7 +1132,6 @@
         if (currentInterventionMode === 'regular') {
           if (item.mode !== 'regular') continue;
 
-          // Filtrer par niche ou items communs (sanitaires/sols)
           const isSameNiche = (item.niche === currentNiche);
           const isCommonSanitary = (item.niche === 'office' && key.includes('sanitary'));
           const isCommonFloor = key.startsWith('surf_');
@@ -1125,7 +1158,6 @@
             grpCombos.appendChild(opt);
           }
         } else {
-          // Mode Sporadique / Grands travaux
           if (item.mode === 'sporadic') {
             const opt = document.createElement('option');
             opt.value = key;
@@ -1170,7 +1202,6 @@
 
     selectProject.addEventListener('change', onProjectChange);
 
-    // Encombrement & Difficulté
     const selectEncombrement = document.getElementById('select-encombrement');
     const labelEncombrementMult = document.getElementById('label-encombrement-mult');
     selectEncombrement.addEventListener('change', () => {
@@ -1179,7 +1210,6 @@
       labelEncombrementMult.textContent = textMap[mult.toFixed(2)] || `x ${mult.toFixed(2)}`;
     });
 
-    // Formulaire d'ajout
     const formItem = document.getElementById('form-item');
     formItem.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -1236,7 +1266,6 @@
       render();
     }
 
-    // In-Line Editing
     window.updateEntryQty = function(id, newQty) {
       const entry = entries.find(e => e.id === id);
       if (!entry) return;
@@ -1280,7 +1309,6 @@
       render();
     };
 
-    // Fiche client
     ['client-company', 'client-name', 'client-phone', 'client-email', 'client-address'].forEach(id => {
       document.getElementById(id).addEventListener('input', updateClientPrintView);
     });
@@ -1309,7 +1337,6 @@
       document.getElementById('print-client-address').textContent = document.getElementById('client-address').value.trim() || 'Adresse non spécifiée';
     }
 
-    // Taxes et calculs
     document.getElementById('discount-type').addEventListener('change', render);
     document.getElementById('discount-value').addEventListener('input', render);
     document.getElementById('check-taxes').addEventListener('change', render);
@@ -1426,8 +1453,8 @@
       const annualWithTax = applyTaxes ? annualNet * 1.14975 : annualNet;
       document.getElementById('rec-annual-total').textContent = annualWithTax.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' }) + " / an";
 
-      // Ventilation interne
-const tbodyBreakdown = document.getElementById('breakdown-tbody');
+      // Ventilation interne exacte à 100 %
+      const tbodyBreakdown = document.getElementById('breakdown-tbody');
       tbodyBreakdown.innerHTML = '';
       const totalProfit = netBeforeTax * 0.125; // 12,50 % de profit pur entreprise
       document.getElementById('badge-profit-net').textContent = `Profit Pur (12,5%) : ${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
@@ -1469,7 +1496,6 @@ const tbodyBreakdown = document.getElementById('breakdown-tbody');
       updateClientPrintView();
     }
 
-    // Affichage des éléments enregistrés (Édition directe à l'écran)
     function renderEntriesList() {
       const container = document.getElementById('container-entries');
       container.innerHTML = '';
@@ -1516,7 +1542,6 @@ const tbodyBreakdown = document.getElementById('breakdown-tbody');
       });
     }
 
-    // Affichage des protocoles détaillés pour le DEVIS PDF / IMPRIMABLE
     function renderSpecificationsPrint() {
       const container = document.getElementById('container-specs-print');
       container.innerHTML = '';
@@ -1552,7 +1577,6 @@ const tbodyBreakdown = document.getElementById('breakdown-tbody');
       });
     }
 
-    // Réinitialisation
     document.getElementById('btn-reset').addEventListener('click', () => {
       if (confirm('Voulez-vous réinitialiser le devis commercial ?')) {
         entries = [];
@@ -1560,7 +1584,6 @@ const tbodyBreakdown = document.getElementById('breakdown-tbody');
       }
     });
 
-    // Exemple représentatif (Clinique médicale & Bureaux)
     document.getElementById('btn-sample').addEventListener('click', () => {
       entries = [];
       document.getElementById('client-company').value = 'Clinique Médicale & Dentaire Bois-Franc';
@@ -1576,7 +1599,6 @@ const tbodyBreakdown = document.getElementById('breakdown-tbody');
       render();
     });
 
-    // Lancement
     setNiche('office');
     updateRates();
   </script>
