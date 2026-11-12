@@ -1281,13 +1281,14 @@
       `;
       tbodyBreakdown.appendChild(totalRow);
 
-      // Calcul du Rendement Propriétaire-Opérateur (Salaire Technicien 49,50% + Profit Pur 12,50%)
-      const techSalary = netBeforeTax * 0.495;
-      const ownerTotalIncome = techSalary + totalProfit;
-      const ownerHourlyYield = totalHoursVisit > 0 ? (ownerTotalIncome / totalHoursVisit) : 0;
+     // Calcul du Rendement Propriétaire-Opérateur (En duo : temps divisé par 2)
+      const ownerSalary = netBeforeTax * 0.30; // Salaire Propriétaire-Opérateur (30,00 %)
+      const ownerTotalIncome = ownerSalary + totalProfit; // Salaire Proprio + Profit Pur (12,50 %)
+      const ownerActualHours = totalHoursVisit / 2; // Temps sur place coupé en 2 (travail à 2 personnes)
+      const ownerHourlyYield = ownerActualHours > 0 ? (ownerTotalIncome / ownerActualHours) : 0;
 
       document.getElementById('owner-calc-detail').textContent = 
-        `Salaire tech. (${techSalary.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}) + Profit pur (${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}) = ${ownerTotalIncome.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}`;
+        `Salaire proprio (${ownerSalary.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}) + Profit (${totalProfit.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })}) = ${ownerTotalIncome.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })} sur ${ownerActualHours.toFixed(2)} h réelles (à 2)`;
       
       document.getElementById('owner-hourly-rate').textContent = 
         `${ownerHourlyYield.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD' })} / h`;
