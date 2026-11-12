@@ -1308,6 +1308,7 @@
     document.getElementById('discount-type').addEventListener('change', render);
     document.getElementById('discount-value').addEventListener('input', render);
     document.getElementById('check-taxes').addEventListener('change', render);
+    document.getElementById('select-crew-config').addEventListener('change', render);
 
     function render() {
       document.getElementById('count-items').textContent = `${entries.length} élément(s)`;
